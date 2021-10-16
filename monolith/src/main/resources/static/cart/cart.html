@@ -1,0 +1,76 @@
+<div style="margin: 10px;">
+	<h5>Ваша корзина</h5>
+	<p>&nbsp;</p>
+	<p ng-show="isCartEmpty()">Ваша корзина пуста.</p>
+
+<div ng-show="!isCartEmpty()">
+	<div class="almost_windows">
+		<table class="table table-striped"><!-- table-bordered table-striped -->
+			<thead class="table-dark">
+				<tr>
+					<th scope="col">id</th>						<!-- 0 -->
+					<th scope="col">category</th>				<!-- 1 -->
+					<th scope="col">title</th>					<!-- 2 -->
+					<th scope="col">price</th>					<!-- 3 -->
+					<th scope="col">rest</th>					<!-- 7 -->
+					<th scope="col">quantity cost</th>			<!-- 5 -->
+					<th scope="col" colspan="3">quantity</th>	<!-- 4 -->
+					<th scope="col">more actions</th>			<!-- 6 -->
+				</tr>
+			</thead>
+			<tr ng-repeat="oitem in cart.oitems">
+				<td>{{oitem.productId}}</td>			<!-- 0 -->
+				<td>{{oitem.category}}</td>				<!-- 1 -->
+				<th scope="row">{{oitem.title}}</th>	<!-- 2 -->
+				<td>{{oitem.price}}</td>				<!-- 3 -->
+				<td>{{oitem.rest}}</td>					<!-- 7 -->
+				<td>{{oitem.cost}}</td>					<!-- 5 -->
+				<td width="20">
+					<button class="btn btn-primary"
+					title="Уменьшить количество товара в корзине." style="width: 30pt"
+					ng-click="cartMinus(oitem.productId, oitem.quantity)">-</button>
+				</td>						<!-- 4.1 -->
+				<td width="20">{{oitem.quantity}}</td>	<!-- 4.2 -->
+				<td width="20">
+					<button class="btn btn-primary"
+					title="Увеличить количество товара в корзине." style="width: 30pt"
+					ng-click="cartPlus(oitem.productId)">+</button>
+				</td>						<!-- 4.3 -->
+				<td>
+					<!-- Кнопка для удаления ВСЕГО количества товара из корзины. -->
+					<button class="btn btn-warning" style="font-family: Webdings;"
+						title="Удалить товар из корзины."
+						ng-click="removeFromCart(oitem.productId)">r</button><!--  -->
+					&nbsp;
+					<!-- Кнопка для просмотра информации о продукте. -->
+					<button class="btn btn-info" style="font-family: Webdings;"
+						title="Посмотреть информацию о товаре."
+						ng-click="infoProduct(oitem)">s</button>
+				</td>									<!-- 6 -->
+			</tr>
+			<tfoot class="table-primary"><td></td>					<!-- 0 -->
+				<td></td>											<!-- 1 -->
+				<td></td>											<!-- 2 -->
+				<td></td>											<!-- 3 -->
+				<td></td>											<!-- 7 -->
+				<td>Общая стоимость: {{cartCost}}</td>				<!-- 5 -->
+				<td colspan="3">Всего товаров: {{cartLoad}}</td>	<!-- 4 -->
+				<td></td>											<!-- 6 -->
+			</tfoot>
+<!--			<caption>
+				Страница: {{productsPage.pageable.pageNumber +1}}&lt;!&ndash;/{{productsPage.totalPages}}<br>
+				Товаров в корзине: {{cartLoad}}.<br>
+				Общая стоимость выбранных товаров: {{cartCost}}.&ndash;&gt;
+			</caption>-->
+		</table>
+	</div>
+	<p>&nbsp;</p>
+	<button class="btn btn-primary" ng-click="gotoOrder()">
+		Оформить заказ
+	</button>
+	<!-- Кнопка для очистки корзины — удаление всего количества ВСЕХ товаров из корзины. -->
+	<button class="btn btn-secondary" ng-click="clearCart()">
+		Очистить корзину
+	</button>
+</div>
+</div>
