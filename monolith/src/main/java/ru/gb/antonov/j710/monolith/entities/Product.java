@@ -3,17 +3,15 @@ package ru.gb.antonov.j710.monolith.entities;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.jetbrains.annotations.NotNull;
+import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
+import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
-import ru.gb.antonov.j710.monolith.beans.soap.products.ProductSoap;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
 import java.util.Objects;
 
-import static ru.gb.antonov.j710.monolith.Factory.MAX_PRICE;
-import static ru.gb.antonov.j710.monolith.Factory.MIN_PRICE;
+import static ru.gb.antonov.j710.monolith.Factory.*;
 
 @Entity
 @Table (name="products")
@@ -31,7 +29,7 @@ public class Product
     private double price;
 
     @Column(name="rest")  @Getter
-    private int rest;
+    private Integer rest;
 
     @ManyToOne
     @JoinColumn(name="category_id", nullable=false)  @Getter
@@ -68,20 +66,6 @@ public class Product
             throw new BadCreationParameterException (sb);
         }
         return this;
-    }
-//(метод используется в тестах, где корректность аргументов зависит от целей тестирования)
-    public static Product dummyProduct (Long id, String title, double price, int rest,
-                                        ProductsCategory category,
-                                        LocalDateTime createdAt, LocalDateTime updatedAt)
-    {   Product p = new Product();
-        p.id = id;
-        p.title = title;
-        p.price = price;
-        p.rest = rest;
-        p.category = category;
-        p.createdAt = createdAt;
-        p.updatedAt = updatedAt;
-        return p;
     }
 //----------------- Геттеры и сеттеры -----------------------------------
 
@@ -124,13 +108,11 @@ public class Product
 //-----------------------------------------------------------------------
 
     public static boolean isTitleValid (String title)
-    {
-        return title != null  &&  !title.trim().isEmpty();
+    {   return sayNoToEmptyStrings (title);
     }
 
     public static boolean isPriceValid (double value)
-    {
-        return value >= MIN_PRICE  &&  value <= MAX_PRICE;
+    {   return value >= MIN_PRICE  &&  value <= MAX_PRICE;
     }
 
     @Override public boolean equals (Object o)
@@ -147,17 +129,7 @@ public class Product
     {   return String.format ("[id:%d, «%s», %.2f, rt:%d]", id, title, price, rest);
     }
 
-    @NotNull
-    public static ProductSoap toProductSoap (Product p)
-    {
-        if (p != null && p.id != null)
-        return new ProductSoap (p.id,
-                                p.title,
-                                p.price,
-                                p.rest,
-                                p.getCategory().getName(),
-                                p.createdAt.getLong (ChronoField.MILLI_OF_SECOND),
-                                p.updatedAt.getLong (ChronoField.MILLI_OF_SECOND));
-        return new ProductSoap();
+    public ProductDto toProductDto ()
+    {   return new ProductDto (id, title, price, rest, category.getName());
     }
 }

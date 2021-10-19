@@ -1,30 +1,27 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
-import lombok.Data;
-import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
-import ru.gb.antonov.j710.monolith.entities.Product;
-
-@Data
 public class OrderItemDto
 {
-//TODO: Кажется, здесь validator.constraints не нужны, т.к. ожидаем, что все поля будут заполнятся НЕ юзером.
-    private Long   productId;
+    private Long productId;
     private String category;
     private String title;
     private double price;
-    private int    rest;
-    private int    quantity;
+    private int rest;
+    private int quantity;
     private double cost;
 //------------------------------------------------------------------
-
     public OrderItemDto () {}
 
-    public OrderItemDto (Product p)  //< создаём «пустой» объект : без количества и общей стоимости.
+    public OrderItemDto (Long productId, String category, String title, Double price,
+                         Integer rest, Integer quantity, Double cost)
     {
-        if (p == null)
-            throw new BadCreationParameterException ("A new OrderItemDto() have got null as parameter.");
-        productId = p.getId();
-        updateFromProduct (p);
+        if (productId != null) this.productId = productId;
+        if (category  != null) this.category  = category;
+        if (title     != null) this.title     = title;
+        if (price     != null) this.price     = price;
+        if (rest      != null) this.rest      = rest;
+        if (quantity  != null) this.quantity  = quantity;
+        if (cost      != null) this.cost      = cost;
     }
 
     public OrderItemDto (OrderItemDto oi) //TODO: проверить, используется ли этот метод ?
@@ -43,16 +40,29 @@ public class OrderItemDto
     public boolean setQuantity (int newQuantity)
     {
         boolean ok = newQuantity >= 0 && quantity != newQuantity;
-        //boolean recalc = quantity != newQuantity;
         if (ok)
-        {
             quantity = newQuantity;
-            //if (recalc) calcCost();
-        }
         return ok;
     }
+    public int getQuantity ()    {    return quantity;    }
 
     public double getCost () { return price * quantity; }
+    public void setCost (double cost)    {    this.cost = cost;    }
+
+    public Long getProductId ()    {    return productId;    }
+    public void setProductId (Long productId)    {    this.productId = productId;    }
+
+    public String getCategory ()    {    return category;    }
+    public void setCategory (String category)    {    this.category = category;    }
+
+    public String getTitle ()    {    return title;    }
+    public void setTitle (String title)    {    this.title = title;    }
+
+    public double getPrice ()    {    return price;    }
+    public void setPrice (double price)    {    this.price = price;    }
+
+    public int getRest ()    {    return rest;    }
+    public void setRest (int rest)    {    this.rest = rest;    }
 
 //----------------- Другие методы ----------------------------------
 
@@ -60,20 +70,4 @@ public class OrderItemDto
     public boolean changeQuantity (int delta) {   return setQuantity (quantity + delta);   }
 
     //private void calcCost () {   setCost (price * quantity);   }
-
-    public boolean updateFromProduct (Product p)
-    {
-        if (productId.equals (p.getId())) //< TODO: выглядит немного избыточно!
-        {
-            title     = p.getTitle();
-            category  = p.getCategory().getName();
-            price     = p.getPrice();
-            rest      = p.getRest();
-    //Следующие поля не нужно заполнять при создании объекта, а при обновлении их заполнять ещё и не рекомендуется!
-            //quantity = ?;
-            //cost = ?;
-            return true;
-        }
-        return false;
-    }
 }

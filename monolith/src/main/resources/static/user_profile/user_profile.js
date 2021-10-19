@@ -1,10 +1,11 @@
 
 angular.module('market-front').controller('user_profileController', function ($rootScope, $scope, $http, $location)
 {
-	const contextUserProfilePath = 'http://localhost:12440/market/api/v1/user_profile';
-	const contextAuthoPath	= 'http://localhost:12440/market/api/v1/auth';
-	$scope.canUserEditProducts = false;
+	const contextUserProfilePath = 'http://localhost:18181/market-monolith/api/v1/user_profile';
+	const contextAuthoPath		 = 'http://localhost:18181/market-monolith/api/v1/auth';
+	const contextOrderPath		 = 'http://localhost:22854/market-order/api/v1/order';
 
+	$scope.canUserEditProducts = false;
 
 	$scope.loadUserInfo = function ()
 	{
@@ -24,7 +25,7 @@ angular.module('market-front').controller('user_profileController', function ($r
 
 	$scope.loadOrders = function ()
 	{
-		$http.get (contextUserProfilePath + '/orders')
+		$http.get (contextOrderPath + '/orders')
 		.then(
 		function successCallback (response)
 		{
@@ -40,7 +41,7 @@ angular.module('market-front').controller('user_profileController', function ($r
 		});
 	}
 //----------------------------------------------------------------------- действия
-	$scope.infoProduct = function (oitem)	//+
+	$scope.infoProduct = function (oitem)
 	{
 		alert('id:              '+ oitem.productId +
 		   ',\rкатегория:       '+ oitem.category +

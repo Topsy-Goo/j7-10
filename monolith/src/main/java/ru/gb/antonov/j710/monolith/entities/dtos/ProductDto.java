@@ -1,8 +1,6 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
-import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import ru.gb.antonov.j710.monolith.entities.Product;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
@@ -10,7 +8,6 @@ import javax.validation.constraints.PositiveOrZero;
 import static ru.gb.antonov.j710.monolith.Factory.PROD_TITLELEN_MAX;
 import static ru.gb.antonov.j710.monolith.Factory.PROD_TITLELEN_MIN;
 
-@Data
 public class ProductDto
 {
     private Long productId;
@@ -31,24 +28,31 @@ public class ProductDto
     private String category;
 //--------------------------------------------------------------
     public ProductDto (){}
-    public ProductDto (Product product)
+    public ProductDto (Long pProductId, String pTitle, Double pPrice, Integer pRest, String pCategory)
     {
-        if (product != null)
-        {   productId = product.getId();
-            title     = product.getTitle();
-            price     = product.getPrice();
-            rest      = product.getRest();
-            category  = product.getCategory ().getName ();
-        }
+       if (pProductId != null) this.productId = pProductId;
+       if (pTitle     != null) this.title     = pTitle;
+       if (pPrice     != null) this.price     = pPrice;
+       if (pRest      != null) this.rest      = pRest;
+       if (pCategory  != null) this.category  = pCategory;
     }
-    public static ProductDto dummyProductDto (Long pProductId, String pTitle, double pPrice, int pRest, String pCategory)
-    {
-        ProductDto pdt = new ProductDto();
-        pdt.productId = pProductId;
-        pdt.title     = pTitle;
-        pdt.price     = pPrice;
-        pdt.rest      = pRest;
-        pdt.category  = pCategory;
-        return pdt;
+//--------------------------------------------------------------
+    public Long getProductId ()               { return productId; }
+    public void setProductId (Long productId) { this.productId = productId; }
+
+    public String getTitle ()                 { return title; }
+    public void setTitle (String title)       { this.title = title; }
+
+    public double getPrice ()                 { return price; }
+    public void setPrice (double price)       { this.price = price; }
+
+    public int getRest ()                     { return rest; }
+    public void setRest (int rest)            { this.rest = rest; }
+
+    public String getCategory ()              { return category; }
+    public void setCategory (String category) { this.category = category; }
+//--------------------------------------------------------------
+    @Override public String toString()
+    {   return String.format ("pdto[id:%d, «%s», %.2f, rt:%d]", productId, title, price, rest);
     }
 }

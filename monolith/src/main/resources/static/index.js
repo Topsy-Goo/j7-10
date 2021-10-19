@@ -87,8 +87,8 @@
 	приложения, бэк считывает БД из sql-файла, а при регистрации нового юзера он не записывается в
 	упомянутый файл).
 	*/
-		const contextAuthoPath	= 'http://localhost:12440/market/api/v1/auth';
-		const contextCartPath	= 'http://localhost:12440/market/api/v1/cart';
+		const contextAuthoPath	= 'http://localhost:18181/market-monolith/api/v1/auth';
+		const contextCartPath	= 'http://localhost:8191/market-cart/api/v1/cart';
 
         if ($localStorage.webMarketUser)
         {
@@ -99,11 +99,15 @@
 		{
 			$http.get(contextCartPath + '/uuid')
 			.then(
-			function successCallback(response)
+			function successCallback (response)
 			{
 				$localStorage.gbj7MarketGuestCartId = response.data.value;
 				console.log ('Temporary cartID is generated:'+ response.data.value);
 //				console.log ();
+			},
+			function failureCallback (response)
+			{
+				console.log ('Ой! @ $localStorage.gbj7MarketGuestCartId');
 			});
 		}
 	}
@@ -119,8 +123,8 @@ angular.module('market-front').controller('indexController',
 	$rootScope - глобальный контекст (позволяет обращаться к ф-циям (и переменным?) откуда угодно)
 	$localStorage - локальное хранилище браузера (требуется подкл. скрипт ngStorage.min.js.)
 */
-	const contextAuthoPath = 'http://localhost:12440/market/api/v1/auth';
-	const contextCartPath  = 'http://localhost:12440/market/api/v1/cart';
+	const contextAuthoPath = 'http://localhost:18181/market-monolith/api/v1/auth';
+	const contextCartPath  = 'http://localhost:8191/market-cart/api/v1/cart';
 
 	$scope.appTitle = 'Marketplace';
 	$scope.mainPageTitle = 'Главная страница';
@@ -155,7 +159,7 @@ angular.module('market-front').controller('indexController',
 				}
 				$scope.tryMergeCarts();
 
-				$rootScope.canEditProducts = $scope.canUserEditProducts();
+//				$rootScope.canEditProducts = $scope.canUserEditProducts();
 			},
 			function failureCallback (response)
 			{

@@ -6,8 +6,8 @@ angular.module('market-front').controller('edit_productController',
 
 	$location - позволяет переходить на др.страницу.
 */
-	const contextProductPath = 'http://localhost:12440/market/api/v1/products';
-	const contextAuthoPath = 'http://localhost:12440/market/api/v1/auth';
+	const contextProductPath = 'http://localhost:18181/market-monolith/api/v1/products';
+	const contextAuthoPath   = 'http://localhost:18181/market-monolith/api/v1/auth';
 
 	var contextPrompt_Creation = "Создание нового товара.";
 	var contextPrompt_Editing = "Изменение существующего товара.";

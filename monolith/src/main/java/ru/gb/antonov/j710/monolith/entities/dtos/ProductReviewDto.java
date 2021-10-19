@@ -1,12 +1,14 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
-import lombok.Data;
-import ru.gb.antonov.j710.monolith.entities.ProductReview;
+//import ru.gb.antonov.j710.monolith.entities.ProductReview;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
-@Data
+import static ru.gb.antonov.j710.monolith.Factory.STR_EMPTY;
+import static ru.gb.antonov.j710.monolith.Factory.sayNoToEmptyStrings;
+
 public class ProductReviewDto
 {
     private String authorName;
@@ -15,14 +17,27 @@ public class ProductReviewDto
     private Long productId;
 //----------------------------------------------------------
     protected ProductReviewDto(){}
-    public ProductReviewDto (ProductReview review)
+    public ProductReviewDto (Long uid/*String name*/, String txt, LocalDateTime ldt, Long pid)
     {
-        if (review != null)
+        if (uid != null/*sayNoToEmptyStrings (name, txt)*/ && pid != null)
         {
-            authorName = review.getOurUser().getLogin();
-            text = review.getText();
-            date = review.getCreatedAt().toLocalDate().format (DateTimeFormatter.ofLocalizedDate (FormatStyle.SHORT));
-            productId = review.getProductId();
+            authorName = uid.toString()/*name*/;
+            text = txt;
+            date = (ldt != null) ? ldt.format (DateTimeFormatter.ofLocalizedDate (FormatStyle.SHORT))
+                                 : STR_EMPTY;
+            productId = pid;
         }
     }
+
+    public String getAuthorName ()    {    return authorName;    }
+    public void setAuthorName (String authorName)    {    this.authorName = authorName;    }
+
+    public String getText ()    {    return text;    }
+    public void setText (String text)    {    this.text = text;    }
+
+    public String getDate ()    {    return date;    }
+    public void setDate (String date)    {    this.date = date;    }
+
+    public Long getProductId ()    {    return productId;    }
+    public void setProductId (Long productId)    {    this.productId = productId;    }
 }

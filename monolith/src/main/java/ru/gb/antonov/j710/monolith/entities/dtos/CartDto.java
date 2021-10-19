@@ -1,11 +1,9 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
-import lombok.Data;
 
 import java.util.LinkedList;
 import java.util.List;
 
-@Data
 public class CartDto
 {
     private List<OrderItemDto> oitems;
@@ -38,9 +36,18 @@ public class CartDto
         }
         return cost;
     }
+    public void setCost (double cost)    {    this.cost = cost;    }
 
     public int getTitlesCount () { return oitems.size(); }
-//-----------------------------------------------------------------------------
+    public void setTitlesCount (int titlesCount)    {    this.titlesCount = titlesCount;    }
+
+    public List<OrderItemDto> getOitems ()    {    return oitems;    }
+    public void setOitems (List<OrderItemDto> oitems)    {    this.oitems = oitems;    }
+
+    public int getLoad ()    {    return load;    }
+    public void setLoad (int load)    {    this.load = load;    }
+
+    //-----------------------------------------------------------------------------
     public boolean addItem (OrderItemDto oitem, int quantity /* может быть 0 */)
     {
         boolean ok = false;

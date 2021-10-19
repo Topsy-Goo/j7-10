@@ -12,11 +12,9 @@ import org.springframework.util.MultiValueMap;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.ResourceNotFoundException;
 import ru.gb.antonov.j710.monolith.beans.repositos.ProductRepo;
 import ru.gb.antonov.j710.monolith.beans.repositos.specifications.ProductSpecification;
-import ru.gb.antonov.j710.monolith.beans.soap.products.ProductSoap;
 import ru.gb.antonov.j710.monolith.entities.*;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,7 +77,7 @@ public class ProductService
     @Transactional
     public Page<ProductDto> getPageOfProducts (int pageIndex, int pageSize, @Nullable MultiValueMap<String, String> filters)
     {
-        return findAll (pageIndex, pageSize, filters).map(ProductService::dtoFromProduct);
+        return findAll (pageIndex, pageSize, filters).map(Product::toProductDto);
     }
 //-------------- Редактирование товаров ---------------------------------
 
@@ -120,60 +118,6 @@ public class ProductService
         p.setRest (0);
         //productRepo.delete(p);
     }
-//--------- Методы для преобразований Product в ProductDto --------------
-
-    public static ProductDto dtoFromProduct (Product product)
-    {
-        return new ProductDto (product);
-    }
-
-    public static List<ProductDto> productListToDtoList (List<Product> pp)
-    {
-        if (pp != null)
-        {
-            return pp.stream()
-                     .map(ProductService::dtoFromProduct)
-                     .collect (Collectors.toList ());
-        }
-        return Collections.emptyList ();
-    }
-
-    public void onProductDeletion (Long pid)
-    {   //Обнулим количество товара, чтобы его невозможно было купить.
-        Product p = findById (pid);
-        p.setRest (0);
-        productRepo.save (p);
-    }
-//-------------- SOAP ---------------------------------------------------
-
-    @Transactional
-    public ProductSoap getProductSoapByProductId (Long pid)
-    {
-        return Product.toProductSoap (findById (pid));
-    }
-
-/** @param from {@code productId} первого элемента интервала.
-    @param to {@code productId} последнего элемента интервала (включительно). */
-    @Transactional
-    @NotNull
-    public List<ProductSoap> getProductSoapRangeByProductIdRange (Long from, Long to)
-    {
-        List<ProductSoap> result = Collections.emptyList();
-        if (from != null && to != null && from > 0L && from.compareTo(to) <= 0)
-        {
-            long range = to - from +1L;
-            if (range <= (Integer.MAX_VALUE))
-            {
-                List<Product> products = findAllByIdBetween (from, to);
-                result = new ArrayList<>((int)range);
-
-                for (Product p : products)
-                    result.add (Product.toProductSoap (p));
-                /*result = findAllByIdBetween (from, to).stream().map (Product::toProductSoap).collect (Collectors.toList ());*/
-            }
-        }
-        return result;
-    }
 //-------------- Фильтры ------------------------------------------------
     @NotNull private Specification<Product> constructSpecification (@Nullable MultiValueMap<String, String> params)
     {
@@ -203,3 +147,5 @@ public class ProductService
         return spec;
     }
 }
+
+

@@ -42,6 +42,11 @@ public class OurUserService implements UserDetailsService
         return findByLogin(login).orElseThrow (()->new UserNotFoundException (errMsg));
     }
 
+    @Transactional
+    public Long getUserId (Principal principal)
+    {   return userByPrincipal (principal).getId();
+    }
+
     @Override
     @Transactional
     public UserDetails loadUserByUsername (String login)

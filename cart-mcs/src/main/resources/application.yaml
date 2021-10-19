@@ -1,0 +1,19 @@
+server:
+  port: 8191
+  servlet:
+    context-path: /market-cart
+
+integration:  #(произволное название параметра)(см. ru.gb.antonov.j710.cart.integration.ProductServiceIntegration)
+  product-service:
+    url: http://localhost:18181/market-monolith #URL строится из локалхост, server:port (соотв-го модуля) и server:servlet:context-path (соотв-го модуля).
+  user-service:
+    url: http://localhost:18181/market-monolith
+
+app:
+  cart:
+    prefix: 'GB_RU_J7_WEBSHOP_V2_'
+    life: 130
+
+#utils:
+#  cart:
+#    prefix: WEB_MARKET_X_

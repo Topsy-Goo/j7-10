@@ -33,7 +33,6 @@ public class AuthController
     private final JwtokenUtil    jwtokenUtil;
     private final AuthenticationManager authenticationManager;
 
-
     //http://localhost:12440/market/api/v1/auth/login
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser (@RequestBody AuthRequest authRequest)

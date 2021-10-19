@@ -7,7 +7,7 @@ import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 
-@SpringBootApplication (scanBasePackages = "ru.gb.antonov.j71.beans")
+@SpringBootApplication (scanBasePackages = "ru.gb.antonov.j710.monolith.beans")
 public class InternetShopApplication
 {
     @Autowired private Environment env;

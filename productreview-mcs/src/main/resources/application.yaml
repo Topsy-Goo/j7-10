@@ -1,0 +1,14 @@
+server:
+  port: 11540
+  servlet:
+    context-path: /market-productreview
+
+integration:
+  product-service:
+    url: http://localhost:18181/market-monolith
+  user-service:
+    url: http://localhost:18181/market-monolith
+  cart-service:
+    url: http://localhost:8191/market-cart
+  order-service:
+    url: http://localhost:22854/market-order

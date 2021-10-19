@@ -1,12 +1,7 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
-@Data
-@NoArgsConstructor
 public class OrderDto
 {
     private Long orderNumber;
@@ -16,4 +11,27 @@ public class OrderDto
     private List<OrderItemDto> oitems;
     private int load;       //< общее количество единиц выбранных/купленных товаров
     private String state;
+
+    public OrderDto(){}
+
+    public Long getOrderNumber ()    {    return orderNumber;    }
+    public void setOrderNumber (Long orderNumber)    {    this.orderNumber = orderNumber;    }
+
+    public String getAddress ()    {    return address;    }
+    public void setAddress (String address)    {    this.address = address;    }
+
+    public String getPhone ()    {    return phone;    }
+    public void setPhone (String phone)    {    this.phone = phone;    }
+
+    public double getCost ()    {    return cost;    }
+    public void setCost (double cost)    {    this.cost = cost;    }
+
+    public List<OrderItemDto> getOitems ()    {    return oitems;    }
+    public void setOitems (List<OrderItemDto> oitems)    {    this.oitems = oitems;    }
+
+    public int getLoad ()    {    return load;    }
+    public void setLoad (int load)    {    this.load = load;    }
+
+    public String getState ()    {    return state;    }
+    public void setState (String state)    {    this.state = state;    }
 }

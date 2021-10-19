@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                .antMatchers ("/api/v1/products/new_review").authenticated()
                .antMatchers ("/api/v1/products/delete/**").hasAuthority (PERMISSION_EDIT_PRODUCT)
                .antMatchers (HttpMethod.POST, "/api/v1/products").hasAuthority (PERMISSION_EDIT_PRODUCT)
-               .antMatchers (HttpMethod.PUT, "/api/v1/products").hasAuthority (PERMISSION_EDIT_PRODUCT)
+               .antMatchers (HttpMethod.PUT , "/api/v1/products").hasAuthority (PERMISSION_EDIT_PRODUCT)
                .antMatchers ("/h2_console/**").permitAll()
                .and()
                .sessionManagement().sessionCreationPolicy (SessionCreationPolicy.STATELESS)

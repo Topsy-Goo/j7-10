@@ -2,11 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<parent>
 		<artifactId>j7-10</artifactId>
 		<groupId>ru.gb.antonov</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>cart-mcs</artifactId>
@@ -15,6 +17,52 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
+
+<!--	<dependencyManagement>
+		<dependencies>
+
+		</dependencies>
+	</dependencyManagement>-->
+
+	<dependencies>
+		<dependency>
+			<groupId>ru.gb.antonov</groupId>
+			<artifactId>monolith</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-data-jpa</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-security</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>	<!-- Библиотека для генерации кода: геттеры, сеттеры, конструкторы и др. -->
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+	<!-- Для использования следующих двух зависимостей требуется установка Redis'а (Linux only)
+		 или Memorai (аналог Redis'а для Windows). -->
+		<dependency>	<!-- Аналог Spring data под кэшь Radis'а. -->
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+		</dependency>
+		<!-- + -->
+		<dependency>	<!-- Библиотека для установления соединения с Redis. -->
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>3.6.0</version>
+		</dependency>
+	</dependencies>
 
 </project>
 <!-- ru.gb.antonov.j710.cart -->

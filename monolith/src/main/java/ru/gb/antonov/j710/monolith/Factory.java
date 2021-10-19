@@ -13,7 +13,7 @@ import java.util.Locale;
 public class Factory
 {
     public static final boolean DRYCART = true;
-    public static final boolean FLOAT_POINT = true;
+    public static final boolean FLOAT_POINT = true; //< в isDecimalNumber() указывает, нужно ли считать точку/запятую частью числа
 
     public static Double MIN_PRICE = 0.01;
     public static final Double MAX_PRICE = Double.MAX_VALUE;
@@ -43,7 +43,7 @@ public class Factory
     public static final String ORDERSTATE_SERVING  = "SERVING";
     public static final String ORDERSTATE_PAYED    = "PAYED";
     public static final String ORDERSTATE_CANCELED = "CANCELED";
-    public static String CART_PREFIX_ = STR_EMPTY;
+    //public static String CART_PREFIX_ = STR_EMPTY;
     public static final String ROLE_USER       = "ROLE_USER";
     public static final String ROLE_ADMIN      = "ROLE_ADMIN";
     public static final String ROLE_SUPERADMIN = "ROLE_SUPERADMIN";
@@ -52,7 +52,7 @@ public class Factory
     public static final String PERMISSION_SHOPPING     = "SIMLE_SHOPPING";
 
     public static final Locale RU_LOCALE = new Locale ("ru", "RU");
-    public static Duration CART_LIFE = Duration.ofDays (30L);
+    //public static Duration CART_LIFE = Duration.ofDays (30L);
 
     public static final MultiValueMap<String, String> NO_FILTERS = null;
 //------------------------------------------------------------------------
@@ -60,7 +60,8 @@ public class Factory
     {
         System.out.println ("\n************************* Считывание настроек: *************************");
 
-        CART_PREFIX_ = env.getProperty ("app.cart.prefix");
+        String s;
+/*        CART_PREFIX_ = env.getProperty ("app.cart.prefix");
         System.out.println ("app.cart.prefix: "+ CART_PREFIX_);
 
         String s = env.getProperty ("app.cart.life");
@@ -68,7 +69,7 @@ public class Factory
         {
             CART_LIFE = Duration.ofDays (Long.parseLong (s));
             System.out.println ("app.cart.life: "+ CART_LIFE);
-        }
+        }*/
         if (isDecimalNumber (s = env.getProperty ("views.shop.page.items"), !FLOAT_POINT))
         {
             PROD_PAGESIZE_DEF = Integer.parseInt (s);
@@ -119,16 +120,6 @@ public class Factory
         return null;
     }
 
-/** Составляем ключ как:  GB_RU_J7_WEBSHOP_ + login
-*/
-    public static String cartKeyByLogin (String login)
-    {
-        String postfix = validateString (login, LOGIN_LEN_MIN, LOGIN_LEN_MAX);
-        if (postfix != null)
-            return CART_PREFIX_ + postfix;
-        throw new UnableToPerformException ("cartKeyByLogin(): некорректный логин: "+ login);
-    }
-
 /** Проверяем, содержатся ли в строке посторонние символы, которые могут вызвать исключение при переводе строки вчисло. (Занятно, что разработчики Java не позаботились отакой мелочи.)
  @param s собственно срока.
  @param floatPoint {@code true} означает, что число может содержать десятичную точку или запятую. */
@@ -147,6 +138,19 @@ public class Factory
                 floatPoint = false;
             }
         }
+        return true;
+    }
+
+/** @param lines массив строк, подлежащих проверке.
+    @return {@code true} — если ни одна из строк lines не пустая и не равна null. */
+    public static boolean sayNoToEmptyStrings (String ... lines)
+    {
+        if (lines != null)
+        for (String s : lines)
+            if (s == null || s.trim().isEmpty())
+            {
+                return false;
+            }
         return true;
     }
 }

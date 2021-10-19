@@ -2,7 +2,8 @@
 angular.module('market-front').controller('orderController',
 	function ($rootScope, $scope, $http, $location, $localStorage)
 {
-	const contextOrderPath = 'http://localhost:12440/market/api/v1/order';
+	const contextOrderPath = 'http://localhost:22854/market-order/api/v1/order';
+
 	var cartPageCurrent = 0;
 	var cartPageTotal = 0;
 	$scope.contextPrompt = "";

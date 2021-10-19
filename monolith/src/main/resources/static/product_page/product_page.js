@@ -2,12 +2,13 @@
 angular.module('market-front').controller('product_pageController',
 function ($rootScope, $scope, $http, $location, $routeParams)
 {
-	const contextProductPath = 'http://localhost:12440/market/api/v1/products';
-	const contextAuthoPath	 = 'http://localhost:12440/market/api/v1/auth';
-	const contextCartPath	 = 'http://localhost:12440/market/api/v1/cart';
-	const contextOrderPath   = 'http://localhost:12440/market/api/v1/order';
+	const contextProductPath		= 'http://localhost:18181/market-monolith/api/v1/products';
+	const contextAuthoPath	 		= 'http://localhost:18181/market-monolith/api/v1/auth';
+	const contextCartPath	 		= 'http://localhost:8191/market-cart/api/v1/cart';
+	const contextOrderPath   		= 'http://localhost:22854/market-order/api/v1/order';
+	const contextProductReviewsPath = 'http://localhost:11540/market-productreview/api/v1/productreviews';
+
 	$scope.showReviewForm = false;
-//	$scope.contextPrompt = 'Свойства товара';
 	$scope.reviewHalfHeader = 'Пока нет отзывов';
 	var failedToLoadProductDescription = 'Не удалось загрузить свойства товара.';
 	var failedToLoadReviews = 'Не удалось загрузить отзывы о товаре.';
@@ -29,7 +30,7 @@ function ($rootScope, $scope, $http, $location, $routeParams)
 
 	$scope.loadReviews = function ()
 	{
-		$http.get (contextProductPath + '/load_reviews/' + $routeParams.pid)
+		$http.get (contextProductReviewsPath + '/load_reviews/' + $routeParams.pid)
 		.then (
 		function successCallback (response)
 		{
@@ -51,7 +52,7 @@ function ($rootScope, $scope, $http, $location, $routeParams)
 		$scope.review.date = null;
 		console.log ($scope.review);
 
-		$http.post (contextProductPath + '/new_review', $scope.review)
+		$http.post (contextProductReviewsPath + '/new_review', $scope.review)
 		.then (
 		function successCallback (response)
 		{
@@ -73,7 +74,7 @@ function ($rootScope, $scope, $http, $location, $routeParams)
 		}
 		else
 		{
-			$http.get (contextProductPath + '/can_review/' + $routeParams.pid)
+			$http.get (contextProductReviewsPath + '/can_review/' + $routeParams.pid)
 			.then (
 			function successCallback (response)
 			{

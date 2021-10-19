@@ -1,15 +1,10 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.NotNull;
 
 import static ru.gb.antonov.j710.monolith.Factory.*;
 
-@Data
-@NoArgsConstructor
 public class AuthRequest
 {
     @NotNull (message="\rНе указан логин!")
@@ -19,6 +14,14 @@ public class AuthRequest
     @NotNull (message="\rНе указан пароль!")
     @Length (min=PASS_LEN_MIN, max=PASS_LEN_MAX, message="\rДлина пароля: 3…128 символов!")
     private String password;
+//--------------------------------------------------------------------------------
+    public AuthRequest (){}
+//--------------------------------------------------------------------------------
+    public String getLogin ()    {    return login;    }
+    public void setLogin (String login)    {    this.login = login;    }
+
+    public String getPassword ()    {    return password;    }
+    public void setPassword (String password)    {    this.password = password;    }
 //--------------------------------------------------------------------------------
     public static AuthRequest dummyAuthRequest (String login, String password)
     {

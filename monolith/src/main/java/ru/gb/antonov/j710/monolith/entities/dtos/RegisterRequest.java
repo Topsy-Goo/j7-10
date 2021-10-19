@@ -1,15 +1,11 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
 import static ru.gb.antonov.j710.monolith.Factory.*;
 
-@Data
-@NoArgsConstructor
 public class RegisterRequest
 {
     @NotNull (message="\rЗадайте логин (3…32 латинских сиволов и/или цифр).")
@@ -35,4 +31,27 @@ public class RegisterRequest
     @NotNull (message="\rПочта указана неполностью: Домен.")
     @Length (min=1/*, message=""*/)
     private String emailDomain;
+//-------------------------------------------------------------------------
+    public RegisterRequest(){}
+//-------------------------------------------------------------------------
+
+    public String getLogin ()    {    return login;    }
+
+    public void setLogin (String login)    {    this.login = login;    }
+
+    public String getPassword ()    {    return password;    }
+
+    public void setPassword (String password)    {    this.password = password;    }
+
+    public String getEmailUser ()    {    return emailUser;    }
+
+    public void setEmailUser (String emailUser)    {    this.emailUser = emailUser;    }
+
+    public String getEmailServer ()    {    return emailServer;    }
+
+    public void setEmailServer (String emailServer)    {    this.emailServer = emailServer;    }
+
+    public String getEmailDomain ()    {    return emailDomain;    }
+
+    public void setEmailDomain (String emailDomain)    {    this.emailDomain = emailDomain;    }
 }

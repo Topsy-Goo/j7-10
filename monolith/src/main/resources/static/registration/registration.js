@@ -10,8 +10,8 @@ angular.module('market-front').controller('registrationController',
 	$rootScope - глобальный контекст (позволяет обращаться к ф-циям (и переменным?) откуда угодно)
 	$localStorage - локальное хранилище браузера (требуется подкл. скрипт ngStorage.min.js.)
 */
-	const contextAuthoPath = 'http://localhost:12440/market/api/v1/auth';
-	const contextCartPath = 'http://localhost:12440/market/api/v1/cart';
+	const contextAuthoPath = 'http://localhost:18181/market-monolith/api/v1/auth';
+	const contextCartPath = 'http://localhost:8191/market-cart/api/v1/cart';
 
 	var contextPrompt_Registered = "Вы успешно зарегистрированы.";
 	var contextPrompt_Unathorized = "Введите логин, паоль и адрес электронной почты.";
