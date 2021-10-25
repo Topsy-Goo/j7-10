@@ -3,20 +3,13 @@ package ru.gb.antonov.j710.productreview.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.gb.antonov.j710.cart.integration.CartToOurUserCallService;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
-import ru.gb.antonov.j710.monolith.beans.services.ProductService;
-import ru.gb.antonov.j710.monolith.entities.OurUser;
-import ru.gb.antonov.j710.monolith.entities.Product;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductReviewDto;
-import ru.gb.antonov.j710.order.entities.OrderItem;
-import ru.gb.antonov.j710.order.services.OrderService;
-import ru.gb.antonov.j710.order.services.OrderStatesService;
 import ru.gb.antonov.j710.productreview.entities.ProductReview;
+import ru.gb.antonov.j710.productreview.integration.ProductreviewToOrderCallService;
+import ru.gb.antonov.j710.productreview.integration.ProductreviewToOurUserCallService;
 import ru.gb.antonov.j710.productreview.repositos.ProductReviewsRepo;
 
-import java.security.Principal;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,31 +17,26 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductReviewService
 {
-    private final ProductReviewsRepo       productReviewsRepo;
-    private final ProductService           productService;
-    //private final OurUserService     ourUserService;
-    private final CartToOurUserCallService cartToOurUserCallService;
-    private final OrderStatesService       orderStatesService;
-    private final OrderService             orderService;
+    private final ProductReviewsRepo                productReviewsRepo;
+    private final ProductreviewToOurUserCallService productreviewToOurUserCallService;
+    private final ProductreviewToOrderCallService   productreviewToOrderCallService;
 
     @Transactional
     public List<ProductReviewDto> getReviewListById (Long pid)
     {
-        //Product product = productService.findById (pid);
-        List<ProductReviewDto> reviews = productReviewsRepo.findAllByProductId (pid)
-                                                           .stream()
-                                                           .map(ProductReview::toProductReviewDto)
-                                                           .collect (Collectors.toList ());
-        return reviews;
+        return productReviewsRepo.findAllByProductId (pid)
+                                 .stream()
+                                 .map(ProductReview::toProductReviewDto)
+                                 .collect (Collectors.toList ());
     }
 
     @Transactional
-    public void newProductReview (Long pid, String text, Principal principal)
+    public void newProductReview (Long pid, String text, String username)
     {
-        if (pid == null || principal == null || text == null || text.isBlank())
+        if (pid == null || username == null || text == null || text.isBlank())
             throw new BadCreationParameterException ("Не могу выполнить запрошенное действие.");
 
-        Long ouruserId = cartToOurUserCallService.userIdByLogin (principal.getName());
+        Long ouruserId = productreviewToOurUserCallService.userIdByLogin (username);
 
         ProductReview review = new ProductReview();
         review.setText (text);
@@ -59,20 +47,17 @@ public class ProductReviewService
 
 /** Юзер может оставить один отзыв к товару, если он этот товар купил хотя бы один раз. */
     @Transactional
-    public Boolean canReview (Principal principal, Long pid)
+    public Boolean canReview (String username, Long pid)
     {
         boolean ok = false;
-        if (principal != null && pid != null)
+        if (username != null && pid != null)
         {
-            //OurUser ourUser = cartToOurUserCallService.userByPrincipal (principal);
-            Long uid = cartToOurUserCallService.userIdByLogin (principal.getName())/*ourUser.getId()*/;
-        //проверяем отсутствие отзывов юзера на товар:
+        //Убеждаемся, что юзер ещё не написал отзыв на товар pid:
+            Long uid = productreviewToOurUserCallService.userIdByLogin (username);
             if (productReviewsRepo.findByProductIdAndOuruserId (pid, uid).isEmpty())
             {
-        //товар должен числиться в оплаченном заказе:
-                Integer stateId = orderStatesService.getOrderStatePayed().getId(); //PAYED
-                Collection<OrderItem> orderItems = orderService.userOrderItemsByProductId (uid, pid, stateId);
-                ok = !orderItems.isEmpty();
+        //Убеждаемся, что юзер купил этот товар:
+                ok = !productreviewToOrderCallService.userOrderItemsByProductId_Payed (uid, pid).isEmpty();
             }
         }
         return ok;

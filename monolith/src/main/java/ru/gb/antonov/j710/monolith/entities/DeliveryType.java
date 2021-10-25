@@ -6,12 +6,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Data
+@Entity  @Data
 public class DeliveryType
 {
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Id  @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="id")
     private Long id;
 
@@ -21,12 +19,9 @@ public class DeliveryType
     @Column (name="cost")
     private double cost;
 
-    @CreationTimestamp
-    @Column(name="created_at", nullable=false)
+    @CreationTimestamp  @Column(name="created_at", nullable=false)
     private LocalDateTime createdAt;
 
-    @CreationTimestamp
-    @Column(name="updated_at", nullable=false)
+    @CreationTimestamp  @Column(name="updated_at", nullable=false)
     private LocalDateTime updatedAt;
-//----------------------------------------------------------------------
 }

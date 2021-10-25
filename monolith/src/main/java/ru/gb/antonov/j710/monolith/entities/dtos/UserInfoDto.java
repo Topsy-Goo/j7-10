@@ -15,12 +15,12 @@ public class UserInfoDto
         //setOuruserId (uid);
     }
 //--------------------------------------------------
-    public String getLogin ()    {    return login;    }
-    public void setLogin (String login)    {    this.login = login;    }
+    public String getLogin ()           { return login; }
+    public void setLogin (String login) { this.login = login; }
 
-    public String getEmail ()    {    return email;    }
-    public void setEmail (String email)    {    this.email = email;    }
+    public String getEmail ()           { return email; }
+    public void setEmail (String email) { this.email = email; }
 
-    //public Long getOuruserId ()    {    return ouruserId;    }
-    //public void setOuruserId (Long ouruserId)    {    this.ouruserId = ouruserId;    }
+    //public Long getOuruserId ()               { return ouruserId; }
+    //public void setOuruserId (Long ouruserId) { this.ouruserId = ouruserId; }
 }

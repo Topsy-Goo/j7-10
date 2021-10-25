@@ -12,16 +12,23 @@ import java.util.List;
 @RestController
 @RequestMapping ("/api/v1/productreviews")
 @RequiredArgsConstructor
+@CrossOrigin ("*")
 public class ProductReviewController
 {
     private final ProductReviewService productReviewService;
 
     @GetMapping ("/load_reviews/{id}")
-    public List<ProductReviewDto> productReviews (@PathVariable (name="id") Long pid)
+    public List<ProductReviewDto> loadProductReviews (@PathVariable (name="id") Long pid)
     {
+System.out.println("\n****************** ProductReviewController.loadProductReviews << /load_reviews/{"+pid+"} *******************\n");
         if (pid == null)
-            throw new BadCreationParameterException("Не могу выполнить поиск для товара id: " + pid);
-        return productReviewService.getReviewListById (pid);
+        {
+System.err.println("Не могу выполнить поиск для товара id: " + pid);
+            throw new BadCreationParameterException ("Не могу выполнить поиск для товара id: " + pid);
+        }
+        List<ProductReviewDto> result = productReviewService.getReviewListById (pid);
+System.out.println("ProductReviewController.loadProductReviews >> "+ result);
+        return result;
     }
 
     @PostMapping ("/new_review")

@@ -15,9 +15,7 @@ import ru.gb.antonov.j710.monolith.beans.repositos.specifications.ProductSpecifi
 import ru.gb.antonov.j710.monolith.entities.*;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.gb.antonov.j710.monolith.Factory.NO_FILTERS;
 
@@ -27,7 +25,6 @@ public class ProductService
 {
     private final ProductRepo productRepo;
     private final ProductCategoryService productCategoryService;
-    private final OurUserService ourUserService;
     //private final OrderService orderService;  кольцует
 
 //названия фильтров, использующиеся на фронте:

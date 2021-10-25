@@ -10,10 +10,10 @@ import static ru.gb.antonov.j710.monolith.Factory.*;
 
 public class CartFactory
 {
-    public static final String STR_EMPTY = "";
-    public static String CART_PREFIX_ = STR_EMPTY;
-    public static Duration CART_LIFE = Duration.ofDays (30L);
-    public static Duration DONOT_SET_CART_LIFE = null;
+    public static final String   STR_EMPTY           = "";
+    public static       String   CART_PREFIX_        = STR_EMPTY;
+    public static       Duration CART_LIFE           = Duration.ofDays(30L);
+    public static       Duration DONOT_SET_CART_LIFE = null;
 
 /** Считываем настройки из файла настроек. */
     public static void init (Environment env)

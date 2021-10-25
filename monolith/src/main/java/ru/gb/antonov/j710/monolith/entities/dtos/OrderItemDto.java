@@ -10,8 +10,6 @@ public class OrderItemDto
     private int quantity;
     private double cost;
 //------------------------------------------------------------------
-    public OrderItemDto () {}
-
     public OrderItemDto (Long productId, String category, String title, Double price,
                          Integer rest, Integer quantity, Double cost)
     {
@@ -23,8 +21,7 @@ public class OrderItemDto
         if (quantity  != null) this.quantity  = quantity;
         if (cost      != null) this.cost      = cost;
     }
-
-    public OrderItemDto (OrderItemDto oi) //TODO: проверить, используется ли этот метод ?
+/*    public OrderItemDto (OrderItemDto oi) //TODO: проверить, используется ли этот метод ?
     {
         productId = oi.productId;
         title     = oi.title;
@@ -33,7 +30,8 @@ public class OrderItemDto
         rest      = oi.rest;
         quantity  = oi.quantity;
         cost      = oi.cost;
-    }
+    }*/
+    public OrderItemDto () {}
 //--------- Геттеры и сеттеры (JSON работает с публичными полями!) --------------
 
     //Возвращает true, если количество было изменено.
@@ -44,25 +42,25 @@ public class OrderItemDto
             quantity = newQuantity;
         return ok;
     }
-    public int getQuantity ()    {    return quantity;    }
+    public int getQuantity ()         { return quantity; }
 
-    public double getCost () { return price * quantity; }
-    public void setCost (double cost)    {    this.cost = cost;    }
+    public double getCost ()          { return price * quantity; }
+    public void setCost (double cost) { this.cost = cost; }
 
-    public Long getProductId ()    {    return productId;    }
-    public void setProductId (Long productId)    {    this.productId = productId;    }
+    public Long getProductId ()               { return productId; }
+    public void setProductId (Long productId) { this.productId = productId; }
 
-    public String getCategory ()    {    return category;    }
-    public void setCategory (String category)    {    this.category = category;    }
+    public String getCategory ()              { return category; }
+    public void setCategory (String category) { this.category = category; }
 
-    public String getTitle ()    {    return title;    }
-    public void setTitle (String title)    {    this.title = title;    }
+    public String getTitle ()           { return title; }
+    public void setTitle (String title) { this.title = title; }
 
-    public double getPrice ()    {    return price;    }
-    public void setPrice (double price)    {    this.price = price;    }
+    public double getPrice ()           { return price; }
+    public void setPrice (double price) { this.price = price; }
 
-    public int getRest ()    {    return rest;    }
-    public void setRest (int rest)    {    this.rest = rest;    }
+    public int getRest ()               { return rest; }
+    public void setRest (int rest)      { this.rest = rest; }
 
 //----------------- Другие методы ----------------------------------
 

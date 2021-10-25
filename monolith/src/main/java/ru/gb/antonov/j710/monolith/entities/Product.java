@@ -3,9 +3,8 @@ package ru.gb.antonov.j710.monolith.entities;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
-import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
+import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -68,7 +67,6 @@ public class Product
         return this;
     }
 //----------------- Геттеры и сеттеры -----------------------------------
-
     private void setId (Long id)   {   this.id = id;   }
 
     public boolean setTitle (String title)
@@ -103,8 +101,8 @@ public class Product
         return ok;
     }
 
-    public static String getPriceFieldName ()  {   return "price";   }
-    public static String getTitleFieldName ()  {   return "title";   }
+    public static String getPriceFieldName ()  { return "price"; }
+    public static String getTitleFieldName ()  { return "title"; }
 //-----------------------------------------------------------------------
 
     public static boolean isTitleValid (String title)

@@ -50,6 +50,9 @@ public class Factory
     public static final String ROLE_MANAGER    = "ROLE_MANAGER";
     public static final String PERMISSION_EDIT_PRODUCT = "EDIT_PRODUCTS";
     public static final String PERMISSION_SHOPPING     = "SIMLE_SHOPPING";
+    public static final String AUTHORIZATION_HDR_TITLE = "Authorization";
+    public static final String JWT_PAYLOAD_ROLES       = "roles";
+    public static final String BEARER_ = "Bearer ";
 
     public static final Locale RU_LOCALE = new Locale ("ru", "RU");
     //public static Duration CART_LIFE = Duration.ofDays (30L);
@@ -61,15 +64,6 @@ public class Factory
         System.out.println ("\n************************* Считывание настроек: *************************");
 
         String s;
-/*        CART_PREFIX_ = env.getProperty ("app.cart.prefix");
-        System.out.println ("app.cart.prefix: "+ CART_PREFIX_);
-
-        String s = env.getProperty ("app.cart.life");
-        if (isDecimalNumber (s, !FLOAT_POINT))
-        {
-            CART_LIFE = Duration.ofDays (Long.parseLong (s));
-            System.out.println ("app.cart.life: "+ CART_LIFE);
-        }*/
         if (isDecimalNumber (s = env.getProperty ("views.shop.page.items"), !FLOAT_POINT))
         {
             PROD_PAGESIZE_DEF = Integer.parseInt (s);

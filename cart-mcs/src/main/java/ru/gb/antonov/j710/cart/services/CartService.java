@@ -8,15 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.gb.antonov.j710.cart.CartFactory;
 import ru.gb.antonov.j710.cart.integration.CartToOurUserCallService;
 import ru.gb.antonov.j710.cart.integration.CartToProductCallService;
-import ru.gb.antonov.j710.monolith.Factory;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.ResourceNotFoundException;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.UnableToPerformException;
-import ru.gb.antonov.j710.monolith.entities.Product;
 import ru.gb.antonov.j710.monolith.entities.dtos.CartDto;
 import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
-import java.security.Principal;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
@@ -128,29 +125,26 @@ public class CartService
         public String toString() { return citems.toString(); }
     }
 //------------------------------------------------------------------------
-
     @Transactional @NotNull
-    public CartDto getUsersCartDto (/*Principal principal*/String username, String uuid)
+    public CartDto getUsersCartDto (String username, String uuid)
     {
         CartsEntry ce = getUsersCartEntry (username, uuid);
         return inMemoryCartToDto (ce.imcart, !DRYCART);
     }
 
-    @NotNull
-    private CartsEntry getUsersCartEntry (/*Principal principal*/String username, String uuid)
+    @NotNull private CartsEntry getUsersCartEntry (String username, String uuid)
     {
         String postfix = uuid;
         Duration cartLife = CART_LIFE;
-        if (/*principal*/username != null)
+        if (username != null)
         {
-            postfix = username/*principal.getName()*/;
+            postfix = username;
             cartLife = null;
         }
         return getUsersCartEntry (postfix, cartLife);
     }
 
-    @NotNull
-    private CartsEntry getUsersCartEntry (String postfix, Duration cartLife)
+    @NotNull private CartsEntry getUsersCartEntry (String postfix, Duration cartLife)
     {
         if ((postfix = validateString (postfix, LOGIN_LEN_MIN, LOGIN_LEN_MAX)) == null)
             throw new UnableToPerformException ("getUsersCart(): нет ключа — нет корзины!");
@@ -169,41 +163,14 @@ public class CartService
         return new CartsEntry (key, imcart);
     }
 
-/*    @NotNull
-    private CartsEntry getUsersCartEntry (OurUser ourUser)
-    {
-        if (ourUser == null)
-            throw new UnableToPerformException ("getUsersCart(): нет юзера — нет корзины!");
-
-        String key = cartKeyByLogin (ourUser.getLogin());
-        if (!redisTemplate.hasKey (key))
-        {
-            redisTemplate.opsForValue().set (key, new InMemoryCart());
-        }
-        InMemoryCart imcart = (InMemoryCart) redisTemplate.opsForValue().get(key);
-        if (imcart == null)
-            throw new UnableToPerformException ("getUsersCart(): не могу извлечь корзину пользователя: "
-                                                + ourUser.getLogin());
-        return new CartsEntry (key, imcart);
-    }*/
-
     private void updateCart (CartsEntry cartsEntry)
-    {
-        redisTemplate.opsForValue().set(cartsEntry.key, cartsEntry.imcart);
+    {   redisTemplate.opsForValue().set(cartsEntry.key, cartsEntry.imcart);
     }
 
     @Transactional
-    public int getCartLoad (/*Principal principal*/String username, String uuid)
-    {
-        //return getUsersCartEntry (principal, uuid).imcart.calcLoad();
-        return getUsersCartEntry (username, uuid).imcart.calcLoad();
+    public int getCartLoad (String username, String uuid)
+    {   return getUsersCartEntry (username, uuid).imcart.calcLoad();
     }
-
-/*    @Transactional
-    public double getCartCost (Principal principal, String uuid)
-    {
-        return calcCost (getUsersCartEntry (principal, uuid).imcart.citems);
-    }*/
 
 /** Метод должен вызываться в рамках к.-л. транзакции. */
     public double calcCost (List<CartItem> citems) //TODO: перенести обратно в InMemoryCart.
@@ -219,7 +186,7 @@ public class CartService
     }
 
     @Transactional
-    public void changeProductQuantity (/*Principal principal*/String username, String uuid, long productId, int delta)
+    public void changeProductQuantity (String username, String uuid, long productId, int delta)
     {
 /*  Считаем, что нет смысла создавать новую товарн.позицию для неположительных значений delta. Кроме того, мы не ждём, что нам придёт значение delta == 0.
     Товар не резервируем, при добавлении его в корзину. */
@@ -263,25 +230,17 @@ public class CartService
     }
 
     @Transactional
-    public void removeProductFromCart (String username/*Principal principal*/, String uuid, long productId)
+    public void removeProductFromCart (String username, String uuid, long productId)
     {
-        //CartsEntry ce = getUsersCartEntry (principal, uuid);
         CartsEntry ce = getUsersCartEntry (username, uuid);
         if (ce.imcart.removeItemByProductId (productId))
             updateCart (ce);
     }
 
     @Transactional
-    public void clearCart (String username/*Principal principal*/, String uuid)
-    {
-        //clearCart (getUsersCartEntry (principal, uuid));
-        clearCart (getUsersCartEntry (username, uuid));
+    public void clearCart (String username, String uuid)
+    {   clearCart (getUsersCartEntry (username, uuid));
     }
-
-/*    public void clearCart (String login)
-    {
-        clearCart (getUsersCartEntry (login, DONOT_SET_CART_LIFE));
-    }*/
 
     private void clearCart (CartsEntry ce)
     {
@@ -291,8 +250,7 @@ public class CartService
 
     @Transactional
     public CartDto getUsersDryCartDto (String login)
-    {
-        return inMemoryCartToDto (getUsersCartEntry (login, DONOT_SET_CART_LIFE).imcart, DRYCART);
+    {   return inMemoryCartToDto (getUsersCartEntry (login, DONOT_SET_CART_LIFE).imcart, DRYCART);
     }
 
 /** При формирвоании DTO-шки проверяем остаток товара «на складе». */
@@ -320,7 +278,7 @@ public class CartService
     }
 
     @Transactional
-    public void mergeCarts (/*Principal principal*/String username, String uuid)
+    public void mergeCarts (String username, String uuid)
     {
         String postfixPr = null;
         String postfixUu = uuid == null ? null : validateString (uuid, LOGIN_LEN_MIN, LOGIN_LEN_MAX);
@@ -329,7 +287,7 @@ public class CartService
             throw new UnableToPerformException ("merge carts: не могу получить гостевую корзину.");
 
         if (/*principal*/username != null)
-            postfixPr = validateString (username/*principal.getName()*/, LOGIN_LEN_MIN, LOGIN_LEN_MAX);
+            postfixPr = validateString (username, LOGIN_LEN_MIN, LOGIN_LEN_MAX);
 
         if (postfixPr == null)
             throw new UnableToPerformException ("merge carts: вызов для НЕавторизованного пользователя.");
@@ -376,10 +334,4 @@ public class CartService
             return redisTemplate.delete (getUsersCartEntry (postfix, DONOT_SET_CART_LIFE).key);
         return false;
     }
-
-/*    public int getCartItemsCount (Principal principal, String uuid)
-    {
-        CartsEntry ce = getUsersCartEntry (principal, uuid);
-        return ce.imcart.citems.size();
-    }*/
 }

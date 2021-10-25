@@ -9,12 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import ru.gb.antonov.j710.monolith.entities.OurUser;
-
-@Entity
-@Data
-@NoArgsConstructor
-@Table (name="orders")
+@Entity  @Data  @NoArgsConstructor  @Table (name="orders")
 public class Order
 {
     @Id
@@ -22,9 +17,6 @@ public class Order
     @Column (name="id")
     private Long id;
 
-/*    @ManyToOne
-    @JoinColumn(name="ouruser_id", nullable=false)
-    private OurUser ouruser;*/
     @Column(name="ouruser_id", nullable=false)
     private Long ouruserId;
 
@@ -55,6 +47,7 @@ public class Order
     // а не они нас.
 //----------------------------------------------------------------------
     public List<OrderItem> getOrderItems () { return Collections.unmodifiableList (orderItems); }
+    public void setOrderItems (List<OrderItem> value) {    orderItems = value;   }
 //----------------------------------------------------------------------
     @Override public String toString()
     {   return String.format ("Order:[id:%d, uid:%d, phone:%s, addr:%s]_with_[%s]",

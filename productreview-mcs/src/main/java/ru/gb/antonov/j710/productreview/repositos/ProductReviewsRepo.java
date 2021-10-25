@@ -2,7 +2,6 @@ package ru.gb.antonov.j710.productreview.repositos;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import ru.gb.antonov.j710.monolith.entities.OurUser;
 import ru.gb.antonov.j710.productreview.entities.ProductReview;
 
 import java.util.Collection;

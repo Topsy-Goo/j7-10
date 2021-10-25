@@ -57,9 +57,7 @@ public class CartDto
             {
                 if (oi.getProductId().equals (oitem.getProductId()))
                 {
-
-                    if (oi.changeQuantity (quantity))
-                        /*recalcCost()*/;
+                    /*if (oi.changeQuantity (quantity))  recalcCost();*/
                     ok = true;
                     break;
                 }
@@ -78,7 +76,6 @@ public class CartDto
     }
 
     public String toString()
-    {   return String.format("CartDto:[cst:%.2f, tls:%d, ld:%d, ois:%s]",
-                             cost, titlesCount, load, oitems);
+    {   return String.format("CartDto:[cst:%.2f, tls:%d, ld:%d, ois:%s]", cost, titlesCount, load, oitems);
     }
 }

@@ -6,4 +6,53 @@
 Создан в рамках работы над курсовым проектом «Интерет-магазин» (Java 7). Сначало магазин писался в проекте j7-1, но в какой-то момент преподаватель решил пилить магазин на микросервисы, и, чтобы не потерять всё, магазин получил вторую инкарнацию в виде проекта l7-10.
 
 На базе этого проекта выполнены следующие ДЗ:
+• ДЗ-10
+• ДЗ-11
 
+SELECT * FROM CATEGORIES;
+SELECT * FROM ORDERITEMS;
+SELECT * FROM ORDERS;
+SELECT * FROM ORDERSTATES;
+SELECT * FROM OURUSERS;
+SELECT * FROM ROLES;
+SELECT * FROM OURUSERS_ROLES;
+SELECT * FROM OURPERMISSIONS;
+SELECT * FROM OURUSERS_OURPERMISSIONS;
+SELECT * FROM PRODUCTS;
+SELECT * FROM DELIVERY_TYPES;
+SELECT * FROM PRODUCTREVIEWS;
+
+memurai-cli --scan
+memurai-cli flushall
+docker-compose up
+
+18181/monolith
+8191/cart-mcs
+22854/order-mcs
+11540/productreview-mcs
+5555/gateway	(шлюз)
+3000/static-html
+7777/users-mcs
+
+В магазин:	http://localhost:5555/shop/index.html
+В консоль:	http://localhost:5555/h2-console
+В консоль:	http://localhost:18181/monolith/h2-console
+В консоль:	http://localhost:7777/ouruser/h2-console
+В консоль:	http://localhost:
+
+//TODO: пропала форма для отзыва на товар.
+//TODO: На стр.товара в отзывах вместо имени автора стоит его id. Это временное упрощение нужно пофиксить.
+//TODO: При добавлении товара сверх допустимого количества, юзеру не выдаётся сообщение о причине НЕдобавления товара в корзину. И вообще, выдаётся 500-ка, что как-то неправильно.
+
+
+// Домашнее задание:
+// 1. Замените интеграцию core с корзиной с RestTemplate на WebClient
+
+// 2. * Подумайте как реализовать защиту endpoint'ов
+
+// 3. * Попробуйте разобраться с CORS Policy для Auth Server
+
+Комментарий для след. коммита:
+
+Комментарий для ДЗ:
+	В коде много комментариев, но удалять я их не могу, т.к. они какое-то время будут объяснять/напоминать мне, что где для чего.

@@ -15,7 +15,6 @@ import ru.gb.antonov.j710.order.integration.OrderToProductCallService;
 import ru.gb.antonov.j710.order.repositos.OrderItemRepo;
 import ru.gb.antonov.j710.order.repositos.OrdersRepo;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,9 +35,9 @@ public class OrderService
 
 //---------------------------------------------------------------------------------------
     @Transactional
-    public OrderDetalesDto getOrderDetales (@NotNull Principal principal)
+    public OrderDetalesDto getOrderDetales (String login)
     {
-        CartDto dryCartDto = orderToCartCallService.getDryCartDto(principal.getName());
+        CartDto dryCartDto = orderToCartCallService.getDryCartDto (login);
         OrderDetalesDto odt = new OrderDetalesDto();
         odt.setCartDto (dryCartDto);
         return odt;
@@ -57,12 +56,11 @@ public class OrderService
     @return та же {@code OrderDetalesDto}, но с дозаполненными полями.
 */
     @Transactional
-    public OrderDetalesDto applyOrderDetails (@NotNull OrderDetalesDto detales, @NotNull Principal principal)
+    public OrderDetalesDto applyOrderDetails (@NotNull OrderDetalesDto detales, String username)
     {
-        String username = principal.getName();
         CartDto cartDto   = detales.getCartDto();
         Long ouruserId    = orderToOurUserCallService.userIdByLogin (username);
-        OrderState oState = orderStatesService.getStatePending();
+        OrderState oState = orderStatesService.getOrderStatePending();
 
         Order o = new Order();
         o.setState (oState);
@@ -98,16 +96,16 @@ public class OrderService
 
         OrderItem oi = new OrderItem();
         oi.setOrder(o);
-        oi.setProductId (/*productService.findById */(dto.getProductId()));
+        oi.setProductId (dto.getProductId());
         oi.setBuyingPrice (dto.getPrice());
         oi.setQuantity (dto.getQuantity());
         return oi;
     }
 
     @Transactional
-    public Collection<OrderDto> getUserOrdersAsOrderDtos (Principal principal)
+    public Collection<OrderDto> getUserOrdersAsOrderDtos (String login)
     {
-        Long ouruserId = orderToOurUserCallService.userIdByLogin (principal.getName());
+        Long ouruserId = orderToOurUserCallService.userIdByLogin (login);
         List<Order> orders = ordersRepo.findAllByOuruserId (ouruserId);
         Collection<OrderDto> list = new ArrayList<>((orders != null) ? orders.size() : 0);
 
@@ -151,7 +149,7 @@ public class OrderService
         ProductDto   productDto = orderToProductCallService.getProductById(oi.getProductId());
 
         oidto.setProductId (productDto.getProductId());
-        oidto.setCategory  (productDto.getCategory()/*.getName()*/);
+        oidto.setCategory  (productDto.getCategory());
         oidto.setTitle     (productDto.getTitle());
         oidto.setQuantity  (quantity);
         oidto.setPrice     (price);
