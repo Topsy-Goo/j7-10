@@ -159,6 +159,8 @@ public class OrderService
     }
 
     public List<OrderItem> userOrderItemsByProductId (Long uid, Long pid, Integer stateId)
-    {   return orderItemRepo.userOrderItemsByProductId (uid, pid, stateId);
+    {
+        List<OrderItem> list = orderItemRepo.userOrderItemsByProductId (uid, pid, stateId);
+        return list;
     }
 }

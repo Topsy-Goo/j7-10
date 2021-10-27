@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductReviewDto;
+import ru.gb.antonov.j710.order.entities.OrderItem;
 import ru.gb.antonov.j710.productreview.entities.ProductReview;
 import ru.gb.antonov.j710.productreview.integration.ProductreviewToOrderCallService;
 import ru.gb.antonov.j710.productreview.integration.ProductreviewToOurUserCallService;
@@ -57,7 +58,7 @@ public class ProductReviewService
             if (productReviewsRepo.findByProductIdAndOuruserId (pid, uid).isEmpty())
             {
         //Убеждаемся, что юзер купил этот товар:
-                ok = !productreviewToOrderCallService.userOrderItemsByProductId_Payed (uid, pid).isEmpty();
+                ok = 0 < productreviewToOrderCallService.payedOrderItemsCountByUserIdAndProductId(uid, pid);
             }
         }
         return ok;

@@ -10,6 +10,7 @@ import ru.gb.antonov.j710.monolith.beans.errorhandlers.OurValidationException;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.UnauthorizedAccessException;
 import ru.gb.antonov.j710.monolith.entities.dtos.OrderDetalesDto;
 import ru.gb.antonov.j710.monolith.entities.dtos.OrderDto;
+import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
 import ru.gb.antonov.j710.order.entities.OrderItem;
 import ru.gb.antonov.j710.order.services.OrderService;
 import ru.gb.antonov.j710.order.services.OrderStatesService;
@@ -59,10 +60,11 @@ public class OrderController
 
 
     @GetMapping ("/payed_order_items/{uid}/{pid}")
-    public List<OrderItem> userOrderItemsByProductId (@PathVariable Long uid, @PathVariable Long pid)
+    public Integer payedOrderItemsCountByUserIdAndProductId (@PathVariable Long uid, @PathVariable Long pid)
     {
         Integer stateId = orderStatesService.getOrderStatePayed().getId();
-        return orderService.userOrderItemsByProductId (uid, pid, stateId);
+        List<OrderItem> list = orderService.userOrderItemsByProductId (uid, pid, stateId);
+        return list.size();
     }
 
 /** Проверяем, зарегистрирован ли пользователь и бросаем исключение, если он не зарегистрирован.

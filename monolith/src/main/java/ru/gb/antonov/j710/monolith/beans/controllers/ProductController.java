@@ -21,7 +21,7 @@ import static ru.gb.antonov.j710.monolith.Factory.PROD_PAGESIZE_DEF;
 @RestController
 @RequestMapping ("/api/v1/products")
 @RequiredArgsConstructor
-//@CrossOrigin ("*")
+@CrossOrigin ("*")
 public class ProductController
 {
     private final ProductService productService;
