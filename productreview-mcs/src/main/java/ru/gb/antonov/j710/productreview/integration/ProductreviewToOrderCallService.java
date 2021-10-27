@@ -15,10 +15,9 @@ public class ProductreviewToOrderCallService
         Integer result = null;
         if (uid != null && pid != null)
         {
-            String url = String.format ("/api/v1/order/payed_order_items/%d/%d", uid, pid);
             result = orderServiceWebClient//
                       .get()
-                      .uri (url)
+                      .uri (String.format ("/api/v1/order/payed_order_items/%d/%d", uid, pid))
                       .retrieve()
                       .bodyToMono (Integer.class)
                       .block();

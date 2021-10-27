@@ -28,10 +28,9 @@ public class UserProfileController
         return ourUserService.userIdByLogin (login);
     }
 
-/*    @GetMapping("/")
-    public void defaultResponse ()
+    @GetMapping("/username/{uid}")
+    public String defaultResponse (@PathVariable Long uid)
     {
-        System.err.println("\ndefaultResponse\n");
-        return;
-    }*/
+        return ourUserService.userNameById (uid);
+    }
 }

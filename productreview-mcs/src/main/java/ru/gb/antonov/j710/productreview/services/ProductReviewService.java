@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductReviewDto;
-import ru.gb.antonov.j710.order.entities.OrderItem;
 import ru.gb.antonov.j710.productreview.entities.ProductReview;
 import ru.gb.antonov.j710.productreview.integration.ProductreviewToOrderCallService;
 import ru.gb.antonov.j710.productreview.integration.ProductreviewToOurUserCallService;
@@ -13,6 +12,8 @@ import ru.gb.antonov.j710.productreview.repositos.ProductReviewsRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.gb.antonov.j710.monolith.Factory.STR_EMPTY;
 
 @Service
 @RequiredArgsConstructor
@@ -25,10 +26,18 @@ public class ProductReviewService
     @Transactional
     public List<ProductReviewDto> getReviewListById (Long pid)
     {
-        return productReviewsRepo.findAllByProductId (pid)
+        List<ProductReviewDto> list = productReviewsRepo.findAllByProductId (pid)
                                  .stream()
-                                 .map(ProductReview::toProductReviewDto)
+                                 .map (ProductReview::toProductReviewDto)
                                  .collect (Collectors.toList ());
+        for (ProductReviewDto prd : list)
+        {
+            String name = productreviewToOurUserCallService.userNameByUserId(prd.getUserId());
+            if (name == null)
+                name = STR_EMPTY;
+            prd.setAuthorName (name);
+        }
+        return list;
     }
 
     @Transactional
@@ -58,7 +67,7 @@ public class ProductReviewService
             if (productReviewsRepo.findByProductIdAndOuruserId (pid, uid).isEmpty())
             {
         //Убеждаемся, что юзер купил этот товар:
-                ok = 0 < productreviewToOrderCallService.payedOrderItemsCountByUserIdAndProductId(uid, pid);
+                ok = 0 < productreviewToOrderCallService.payedOrderItemsCountByUserIdAndProductId (uid, pid);
             }
         }
         return ok;

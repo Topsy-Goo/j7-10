@@ -8,6 +8,8 @@ import ru.gb.antonov.j710.monolith.entities.dtos.ProductReviewDto;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import static ru.gb.antonov.j710.monolith.Factory.NO_STRING;
+
 @Data   @NoArgsConstructor   @Entity    @Table (name="productreviews")
 public class ProductReview
 {
@@ -32,7 +34,7 @@ public class ProductReview
 //-----------------------------------------------------------
 
     public ProductReviewDto toProductReviewDto ()
-    {   return new ProductReviewDto (ouruserId, text, createdAt, productId);
+    {   return new ProductReviewDto (ouruserId, NO_STRING, text, createdAt, productId);
     }
 
     @Override public String toString()

@@ -32,6 +32,8 @@ public class OurUserService implements UserDetailsService
     private final OurUserRepo          ourUserRepo;
     private final RoleService          roleService;
     private final OurPermissionService ourPermissionService;
+    public static final String NO_SUCH_LOGIN_ = "Логин не зарегистрирован: ";
+    public static final String NO_SUCH_UID_   = "ID не зарегистрирован: ";
 //-----------------------------------------------------------------------------------
 //TODO: если юзера можно будет удалять из БД, то нужно не забыть удалить и его корзину из Memurai.
 
@@ -39,8 +41,7 @@ public class OurUserService implements UserDetailsService
     public OurUser userByPrincipal (Principal principal)
     {
         String login = (principal != null) ? principal.getName() : STR_EMPTY;
-        String errMsg = "Логин не зарегистрирован: " + login;
-        return findByLogin (login).orElseThrow (()->new UserNotFoundException (errMsg));
+        return findByLogin (login).orElseThrow (()->new UserNotFoundException (NO_SUCH_LOGIN_ + login));
     }
 
     @Transactional
@@ -50,19 +51,26 @@ public class OurUserService implements UserDetailsService
 
     @Transactional
     public Long userIdByLogin (@NotNull String login)
+    {   return findByLogin (login).orElseThrow (()->new UserNotFoundException (NO_SUCH_LOGIN_ + login))
+                                  .getId();
+    }
+
+    @Transactional
+    public @NotNull String userNameById (Long uid)
     {
-        String errMsg = "Логин не зарегистрирован: " + login;
-        return ourUserRepo.findByLogin (login)
-                          .orElseThrow (()->new UserNotFoundException (""))
-                          .getId();
+        String username = STR_EMPTY;
+        if (uid != null)
+            username = ourUserRepo.findById (uid)
+                                  .orElseThrow(()->new UserNotFoundException (NO_SUCH_UID_ + uid))
+                                  .getLogin();
+        return username;
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername (String login)
     {
-        String errMsg = String.format ("Логин (%s) не зарегистрирован.", login);
-        OurUser ourUser = findByLogin(login).orElseThrow(()->new UsernameNotFoundException (errMsg));
+        OurUser ourUser = findByLogin(login).orElseThrow(()->new UsernameNotFoundException (NO_SUCH_LOGIN_+login));
 
         return new User(ourUser.getLogin(),
                         ourUser.getPassword(),
@@ -109,7 +117,8 @@ public class OurUserService implements UserDetailsService
         return new UserInfoDto (u.getLogin(), u.getEmail());
     }
 
-/** Упростим задачу — не станем прописывать разрешения в БД, а просто разрешим редактировать товары админам и суперадминам. */
+/** Редактировать информацию о товарах могут только те пользователи, у которых есть
+разрешение {@code PERMISSION_EDIT_PRODUCT}. */
     @Transactional
     public Boolean canEditProduct (Principal principal)
     {

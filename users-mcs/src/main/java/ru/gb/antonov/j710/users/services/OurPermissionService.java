@@ -40,10 +40,4 @@ public class OurPermissionService
     {
         return findByName (PERMISSION_SHOPPING).orElseThrow (()->new UnableToPerformException (PERMISSION_ABSENT));
     }
-
-///** @throws UnableToPerformException*/
-    //@NotNull public Role getPermission ()
-    //{
-    //    return findByName ("?????").orElseThrow (()->new UnableToPerformException (PERMISSION_ABSENT));
-    //}
 }
