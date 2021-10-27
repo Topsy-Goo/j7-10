@@ -7,92 +7,95 @@ import ru.gb.antonov.j710.monolith.beans.errorhandlers.UnableToPerformException;
 import ru.gb.antonov.j710.monolith.entities.dtos.CartDto;
 import ru.gb.antonov.j710.monolith.entities.dtos.StringResponse;
 
-import java.security.Principal;
 import java.util.UUID;
 
 @RestController
-@RequestMapping ("/api/v1/cart")    //http://localhost:8191/market-cart/api/v1/cart
+@RequestMapping ("/api/v1/cart")    //http://localhost:8191/cart/api/v1/cart
 @RequiredArgsConstructor
-@CrossOrigin ("*")
+//@CrossOrigin ("*")
 public class CartController
 {
     private final CartService cartService;
 //------------------------------------------------------------------------
 
-    @GetMapping({"/uuid"})
+/** Запрос на генерирование UUID. Авторизация НЕ требуется. */
+    @GetMapping({"/generate_uuid"})                             //-
     public StringResponse generateCartUuid ()
     {
         return new StringResponse (UUID.randomUUID().toString());
     }
 
-    @GetMapping ("/{uuid}")
-    public CartDto getProductsCart (@RequestHeader(required = false) String username/*Principal principal*/, @PathVariable String uuid)
+/** Запрос корзины авторизованного пользователя или гостя.
+Авторизация нужна для пользователя, но не нужна для гостя. */
+    @GetMapping ("/{uuid}")                                     //±
+    public CartDto getProductsCart (@RequestHeader(required = false) String username, @PathVariable String uuid)
     {
-        //return cartService.getUsersCartDto (principal, uuid);
         return cartService.getUsersCartDto (username, uuid);
     }
 
-    @GetMapping ("/load/{uuid}")
-    public Integer getCartLoad (@RequestHeader(required = false) String username/*Principal principal*/, @PathVariable String uuid)
+/** Запрос количества товаро в корзине авторизованного пользователя или гостя.
+Авторизация нужна для пользователя, но не нужна для гостя. */
+    @GetMapping ("/load/{uuid}")                                //±
+    public Integer getCartLoad (@RequestHeader(required = false) String username, @PathVariable String uuid)
     {
-        //return cartService.getCartLoad (principal, uuid);
         return cartService.getCartLoad (username, uuid);
     }
 
-/*    @GetMapping ("/cost/{uuid}")
-    public Double getCartCost (Principal principal, @PathVariable String uuid)
-    {
-        return cartService.getCartCost (principal, uuid);
-    }*/
-
-    @GetMapping ("/plus/{productId}/{uuid}")
-    public void increaseProductQuantity (/*Principal principal*/@RequestHeader(required = false) String username, @PathVariable Long productId, @PathVariable String uuid)
+/** Увеличение кол-ва товара в корзине авторизованного пользователя или гостя.
+Авторизация нужна для пользователя, но не нужна для гостя. */
+    @GetMapping ("/plus/{productId}/{uuid}")                    //±
+    public void increaseProductQuantity (@RequestHeader(required = false) String username, @PathVariable Long productId, @PathVariable String uuid)
     {
         if (productId == null)
             throw new UnableToPerformException ("Не могу изменить количество для товара id: "+ productId);
-        //cartService.changeProductQuantity (principal, uuid, productId, 1);
         cartService.changeProductQuantity (username, uuid, productId, 1);
     }
 
-    @GetMapping ("/minus/{productId}/{uuid}")
-    public void decreseProductQuantity (/*Principal principal*/@RequestHeader(required = false) String username, @PathVariable Long productId, @PathVariable String uuid)
+/** Уменьшение кол-ва товара в корзине авторизованного пользователя или гостя.
+Авторизация нужна для пользователя, но не нужна для гостя. */
+    @GetMapping ("/minus/{productId}/{uuid}")                   //±
+    public void decreseProductQuantity (@RequestHeader(required = false) String username, @PathVariable Long productId, @PathVariable String uuid)
     {
         if (productId == null)
             throw new UnableToPerformException ("Не могу изменить количество для товара id: "+ productId);
-        //cartService.changeProductQuantity (principal, uuid, productId, -1);
         cartService.changeProductQuantity (username, uuid, productId, -1);
     }
 
-    @GetMapping ("/remove/{productId}/{uuid}")
-    public void removeProduct (/*Principal principal*/@RequestHeader(required = false) String username, @PathVariable Long productId, @PathVariable String uuid)
+/** Удаление товарной позиции из корзины авторизованного пользователя или гостя.
+Авторизация нужна для пользователя, но не нужна для гостя. */
+    @GetMapping ("/remove/{productId}/{uuid}")                  //±
+    public void removeProduct (@RequestHeader(required = false) String username, @PathVariable Long productId, @PathVariable String uuid)
     {
         if (productId == null)
             throw new UnableToPerformException ("Не могу удалить из корзины товар id: "+ productId);
-        //cartService.removeProductFromCart (principal, uuid, productId);
         cartService.removeProductFromCart (username, uuid, productId);
     }
 
-    @GetMapping ("/clear/{uuid}")
-    public void clearCart (/*Principal principal*/@RequestHeader(required = false) String username, @PathVariable String uuid)
+/** Удаление всех товарных позиций из корзины авторизованного пользователя или гостя.
+Авторизация нужна для пользователя, но не нужна для гостя. */
+    @GetMapping ("/clear/{uuid}")                               //±
+    public void clearCart (@RequestHeader(required = false) String username, @PathVariable String uuid)
     {
-        //cartService.clearCart (principal, uuid);
         cartService.clearCart (username, uuid);
     }
 
-    @GetMapping({"/merge/{uuid}"})
-    public void mergeCarts (/*Principal principal*/@RequestHeader String username, @PathVariable String uuid)
+/** Запрос на слияние корзин авторизованного пользователя и гостя.
+Авторизация нужна.  */
+    @GetMapping({"/merge/{uuid}"})                              //+
+    public void mergeCarts (@RequestHeader String username, @PathVariable String uuid)
     {
-        //this.cartService.mergeCarts (principal, uuid);
         this.cartService.mergeCarts (username, uuid);
     }
 
-    @GetMapping ("/drycart/{username}")
+/** Сейчас вызывается из модуля order-mcs. */
+    @GetMapping ("/drycart/{username}")                         //-
     public CartDto getDryCart (@PathVariable String username)
     {
         return cartService.getUsersDryCartDto (username);
     }
 
-    @GetMapping ("/remove_non_empty/{username}")
+/** Сейчас вызывается из модуля order-mcs. */
+    @GetMapping ("/remove_non_empty/{username}")                //-
     public void removeNonEmptyItems (@PathVariable String username)
     {
         cartService.removeNonEmptyItems (username);

@@ -6,13 +6,12 @@ import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterExcep
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductReviewDto;
 import ru.gb.antonov.j710.productreview.services.ProductReviewService;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping ("/api/v1/productreviews")
 @RequiredArgsConstructor
-@CrossOrigin ("*")
+//@CrossOrigin ("*")
 public class ProductReviewController
 {
     private final ProductReviewService productReviewService;
@@ -20,26 +19,21 @@ public class ProductReviewController
     @GetMapping ("/load_reviews/{id}")
     public List<ProductReviewDto> loadProductReviews (@PathVariable (name="id") Long pid)
     {
-System.out.println("\n****************** ProductReviewController.loadProductReviews << /load_reviews/{"+pid+"} *******************\n");
         if (pid == null)
-        {
-System.err.println("Не могу выполнить поиск для товара id: " + pid);
             throw new BadCreationParameterException ("Не могу выполнить поиск для товара id: " + pid);
-        }
-        List<ProductReviewDto> result = productReviewService.getReviewListById (pid);
-System.out.println("ProductReviewController.loadProductReviews >> "+ result);
-        return result;
+
+        return productReviewService.getReviewListById (pid);
     }
 
     @PostMapping ("/new_review")
-    public void newProductReview (@RequestBody ProductReviewDto reviewDto, Principal principal)
+    public void newProductReview (@RequestBody ProductReviewDto reviewDto, @RequestHeader String username)
     {
-        productReviewService.newProductReview (reviewDto.getProductId(), reviewDto.getText(), principal);
+        productReviewService.newProductReview (reviewDto.getProductId(), reviewDto.getText(), username);
     }
 
     @GetMapping ("/can_review/{pid}")
-    public Boolean canReviews (@PathVariable Long pid, Principal principal)
+    public Boolean canReviews (@PathVariable Long pid, @RequestHeader String username)
     {
-        return productReviewService.canReview (principal, pid);
+        return productReviewService.canReview (username, pid);
     }
 }

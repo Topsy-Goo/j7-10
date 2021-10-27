@@ -1,4 +1,4 @@
-package ru.gb.antonov.j710.users;
+package ru.gb.antonov.j710.users.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,11 +15,13 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static ru.gb.antonov.j710.monolith.Factory.JWT_PAYLOAD_ROLES;
+
 @Component
 public class JwtokenUtil
 {
-    @Value("${jwt.secret}") //< синтаксис ссылается на проперти-файл
-    private String secret;      //< обычно выносится в к-л конфиг (см. yaml)
+    @Value("${jwt.secret}") //< ссылка на проперти-файл
+    private String secret;  //< обычно выносится в к-л конфиг (см. yaml)
 
     @Value("${jwt.lifetime}")
     private Integer lifetime;   //< обычно выносится в к-л конфиг (см. yaml)
@@ -33,7 +35,7 @@ public class JwtokenUtil
                                 .map (GrantedAuthority::getAuthority)
                                 .collect (Collectors.toList());
 
-        claims.put ("roles", roles);
+        claims.put (JWT_PAYLOAD_ROLES, roles);
         Date dateIssued = new Date();
         Date dateExpired = new Date (dateIssued.getTime() + lifetime);
         return Jwts.builder()
@@ -45,31 +47,28 @@ public class JwtokenUtil
                    .compact();
     }
 
-    public String getLoginFromToken (String token)
-    {   return getClaimFromToken(token, Claims::getSubject);
+/** Сейчас используется для получения инф-ции о юзере для его л/к. */
+    public String getLoginFromToken (String jwt)
+    {   return getClaimFromToken(jwt, Claims::getSubject);
     }
 
-    private <T> T getClaimFromToken (String token, Function<Claims, T> claimsResolver)
+/** Сейчас используется для получения инф-ции о юзере для его л/к. */
+    private <T> T getClaimFromToken (String jwt, Function<Claims, T> claimsResolver)
     {
-        Claims claims = getAllClaimsFromToken (token);
+        Claims claims = getAllClaimsFromToken (jwt);
         return claimsResolver.apply (claims);
     }
 
-    private Claims getAllClaimsFromToken(String token)
+/** Сейчас используется для получения инф-ции о юзере для его л/к. */
+    private Claims getAllClaimsFromToken(String jwt)
     {
-        Claims c = Jwts.parser()
-                   .setSigningKey (secret)  //< нужет для проверки подлинности и актуальности токена
-                   .parseClaimsJws (token)
+        return Jwts.parser()
+                   .setSigningKey (secret)
+                   .parseClaimsJws (jwt)
                    .getBody();
-        return c;
     }
 
-    public List<String> getRoles(String token)
-    {
-    /*    return getClaimFromToken (
-                token,
-                (Function<Claims, List<String>>) claims -> claims.get("roles", List.class));*/
-        List<String> list = getClaimFromToken (token, claims -> claims.get ("roles", List.class));
-        return list;
+    public List<String> getRoles (String jwt)
+    {   return getClaimFromToken (jwt, claims -> claims.get (JWT_PAYLOAD_ROLES, List.class));
     }
 }

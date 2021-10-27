@@ -13,7 +13,6 @@ import ru.gb.antonov.j710.monolith.beans.services.ProductService;
 import ru.gb.antonov.j710.monolith.entities.Product;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
-import java.security.Principal;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,7 @@ import static ru.gb.antonov.j710.monolith.Factory.PROD_PAGESIZE_DEF;
 @RestController
 @RequestMapping ("/api/v1/products")
 @RequiredArgsConstructor
-@CrossOrigin ("*")
+//@CrossOrigin ("*")
 public class ProductController
 {
     private final ProductService productService;
@@ -31,7 +30,7 @@ public class ProductController
     private final int pageSize = PROD_PAGESIZE_DEF;
 //--------------------------------------------------------------------
 
-    //http://localhost:18181/api/v1/products/page?p=0
+    //http://localhost:18181/monolith/api/v1/products/page?p=0
     @GetMapping ("/page")
     public Page<ProductDto> getProductsPage (
             @RequestParam (defaultValue="0", name="p", required=false) Integer pageIndex,
@@ -40,9 +39,9 @@ public class ProductController
         return productService.getPageOfProducts (pageIndex, pageSize, filters);
     }
 
-    //http://localhost:18181/api/v1/products/11
+    //http://localhost:18181/monolith/api/v1/products/11
     @GetMapping ("/{id}")
-    public ProductDto findById (@PathVariable Long id, @RequestHeader(required=false) String username, Principal principal)//TODO:убрать username и Principal
+    public ProductDto findById (@PathVariable Long id)
     {
         if (id == null)
             throw new UnableToPerformException ("Не могу выполнить поиск для товара id: "+ id);
@@ -50,7 +49,7 @@ public class ProductController
     }
 //------------------- Редактирование товара ----------------------------
 
-   //http://localhost:18181/api/v1/products   POST
+   //http://localhost:18181/monolith/api/v1/products   POST
     @PostMapping
     public Optional<ProductDto> createProduct (@RequestBody @Validated ProductDto pdto, BindingResult br)
     //  Нельзя изменять последовательность следующих параметров: @Validated ProductDto pdto, BindingResult br
@@ -65,7 +64,7 @@ public class ProductController
         return toOptionalProductDto (p);
     }
 
-   //http://localhost:18181/api/v1/products   PUT
+   //http://localhost:18181/monolith/api/v1/products   PUT
     @PutMapping
     public Optional<ProductDto> updateProduct (@RequestBody ProductDto pdto)
     {
@@ -74,7 +73,7 @@ public class ProductController
         return toOptionalProductDto (p);
     }
 
-    //http://localhost:18181/api/v1/products/delete/11
+    //http://localhost:18181/monolith/api/v1/products/delete/11
     @GetMapping ("/delete/{id}")
     public void deleteProductById (@PathVariable Long id)
     {

@@ -1,21 +1,15 @@
 server:
-  port: 11540
+  port: 7777
   servlet:
-    context-path: /productreview
+    context-path: /ouruser
 
-integration:
+integration: # это для обмена сообщениями между модулями; произволное название параметра; для примера см.UserToProductCallService и UserIntegrationConfig
   product-service:
     url: http://localhost:18181/monolith
-  user-service:
-    url: http://localhost:7777/ouruser
-  cart-service:
-    url: http://localhost:8191/cart
-  order-service:
-    url: http://localhost:22854/order
 
 spring:
   application:
-    name: productreview-service
+    name: ourusers-module
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/postgres
@@ -36,3 +30,7 @@ spring:
 #      enabled: true
 #      settings:
 #        web-allow-others: false
+
+jwt: #этот секрет должен быть единым для всего приложения, но, пока мы не можем так сделать, просто скопируем его из монолита
+  secret: $2a$12$c4HYjryn7vo1bYQfSzkUDe8jPhYIpInbUKZmv5lGnmcyrQPLIWnVu
+  lifetime: 36000000 #10ч

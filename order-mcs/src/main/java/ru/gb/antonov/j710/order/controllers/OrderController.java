@@ -10,53 +10,67 @@ import ru.gb.antonov.j710.monolith.beans.errorhandlers.OurValidationException;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.UnauthorizedAccessException;
 import ru.gb.antonov.j710.monolith.entities.dtos.OrderDetalesDto;
 import ru.gb.antonov.j710.monolith.entities.dtos.OrderDto;
+import ru.gb.antonov.j710.order.entities.OrderItem;
 import ru.gb.antonov.j710.order.services.OrderService;
+import ru.gb.antonov.j710.order.services.OrderStatesService;
 
-import java.security.Principal;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RequestMapping ("/api/v1/order")
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin ("*")
+//@CrossOrigin ("*")
 public class OrderController
 {
-    private final OrderService   orderService;
+    private final OrderService       orderService;
+    private final OrderStatesService orderStatesService;
 //-------------------------------------------------------------------------------------------
 
     @GetMapping ("/details")
-    public OrderDetalesDto getOrderDetales (Principal principal, @RequestHeader String username)
+    public OrderDetalesDto getOrderDetales (@RequestHeader String username)
     {
-        checkRightsToMakeOrder (principal);
-        return orderService.getOrderDetales (principal);
+        checkRightsToMakeOrder (username);
+        return orderService.getOrderDetales (username);
     }
 
     @PostMapping ("/confirm")
     @ResponseStatus (HttpStatus.CREATED)
     public OrderDetalesDto applyOrderDetails (@RequestBody @Validated OrderDetalesDto orderDetalesDto,
-                                              BindingResult br, Principal principal, @RequestHeader String username)
-    {   checkRightsToMakeOrder (principal);
+                                              BindingResult br, @RequestHeader String username)
+    {   checkRightsToMakeOrder (username);
         if (br.hasErrors())
         {   //преобразуем набор ошибок в список сообщений, и пакуем в одно общее исключение (в наше заранее для это приготовленное исключение).
-            throw new OurValidationException (br.getAllErrors().stream()
-                                                .map (ObjectError::getDefaultMessage)
-                                                .collect (Collectors.toList ()));
+            List<String> list = br.getAllErrors()
+                                  .stream()
+                                  .map (ObjectError::getDefaultMessage)
+                                  .collect (Collectors.toList ());
+            throw new OurValidationException (list); //TODO: после распила список не выводится.
         }
-        return orderService.applyOrderDetails (orderDetalesDto, principal);
+        return orderService.applyOrderDetails (orderDetalesDto, username);
+    }
+
+    @GetMapping ("/orders")
+    public Collection<OrderDto> getOrders (@RequestHeader String username)
+    {
+        return orderService.getUserOrdersAsOrderDtos (username);
+    }
+
+
+    @GetMapping ("/payed_order_items/{uid}/{pid}")
+    public List<OrderItem> userOrderItemsByProductId (@PathVariable Long uid, @PathVariable Long pid)
+    {
+        Integer stateId = orderStatesService.getOrderStatePayed().getId();
+        return orderService.userOrderItemsByProductId (uid, pid, stateId);
     }
 
 /** Проверяем, зарегистрирован ли пользователь и бросаем исключение, если он не зарегистрирован.
     @throws UnauthorizedAccessException */
-    private void checkRightsToMakeOrder (Principal principal)
+    private void checkRightsToMakeOrder (String username)
     {
-        if (principal == null)
-            throw new UnauthorizedAccessException ("Заказ может оформить только авторизованый пользователь (It's only authorized user can make order.).");
-    }
-
-    @GetMapping ("/orders")
-    public Collection<OrderDto> getOrders (Principal principal)
-    {
-        return orderService.getUserOrdersAsOrderDtos (principal);
+        if (username == null || username.isBlank())
+            throw new UnauthorizedAccessException (
+            "Заказ может оформить только авторизованый пользователь. (It's only authorized user can make order.)");
     }
 }

@@ -13,4 +13,4 @@ public class GatewayApp
     public static final String BEARER_ = "Bearer ";
 
     public static void main (String[] args) {   SpringApplication.run (GatewayApp.class, args);   }
-}
+}//1

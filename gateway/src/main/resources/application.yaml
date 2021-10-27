@@ -1,0 +1,105 @@
+server:
+  port: 5555
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      enabled: true #< умолчальное значение
+#      globalcors:
+#        corsConfigurations:
+#          '[/**]':
+#            allowedOrigins: "http://localhost:3000"
+#            allowedMethods:
+#              - GET
+#              - POST
+#              - PUT
+      routes:
+#Кажется, взаимное расположение элементов маршрута не имеет значения.
+#   id: id маршрута, id может использоваться при ссылках на этот маршрут из кода приложения.
+#   predicates: предикат, условие; если оно выполнится по отношению к адресу запроса, то маршрут будет применён к этому адресу, — произойдёт маршрутизация.
+#       Path указывает, что должно остаться от адреса после отрезания http://localhost:5555, чтобы маршрут был применён. В Path несколько элементов разделяются запятой; для срабатывания маршрута достаточно соответствия одному из них.
+#   uri: адрес, куда шлюз должен перенаправить запрос.
+#   filters: Фильтры применяются к адресу уже во время преобразования адреса.
+#       StripPrefix - (стд.фильтр шлюза) отрезает указанное кол-во звеньев слева от Path.
+#       PrefixPath - (стд.фильтр шлюза) добавляет указ.строку к Path слева, чтобы из "/products/**" получилось "/api/vi/products/**". В этот параметр нужно также включить и server:servlet:context-path, если он задан, того модуля, на который перенаправляется запрос. Значение context-path в PrefixPath должно находиться слева; оно потом само где-то отрежется по дороге к контроллеру. (Потом всё это дело добавиться справа к uri, чтобы получилось http://localhost:18181/<context-path>/api/vi/products/**.)
+#       GatewayAuthFilter - класс (содержащий пользовательский фильтр), используемый в данном маршруте. (У нас почти все маршруты используют этот фильтр, но могут использовать разные фильтры, или не использовать пользовательские фильтры вовсе. Этот фильтр добавляет к запросу заголовок, содержащий имя юзера и его роли/разрешения.)
+
+#Преобразуем http://localhost:5555/market/products/**  >>  http://localhost:18181/monolith/api/v1/products/**
+        - id: monolith
+          predicates:
+            - Path=/market/products/**
+          uri: http://localhost:18181/
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/monolith/api/v1   # /monolith это server:servlet:context-path
+            - GatewayAuthFilter
+#Преобразуем http://localhost:5555/market/user_profile/**  >>  http://localhost:7777/ouruser/api/v1/user_profile/**
+#Преобразуем http://localhost:5555/market/auth/**          >>  http://localhost:7777/ouruser/api/v1/auth/**
+        - id: ouruser-module
+          predicates:
+            - Path=/market/user_profile/**,/market/auth/**
+          uri: http://localhost:7777/
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/ouruser/api/v1   # /ouruser это server:servlet:context-path
+            - GatewayAuthFilter
+#Преобразуем http://localhost:5555/market/cart/**  >>  http://localhost:8191/cart/api/v1/cart/**
+        - id: cart-service
+          predicates:
+            - Path=/market/cart/**
+          uri: http://localhost:8191/
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/cart/api/v1   # /cart это server:servlet:context-path
+            - GatewayAuthFilter
+#Преобразуем http://localhost:5555/market/order/**  >>  http://localhost:22854/order/api/v1/order/**
+        - id: order-service
+          predicates:
+            - Path=/market/order/**
+          uri: http://localhost:22854/
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/order/api/v1   # /order это server:servlet:context-path
+            - GatewayAuthFilter
+#Преобразуем http://localhost:5555/market/productreviews/**  >>  http://localhost:11540/productreview/api/v1/productreviews/**
+        - id: productreview-service
+          predicates:
+            - Path=/market/productreviews/**
+          uri: http://localhost:11540/
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/productreview/api/v1   # /productreview это server:servlet:context-path
+            - GatewayAuthFilter
+#Преобразуем http://localhost:5555/shop/**  >>  http://localhost:7777/market/** - отдавая страницы через шлюз удалось «погасить» CORS-ошибки, связанные с обращением к модулю ststic-html.
+        - id: static-html
+          predicates:
+            - Path=/shop/**
+          uri: http://localhost:3000/
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/market   # /market это server:servlet:context-path
+
+#Преобразуем http://localhost:5555/h2-console/**  >>  http://localhost:????/monolith/h2-console/**
+#        - id: h2console
+#          predicates:
+#            - Path=/h2-console/**
+#          uri: http://localhost:????/
+#          filters:
+#            - StripPrefix=1
+#            - PrefixPath=/monolith
+#            - GatewayAuthFilter
+
+jwt: #этот секрет должен быть единым для всего приложения. Сейчас копия этого параметра есть у модуля ourusers-module.
+  secret: $2a$12$c4HYjryn7vo1bYQfSzkUDe8jPhYIpInbUKZmv5lGnmcyrQPLIWnVu
+  lifetime: 36000000 #10ч
+
+logging:
+  level:
+#    reactor:
+#      netty: TRACE
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE

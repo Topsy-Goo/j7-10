@@ -10,7 +10,7 @@ import java.security.Principal;
 @RequestMapping ("/api/v1/user_profile")
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin ("*")
+//@CrossOrigin ("*")
 public class UserProfileController
 {
     private final OurUserService ourUserService;
@@ -23,8 +23,15 @@ public class UserProfileController
     }
 
     @GetMapping ("/userid/{login}")
-    public Long getUserId (/*Principal principal, */@PathVariable String login)
+    public Long getUserId (Principal principal, @PathVariable String login)
     {
         return ourUserService.userIdByLogin (login);
     }
+
+/*    @GetMapping("/")
+    public void defaultResponse ()
+    {
+        System.err.println("\ndefaultResponse\n");
+        return;
+    }*/
 }

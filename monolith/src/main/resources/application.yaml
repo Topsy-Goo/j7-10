@@ -1,51 +1,35 @@
 server:
   port: 18181
   servlet:
-    context-path: /market-monolith
+    context-path: /monolith # Если этот параметр указываем, то его нужно включить в маршрут(ы) в PrefixPath. Например: «- PrefixPath=/monolith/api/v1».
 
-spring: # < конфигурируем спринг-окружение
-
-  datasource: # < спринговый стандартный бин для подключения к базе данных
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:mydatabase;MODE=PostgreSQL
-    username: sa
-    password:
-#    driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://localhost:5433/postgres
-#    username: postgres
-#    password: postgres
-
-  jpa: # < указываем реализацию JPA (по умолчанию будет подключен хибер-т)
-    show-sql: true # < показывать сгенерированные запросы хибер-та
+spring:
+  application:
+    name: monolith-module
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: postgres
+    password: postgres
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:mydatabase;MODE=PostgreSQL
+#    username: sa
+#    password:
+  jpa:
+    show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect #org.hibernate.dialect.PostgreSQL94Dialect #
-    open-in-view: false #(j7-10)
-
-  h2: # < необязательная настройка БД (Спринг дружит с h2 и позволяет делать такую настройку)
-    console:
-      enabled: true # < ?кажется, поддержка консольного ввода для работы с БД?
-      settings:
-        web-allow-others: false # < закрыть доступ к этой консоли из других WEB-приложений (только из браузера можно)
-
-jwt:
-  secret: $2a$12$c4HYjryn7vo1bYQfSzkUDe8jPhYIpInbUKZmv5lGnmcyrQPLIWnVu
-  lifetime: 36000000 #10ч
-
-integration:  #(j7-10)(произволное название параметра)(см. ru.gb.antonov.j710.monolith.beans.integration.CartServiceIntegration)
-  cart-service:
-    url: http://localhost:8191/market-cart #URL строится из локалхост, server:port (соотв-го модуля) и server:servlet:context-path (соотв-го модуля).
-  order-service:
-    url: http://localhost:22854/market-order
-  productreview-service:
-    url: http://localhost:11540/market-productreview
+        dialect: org.hibernate.dialect.PostgreSQL94Dialect #org.hibernate.dialect.H2Dialect #
+    open-in-view: false
+#  h2:
+#    console:
+#      enabled: true
+#      settings:
+#        web-allow-others: false
 
 # ___________________________________________________________
 # Следующие свойства загружаются на «этапе @PostConstruct».
 app:
-#  cart:
-#    prefix: 'GB_RU_J7_WEBSHOP_V2_'
-#    life: 130
   product:
     price:
       min: 0.01

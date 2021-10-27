@@ -18,65 +18,25 @@
 		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 
-
-<!--	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>ru.gb.antonov</groupId>
-				<artifactId>monolith</artifactId>
-				<exclusions>
-					<exclusion>
-					</exclusion>
-					<exclusion>
-
-					</exclusion>
-					<exclusion>
-
-					</exclusion>
-				</exclusions>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>-->
-
-
 	<dependencies>
-
-		<dependency>	<!-- поддержка jdbc-драйвера H2 ("H2 Database Engine"). См.также YAML-файл. -->
+<!--		<dependency>	&lt;!&ndash; Это быстро стартует и не отжирает 4Гб ОЗУ. См.также YAML-файл в (?каком?) модуле. &ndash;&gt;
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>	<!-- Система миграции. Позволит указывать, какое наполнение базы данных нам может пригодиться. В ресурсах нужна папка db\migration (не db.migration). -->
+		<dependency>	&lt;!&ndash; Кажется, не нужна при использовании flyway из docker-а. &ndash;&gt;
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+		</dependency>-->
+		<dependency>	<!-- Это у нас работает из docker-а. См.также YAML-файл в (?каком?) модуле. -->
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
 		</dependency>
-
 		<dependency>	<!-- Позволяет упростить работу с хибер-том на уровне Спринга. См.также YAML-файл. -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<dependency>	<!-- для организации авторизации при пом.(чего?) -->
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-			<!-- Также автоматически конфигурирет умолчального пользователя user; его (одноразовый?) пароль создаётся генериться при старте приложения.  -->
-		</dependency>
-<!--		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>-->
-
-		<dependency>	<!-- Библиотека для генерации кода: геттеры, сеттеры, конструкторы и др. -->
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>	<!-- Помогает собирать и парсить JWT. -->
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
-			<version>0.9.1</version>
-		</dependency>
 	</dependencies>
-
 </project>
 <!-- ru.gb.antonov.j710.monolith -->

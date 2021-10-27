@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.ErrorMessage;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.OurValidationException;
 import ru.gb.antonov.j710.users.services.OurUserService;
-import ru.gb.antonov.j710.users.JwtokenUtil;
+import ru.gb.antonov.j710.users.utils.JwtokenUtil;
 import ru.gb.antonov.j710.users.entities.OurUser;
 import ru.gb.antonov.j710.monolith.entities.dtos.AuthRequest;
 import ru.gb.antonov.j710.monolith.entities.dtos.AuthResponse;
@@ -34,7 +34,7 @@ public class AuthController
     private final JwtokenUtil    jwtokenUtil;
     private final AuthenticationManager authenticationManager;
 
-    //http://localhost:18181/api/v1/auth/login
+    //http://localhost:7777/ouruser/api/v1/auth/login
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser (@RequestBody AuthRequest authRequest)
     {
@@ -43,7 +43,7 @@ public class AuthController
         return inlineAuthentificateAndResponseWithJwt (login, password);
     }
 
-    //http://localhost:18181/api/v1/auth/register
+    //http://localhost:7777/ouruser/api/v1/auth/register
     @PostMapping ("/register")
     public ResponseEntity<?> registerNewUser (@RequestBody @Validated RegisterRequest registerRequest,
                                               BindingResult br)
@@ -78,6 +78,7 @@ public class AuthController
 
     private ResponseEntity<?> inlineAuthentificateAndResponseWithJwt (String login, String password)
     {
+    //Сначала авторизацию проверяет система безопасности:
         try
         {   authenticationManager.authenticate (new UsernamePasswordAuthenticationToken (login, password));
         }
@@ -88,9 +89,10 @@ public class AuthController
         }
         catch (Exception e){e.printStackTrace();}
 
+    //Если СБ признала юзера «правильным», то генерируем JWT и отдаём его браузеру:
         UserDetails userDetails = ourUserService.loadUserByUsername (login);
-        String token = jwtokenUtil.generateJWToken (userDetails);
+        String jwt = jwtokenUtil.generateJWToken (userDetails);
 
-        return ResponseEntity.ok (new AuthResponse (token));
+        return ResponseEntity.ok (new AuthResponse (jwt));
     }
 }

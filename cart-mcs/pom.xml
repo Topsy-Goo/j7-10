@@ -18,16 +18,10 @@
 		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 
-<!--	<dependencyManagement>
-		<dependencies>
-
-		</dependencies>
-	</dependencyManagement>-->
-
 	<dependencies>
 		<dependency>
 			<groupId>ru.gb.antonov</groupId>
-			<artifactId>monolith</artifactId>
+			<artifactId>users-mcs</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 			<exclusions>
@@ -43,16 +37,18 @@
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
 				</exclusion>
+<!--				<exclusion>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+				</exclusion>-->
+				<exclusion>
+					<groupId>io.jsonwebtoken</groupId>
+					<artifactId>jjwt</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>	<!-- Библиотека для генерации кода: геттеры, сеттеры, конструкторы и др. -->
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-	<!-- Для использования следующих двух зависимостей требуется установка Redis'а (Linux only)
-		 или Memorai (аналог Redis'а для Windows). -->
-		<dependency>	<!-- Аналог Spring data под кэшь Radis'а. -->
+	<!-- Для использования следующих двух зависимостей требуется установка Redis'а (Linux only) или Memorai (аналог Redis'а для Windows). -->
+		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-redis</artifactId>
 		</dependency>
@@ -65,4 +61,3 @@
 	</dependencies>
 
 </project>
-<!-- ru.gb.antonov.j710.cart -->

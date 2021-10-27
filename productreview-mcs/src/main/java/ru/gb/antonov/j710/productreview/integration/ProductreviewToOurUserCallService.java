@@ -1,4 +1,4 @@
-package ru.gb.antonov.j710.order.integration;
+package ru.gb.antonov.j710.productreview.integration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -6,17 +6,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 @RequiredArgsConstructor
-public class OrderToOurUserCallService
+public class ProductreviewToOurUserCallService
 {
     private final WebClient ourUserServiceWebClient;
 
     public Long userIdByLogin (String login)
     {
-        Long result = ourUserServiceWebClient.get()
+        return ourUserServiceWebClient.get()
                                       .uri ("/api/v1/user_profile/userid/" + login)
                                       .retrieve()
                                       .bodyToMono (Long.class)
-                                      .block(/*Duration.ofSeconds (10)*/);
-        return result;
+                                      .block();
     }
 }
