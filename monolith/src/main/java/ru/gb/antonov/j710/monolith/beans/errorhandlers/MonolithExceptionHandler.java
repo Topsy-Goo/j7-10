@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 помощью необрабатываемые исключения «превращаются» в сообщения и отправляются клиенту.
 */
 @ControllerAdvice   //< наследуется от @Component
-public class GlobalExceptionHandler
+public class MonolithExceptionHandler
 {
     @ExceptionHandler
     public ResponseEntity<?> catchResouceNotFoundException (ResourceNotFoundException e)

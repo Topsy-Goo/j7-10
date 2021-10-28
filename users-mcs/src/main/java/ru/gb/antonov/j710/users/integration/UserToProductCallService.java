@@ -13,10 +13,13 @@ public class UserToProductCallService
 
     public ProductDto getProductById (Long pid)
     {
-        return productServiceWebClient.get()
-                                      .uri ("/api/v1/products/" + pid)
-                                      .retrieve()
-                                      .bodyToMono (ProductDto.class)
-                                      .block();
+        return productServiceWebClient
+                .get()
+                .uri ("/api/v1/products/" + pid)
+                //.header ("header_name1", new String[]{"value1","value2","…"}) < можно добавить заголовки, и получатель вынет из них строковые данные при пом. @RequestHeader String header_name1.
+                //.header ("header_name2", "…")
+                .retrieve()
+                .bodyToMono (ProductDto.class)
+                .block();
     }
-}//1
+}

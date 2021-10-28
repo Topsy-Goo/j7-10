@@ -8,9 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.OurValidationException;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.UnauthorizedAccessException;
-import ru.gb.antonov.j710.monolith.entities.dtos.OrderDetalesDto;
-import ru.gb.antonov.j710.monolith.entities.dtos.OrderDto;
-import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
+import ru.gb.antonov.j710.order.dtos.OrderDetalesDto;
+import ru.gb.antonov.j710.order.dtos.OrderDto;
 import ru.gb.antonov.j710.order.entities.OrderItem;
 import ru.gb.antonov.j710.order.services.OrderService;
 import ru.gb.antonov.j710.order.services.OrderStatesService;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 @RequestMapping ("/api/v1/order")
 @RestController
 @RequiredArgsConstructor
-//@CrossOrigin ("*")
+@CrossOrigin ("*")
 public class OrderController
 {
     private final OrderService       orderService;
@@ -30,7 +29,7 @@ public class OrderController
 //-------------------------------------------------------------------------------------------
 
     @GetMapping ("/details")
-    public OrderDetalesDto getOrderDetales (@RequestHeader String username)
+    public OrderDetalesDto getOrderDetales (@RequestHeader String username) //в параметр username попадает значение заголовка username; если имя параметра отличается от имени заголовка, то нужно указать, из какого заголовка папраметр должен брать значение
     {
         checkRightsToMakeOrder (username);
         return orderService.getOrderDetales (username);
@@ -43,11 +42,9 @@ public class OrderController
     {   checkRightsToMakeOrder (username);
         if (br.hasErrors())
         {   //преобразуем набор ошибок в список сообщений, и пакуем в одно общее исключение (в наше заранее для это приготовленное исключение).
-            List<String> list = br.getAllErrors()
-                                  .stream()
-                                  .map (ObjectError::getDefaultMessage)
-                                  .collect (Collectors.toList ());
-            throw new OurValidationException (list); //TODO: после распила список не выводится.
+            List<String> list = br.getAllErrors().stream()
+                                  .map (ObjectError::getDefaultMessage).collect (Collectors.toList());
+            throw new OurValidationException (list);
         }
         return orderService.applyOrderDetails (orderDetalesDto, username);
     }
@@ -72,7 +69,6 @@ public class OrderController
     private void checkRightsToMakeOrder (String username)
     {
         if (username == null || username.isBlank())
-            throw new UnauthorizedAccessException (
-            "Заказ может оформить только авторизованый пользователь. (It's only authorized user can make order.)");
+            throw new UnauthorizedAccessException ("Заказ может оформить только авторизованый пользователь. (It's only authorized user can make order.)");
     }
 }

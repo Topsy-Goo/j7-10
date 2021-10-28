@@ -1,15 +1,17 @@
-package ru.gb.antonov.j710.monolith.entities.dtos;
+package ru.gb.antonov.j710.order.dtos;
+
+import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
 
 import java.util.List;
 
 public class OrderDto
 {
-    private Long orderNumber;
+    private Long   orderNumber;
     private String address;
     private String phone;
     private double cost;    //< общая стоимость выбранных/купленных товаров
     private List<OrderItemDto> oitems;
-    private int load;       //< общее количество единиц выбранных/купленных товаров
+    private int    load;    //< общее количество единиц выбранных/купленных товаров
     private String state;
 
     public OrderDto(){}

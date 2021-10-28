@@ -3,7 +3,7 @@ package ru.gb.antonov.j710.productreview.entities;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import ru.gb.antonov.j710.monolith.entities.dtos.ProductReviewDto;
+import ru.gb.antonov.j710.productreview.dtos.ProductReviewDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

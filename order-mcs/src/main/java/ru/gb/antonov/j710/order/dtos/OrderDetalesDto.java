@@ -1,6 +1,7 @@
-package ru.gb.antonov.j710.monolith.entities.dtos;
+package ru.gb.antonov.j710.order.dtos;
 
 import org.hibernate.validator.constraints.Length;
+import ru.gb.antonov.j710.monolith.entities.dtos.CartDto;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;

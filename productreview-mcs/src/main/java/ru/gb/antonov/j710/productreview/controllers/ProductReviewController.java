@@ -3,7 +3,7 @@ package ru.gb.antonov.j710.productreview.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
-import ru.gb.antonov.j710.monolith.entities.dtos.ProductReviewDto;
+import ru.gb.antonov.j710.productreview.dtos.ProductReviewDto;
 import ru.gb.antonov.j710.productreview.services.ProductReviewService;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.gb.antonov.j710.monolith.entities.dtos;
+package ru.gb.antonov.j710.users.dtos;
 
 
 public class AuthResponse

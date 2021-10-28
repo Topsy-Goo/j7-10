@@ -10,6 +10,7 @@ public class OrderItemDto
     private int quantity;
     private double cost;
 //------------------------------------------------------------------
+/** Метод меняет только те поля, для которых был передан не null. */
     public OrderItemDto (Long productId, String category, String title, Double price,
                          Integer rest, Integer quantity, Double cost)
     {

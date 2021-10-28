@@ -1,4 +1,4 @@
-package ru.gb.antonov.j710.monolith.entities.dtos;
+package ru.gb.antonov.j710.users.dtos;
 
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;

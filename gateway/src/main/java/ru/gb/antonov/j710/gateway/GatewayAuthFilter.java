@@ -1,6 +1,7 @@
 package ru.gb.antonov.j710.gateway;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.lang.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -11,8 +12,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.gb.antonov.j710.gateway.GatewayApp.*;
 
@@ -66,15 +69,18 @@ public class GatewayAuthFilter extends AbstractGatewayFilterFactory<GatewayAuthF
         return result;
     }
 
-/** создаём для сообщения заголовок, с которым оно будет передаваться между частями приложения */
+/** Добавляем в сообщение заголовки, с которыми оно будет передаваться между частями приложения.<p>
+Для доступа к полям JWT используется объект типа {@code Claims}; к стандартным полям доступ дают спец.
+методы, а для доступа к нестандартным полям используется метод {@code get()}.<p>
+Изменение запроса начинается с метода {@code mutate()}, а заканчивается методом {@code build()}.*/
     private void populateRequestWithHeaders (ServerWebExchange srvrWebExchange, String jwt)
     {
         Claims claims = gatewayJwtUtil.getAllClaimsFromJWToken (jwt);
         srvrWebExchange.getRequest()
-                       .mutate()
-                       .header (INAPP_HDR_FIELD_LOGIN, claims.getSubject()) //< стд.поле jwt : sub
-                       .header (INAPP_HDR_FIELD_ROLES, jwtRolesToStringArray (claims.get (JWT_PAYLOAD_ROLES))) //< для всех нестандартных полей — доступ по их имени
-                       .build();
+            .mutate()
+            .header (INAPP_HDR_FIELD_LOGIN, claims.getSubject()) //< стд.поле jwt : sub
+            .header (INAPP_HDR_FIELD_ROLES, jwtRolesToStringArray (claims.get (JWT_PAYLOAD_ROLES)))
+            .build();
     }
 
 /** В JWT "roles" это List<String> (см.JwtokenUtil.generateJWToken()). */
@@ -83,9 +89,8 @@ public class GatewayAuthFilter extends AbstractGatewayFilterFactory<GatewayAuthF
         String[] result = new String[]{};
         if (value instanceof Collection && ((Collection<?>) value).size() > 0)
         {
-/*          List<String> roles = ((List<?>) value).stream().map(Object::toString).collect(Collectors.toList());     < правильный путь (без «желтизны»), но долгий */
-            Collection<String> roles = (Collection<String>) value; //< быстрый путь
-            result = roles.toArray (result);
+            result = ((List<?>) value).stream().map (Object::toString)
+                                      .collect (Collectors.toList()).toArray (result);
         }
         return result;
     }

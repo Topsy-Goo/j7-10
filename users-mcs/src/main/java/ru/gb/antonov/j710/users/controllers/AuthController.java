@@ -16,9 +16,9 @@ import ru.gb.antonov.j710.monolith.beans.errorhandlers.OurValidationException;
 import ru.gb.antonov.j710.users.services.OurUserService;
 import ru.gb.antonov.j710.users.utils.JwtokenUtil;
 import ru.gb.antonov.j710.users.entities.OurUser;
-import ru.gb.antonov.j710.monolith.entities.dtos.AuthRequest;
-import ru.gb.antonov.j710.monolith.entities.dtos.AuthResponse;
-import ru.gb.antonov.j710.monolith.entities.dtos.RegisterRequest;
+import ru.gb.antonov.j710.users.dtos.AuthRequest;
+import ru.gb.antonov.j710.users.dtos.AuthResponse;
+import ru.gb.antonov.j710.users.dtos.RegisterRequest;
 
 import java.security.Principal;
 import java.util.Optional;

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
-import ru.gb.antonov.j710.monolith.entities.dtos.ProductReviewDto;
+import ru.gb.antonov.j710.productreview.dtos.ProductReviewDto;
 import ru.gb.antonov.j710.productreview.entities.ProductReview;
 import ru.gb.antonov.j710.productreview.integration.ProductreviewToOrderCallService;
 import ru.gb.antonov.j710.productreview.integration.ProductreviewToOurUserCallService;

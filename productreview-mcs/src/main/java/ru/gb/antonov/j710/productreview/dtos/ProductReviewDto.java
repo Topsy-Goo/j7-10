@@ -1,4 +1,4 @@
-package ru.gb.antonov.j710.monolith.entities.dtos;
+package ru.gb.antonov.j710.productreview.dtos;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
