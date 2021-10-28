@@ -1,7 +1,6 @@
 package ru.gb.antonov.j710.gateway;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.lang.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,10 +75,10 @@ public class GatewayAuthFilter extends AbstractGatewayFilterFactory<GatewayAuthF
     {
         Claims claims = gatewayJwtUtil.getAllClaimsFromJWToken (jwt);
         srvrWebExchange.getRequest()
-            .mutate()
-            .header (INAPP_HDR_FIELD_LOGIN, claims.getSubject()) //< стд.поле jwt : sub
-            .header (INAPP_HDR_FIELD_ROLES, jwtRolesToStringArray (claims.get (JWT_PAYLOAD_ROLES)))
-            .build();
+                       .mutate()
+                       .header(INAPP_HDR_LOGIN, claims.getSubject()) //< стд.поле jwt : sub
+                       .header(INAPP_HDR_ROLES, jwtRolesToStringArray(claims.get(JWT_PAYLOAD_ROLES)))
+                       .build();
     }
 
 /** В JWT "roles" это List<String> (см.JwtokenUtil.generateJWToken()). */

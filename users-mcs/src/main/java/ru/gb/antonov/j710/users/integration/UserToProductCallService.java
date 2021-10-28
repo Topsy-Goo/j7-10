@@ -20,6 +20,7 @@ public class UserToProductCallService
                 //.header ("header_name2", "…")
                 .retrieve()
                 .bodyToMono (ProductDto.class)
+                //.toBodilessEntity()  < для запросов, которые не ждут объект в ответе.
                 .block();
     }
 }

@@ -6,7 +6,7 @@ spring:
     name: gateway-service
   cloud:
     gateway:
-      enabled: true #< умолчальное значение
+#      enabled: true #< умолчальное значение
 #      globalcors:
 #        corsConfigurations:
 #          '[/**]':
@@ -15,6 +15,7 @@ spring:
 #              - GET
 #              - POST
 #              - PUT
+#            allowedHeaders: "*" # шлюз пропускает все заголовки, которые через него проходят
       routes:
 #Кажется, взаимное расположение элементов маршрута не имеет значения.
 #   id: id маршрута, id может использоваться при ссылках на этот маршрут из кода приложения.

@@ -36,7 +36,7 @@ public class Factory
     public static final int ORDERSTATE_FRIENDLYNAME_LEN = 64;
 
     public static final String STR_EMPTY = "";
-    public static final String BEARER_   = "Bearer ";
+    public static final String BEARER_   = "Bearer ";  //< должно совпадать с одноимённой переменной в gateway.GatewayApp
     public static final String PRODUCT_PRICE_FIELD_NAME = Product.getPriceFieldName();
     public static final String PRODUCT_TITLE_FIELD_NAME = Product.getTitleFieldName();
     public static final String ORDERSTATE_NONE     = "NONE";
@@ -50,8 +50,10 @@ public class Factory
     public static final String ROLE_MANAGER    = "ROLE_MANAGER";
     public static final String PERMISSION_EDIT_PRODUCT = "EDIT_PRODUCTS";
     public static final String PERMISSION_SHOPPING     = "SIMLE_SHOPPING";
-    public static final String AUTHORIZATION_HDR_TITLE = "Authorization";
-    public static final String JWT_PAYLOAD_ROLES       = "roles";
+    public static final String AUTHORIZATION_HDR_TITLE = "Authorization";  //< должно совпадать с одноимённой переменной в gateway.GatewayApp
+    public static final String JWT_PAYLOAD_ROLES = "roles";    //< должно совпадать с одноимённой переменной в gateway.GatewayApp
+    public static final String INAPP_HDR_LOGIN   = "username"; //< должно совпадать с одноимённой переменной в gateway.GatewayApp
+    public static final String INAPP_HDR_ROLES   = "roles";    //< должно совпадать с одноимённой переменной в gateway.GatewayApp
 
     public static final MultiValueMap<String, String> NO_FILTERS = null;
     public static final Locale RU_LOCALE = new Locale ("ru", "RU");

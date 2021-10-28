@@ -34,7 +34,7 @@
 	</properties>
 
 	<dependencies>
-        <dependency>	<!-- Даётся тому, кто делает запросы. -->
+        <dependency>	<!-- Для межмодульных запросов с использованием WebClient. -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>

@@ -23,14 +23,14 @@ public class UserProfileController
     }
 
     @GetMapping ("/userid/{login}")
-    public Long getUserId (Principal principal, @PathVariable String login)
+    public Long getUserIdByLogin (@PathVariable String login)
     {
         return ourUserService.userIdByLogin (login);
     }
 
     @GetMapping("/username/{uid}")
-    public String defaultResponse (@PathVariable Long uid)
+    public String userNameByUserId (@PathVariable Long uid)
     {
-        return ourUserService.userNameById (uid);
+        return ourUserService.userNameByUserId (uid);
     }
 }

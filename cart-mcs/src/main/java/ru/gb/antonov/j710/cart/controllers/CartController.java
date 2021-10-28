@@ -9,6 +9,8 @@ import ru.gb.antonov.j710.monolith.entities.dtos.StringResponse;
 
 import java.util.UUID;
 
+import static ru.gb.antonov.j710.monolith.Factory.INAPP_HDR_LOGIN;
+
 @RestController
 @RequestMapping ("/api/v1/cart")    //http://localhost:8191/cart/api/v1/cart
 @RequiredArgsConstructor
@@ -28,7 +30,9 @@ public class CartController
 /** Запрос корзины авторизованного пользователя или гостя.
 Авторизация нужна для пользователя, но не нужна для гостя. */
     @GetMapping ("/{uuid}")                                     //±
-    public CartDto getProductsCart (@RequestHeader(required = false) String username, @PathVariable String uuid)
+    public CartDto getProductsCart (
+                        @RequestHeader(name= INAPP_HDR_LOGIN, required = false) String username,
+                        @PathVariable String uuid)
     {
         return cartService.getUsersCartDto (username, uuid);
     }
@@ -36,7 +40,9 @@ public class CartController
 /** Запрос количества товаро в корзине авторизованного пользователя или гостя.
 Авторизация нужна для пользователя, но не нужна для гостя. */
     @GetMapping ("/load/{uuid}")                                //±
-    public Integer getCartLoad (@RequestHeader(required = false) String username, @PathVariable String uuid)
+    public Integer getCartLoad (
+                        @RequestHeader(name= INAPP_HDR_LOGIN, required = false) String username,
+                        @PathVariable String uuid)
     {
         return cartService.getCartLoad (username, uuid);
     }
@@ -44,7 +50,9 @@ public class CartController
 /** Увеличение кол-ва товара в корзине авторизованного пользователя или гостя.
 Авторизация нужна для пользователя, но не нужна для гостя. */
     @GetMapping ("/plus/{productId}/{uuid}")                    //±
-    public void increaseProductQuantity (@RequestHeader(required = false) String username, @PathVariable Long productId, @PathVariable String uuid)
+    public void increaseProductQuantity (
+                        @RequestHeader(name= INAPP_HDR_LOGIN, required = false) String username,
+                        @PathVariable Long productId, @PathVariable String uuid)
     {
         if (productId == null)
             throw new UnableToPerformException ("Не могу изменить количество для товара id: "+ productId);
@@ -54,7 +62,9 @@ public class CartController
 /** Уменьшение кол-ва товара в корзине авторизованного пользователя или гостя.
 Авторизация нужна для пользователя, но не нужна для гостя. */
     @GetMapping ("/minus/{productId}/{uuid}")                   //±
-    public void decreseProductQuantity (@RequestHeader(required = false) String username, @PathVariable Long productId, @PathVariable String uuid)
+    public void decreseProductQuantity (
+                        @RequestHeader(name= INAPP_HDR_LOGIN, required = false) String username,
+                        @PathVariable Long productId, @PathVariable String uuid)
     {
         if (productId == null)
             throw new UnableToPerformException ("Не могу изменить количество для товара id: "+ productId);
@@ -64,7 +74,8 @@ public class CartController
 /** Удаление товарной позиции из корзины авторизованного пользователя или гостя.
 Авторизация нужна для пользователя, но не нужна для гостя. */
     @GetMapping ("/remove/{productId}/{uuid}")                  //±
-    public void removeProduct (@RequestHeader(required = false) String username, @PathVariable Long productId, @PathVariable String uuid)
+    public void removeProduct (@RequestHeader(name= INAPP_HDR_LOGIN, required = false) String username,
+                               @PathVariable Long productId, @PathVariable String uuid)
     {
         if (productId == null)
             throw new UnableToPerformException ("Не могу удалить из корзины товар id: "+ productId);
@@ -74,7 +85,8 @@ public class CartController
 /** Удаление всех товарных позиций из корзины авторизованного пользователя или гостя.
 Авторизация нужна для пользователя, но не нужна для гостя. */
     @GetMapping ("/clear/{uuid}")                               //±
-    public void clearCart (@RequestHeader(required = false) String username, @PathVariable String uuid)
+    public void clearCart (@RequestHeader(name= INAPP_HDR_LOGIN, required = false) String username,
+                           @PathVariable String uuid)
     {
         cartService.clearCart (username, uuid);
     }
@@ -82,21 +94,22 @@ public class CartController
 /** Запрос на слияние корзин авторизованного пользователя и гостя.
 Авторизация нужна.  */
     @GetMapping({"/merge/{uuid}"})                              //+
-    public void mergeCarts (@RequestHeader String username, @PathVariable String uuid)
+    public void mergeCarts (@RequestHeader(name= INAPP_HDR_LOGIN) String username,
+                            @PathVariable String uuid)
     {
         this.cartService.mergeCarts (username, uuid);
     }
 
 /** Сейчас вызывается из модуля order-mcs. */
     @GetMapping ("/drycart/{username}")                         //-
-    public CartDto getDryCart (@PathVariable String username)
+    public CartDto getDryCart (@PathVariable(name= INAPP_HDR_LOGIN) String username)
     {
         return cartService.getUsersDryCartDto (username);
     }
 
 /** Сейчас вызывается из модуля order-mcs. */
     @GetMapping ("/remove_non_empty/{username}")                //-
-    public void removeNonEmptyItems (@PathVariable String username)
+    public void removeNonEmptyItems (@PathVariable(name= INAPP_HDR_LOGIN) String username)
     {
         cartService.removeNonEmptyItems (username);
     }

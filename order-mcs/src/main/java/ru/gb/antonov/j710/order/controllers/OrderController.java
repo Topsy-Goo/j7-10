@@ -18,10 +18,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.gb.antonov.j710.monolith.Factory.INAPP_HDR_LOGIN;
+
 @RequestMapping ("/api/v1/order")
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin ("*")
+//@CrossOrigin ("*")
 public class OrderController
 {
     private final OrderService       orderService;
@@ -29,7 +31,7 @@ public class OrderController
 //-------------------------------------------------------------------------------------------
 
     @GetMapping ("/details")
-    public OrderDetalesDto getOrderDetales (@RequestHeader String username) //в параметр username попадает значение заголовка username; если имя параметра отличается от имени заголовка, то нужно указать, из какого заголовка папраметр должен брать значение
+    public OrderDetalesDto getOrderDetales (@RequestHeader(name= INAPP_HDR_LOGIN) String username) //в параметр username попадает значение заголовка username; если имя параметра отличается от имени заголовка, то нужно указать, из какого заголовка папраметр должен брать значение
     {
         checkRightsToMakeOrder (username);
         return orderService.getOrderDetales (username);
@@ -38,7 +40,8 @@ public class OrderController
     @PostMapping ("/confirm")
     @ResponseStatus (HttpStatus.CREATED)
     public OrderDetalesDto applyOrderDetails (@RequestBody @Validated OrderDetalesDto orderDetalesDto,
-                                              BindingResult br, @RequestHeader String username)
+                                              BindingResult br,
+                                              @RequestHeader(name= INAPP_HDR_LOGIN) String username)
     {   checkRightsToMakeOrder (username);
         if (br.hasErrors())
         {   //преобразуем набор ошибок в список сообщений, и пакуем в одно общее исключение (в наше заранее для это приготовленное исключение).
@@ -50,7 +53,7 @@ public class OrderController
     }
 
     @GetMapping ("/orders")
-    public Collection<OrderDto> getOrders (@RequestHeader String username)
+    public Collection<OrderDto> getOrders (@RequestHeader(name= INAPP_HDR_LOGIN) String username)
     {
         return orderService.getUserOrdersAsOrderDtos (username);
     }

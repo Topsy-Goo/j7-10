@@ -56,7 +56,7 @@ public class OurUserService implements UserDetailsService
     }
 
     @Transactional
-    public @NotNull String userNameById (Long uid)
+    public @NotNull String userNameByUserId (Long uid)
     {
         String username = STR_EMPTY;
         if (uid != null)
