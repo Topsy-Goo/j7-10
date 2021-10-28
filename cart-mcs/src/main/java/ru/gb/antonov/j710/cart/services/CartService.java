@@ -226,7 +226,12 @@ public class CartService
         if (ok)
             updateCart (ce);
         else
-            throw new ResourceNotFoundException ("Не удалось изменить количество товара в корзине:\r"+ productDto);
+        {
+            String err = String.format ("не удалось изменить количество товара в корзине:\rтовар: %s\rостаток на складе: %d\rколичество этого товара в вашей корзине: %s",
+                                        productDto.getTitle(), productDto.getRest(),
+                                        (ci != null) ? ci.quantity : "?");
+            throw new ResourceNotFoundException (err);
+        }
     }
 
     @Transactional
