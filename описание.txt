@@ -52,6 +52,9 @@ docker-compose up
  3.Заменить double на BigDecimal.
 
 Комментарий для след. коммита:
+• Перевели цены на BigDecimal
+• Прикрутили PayPal.
+•
 
 //TODO: *** >>> --
 //TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:  ----  испортить данные в secret.properties.
@@ -59,6 +62,10 @@ docker-compose up
 
 Комментарий для ДЗ:
 
+//TODO: помы почистить
 //TODO: AppConfig-и удалить?
 //TODO: * При авторизации из корзины, она пустеет до обновления страницы. Нужно обновлять страницу при авторизации. * При обновлении страницы магазина, показывается первая страница.
 //TODO: Нет сортировки товаров при выводе их списка на витрину.
+
+Generated Credit Card Details:	Visa		4627586082954754	11/2025		203
+Generated Credit Card Details:	MasterCard	5275940405880695	07/2022		249

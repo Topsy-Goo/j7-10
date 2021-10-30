@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity  @Data  @NoArgsConstructor  @Table (name="orderitems")
@@ -20,16 +21,16 @@ public class OrderItem
     @Column(name="product_id", nullable=false)
     private Long productId;
 
-    @Column(name="buying_price")
-    private double buyingPrice;
+    @Column(name="buying_price", nullable=false)
+    private BigDecimal buyingPrice = BigDecimal.ZERO;
 
-    @Column(name="quantity")
+    @Column(name="quantity", nullable=false)
     private int quantity;
 
-    @CreationTimestamp    @Column(name="created_at", nullable=false)
+    @CreationTimestamp    @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @CreationTimestamp    @Column (name="updated_at", nullable=false)
+    @CreationTimestamp    @Column (name="updated_at")
     private LocalDateTime updatedAt;
 //-----------------------------------------------------------------
     @Override public String toString()

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
+import java.math.BigDecimal;
+
 @Component
 @RequiredArgsConstructor
 public class CartToProductCallService
@@ -20,5 +22,5 @@ public class CartToProductCallService
                                       .block();
     }
 
-    public Double productPriceById (Long pid){   return getProductById (pid).getPrice();   }
+    public BigDecimal productPriceById (Long pid) {   return getProductById(pid).getPrice();   }
 }

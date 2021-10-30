@@ -1,6 +1,7 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,41 +12,34 @@ public class CartDto
 
     //следующ. 2 поля никогда не хранят актуальные значения! При попытке получить их значения, последние
     // вычисляются и возвращаются геттерами.
-    private double cost;
+    private BigDecimal cost = BigDecimal.ZERO;
     private int load;
 //-----------------------------------------------------------------------------
     public CartDto () { oitems = new LinkedList<> (); }
 
-    public static CartDto dummyCartDto (/*Метод готов переварить любые параметры.*/)
-    {
-        CartDto cdt = new CartDto();
-        //cdt.oitems = ;
-        cdt.titlesCount = 0;
-        cdt.cost = 0.0;
-        cdt.load = 0;
-        //cdt. = ;
-        return cdt;
+    public static CartDto dummyCartDto ()
+    {   return new CartDto();
     }
 //--------------------- геттеры и сеттеры -------------------------------------
-    public double getCost ()
+    public BigDecimal getCost ()
     {
-        double cost = 0.0;
+        BigDecimal cost = BigDecimal.ZERO;
         for (OrderItemDto oitem : oitems)
         {
-            cost += oitem.getCost();
+            cost = cost.add (oitem.getCost());
         }
         return cost;
     }
-    public void setCost (double cost)    {    this.cost = cost;    }
+    public void setCost (BigDecimal value)    { cost = value; }
 
-    public int getTitlesCount () { return oitems.size(); }
-    public void setTitlesCount (int titlesCount)    {    this.titlesCount = titlesCount;    }
+    public int getTitlesCount ()            { return oitems.size(); }
+    public void setTitlesCount (int value)  { titlesCount = value; }
 
-    public List<OrderItemDto> getOitems ()    {    return oitems;    }
-    public void setOitems (List<OrderItemDto> oitems)    {    this.oitems = oitems;    }
+    public List<OrderItemDto> getOitems ()           { return oitems; }
+    public void setOitems (List<OrderItemDto> value) { oitems = value; }
 
-    public int getLoad ()    {    return load;    }
-    public void setLoad (int load)    {    this.load = load;    }
+    public int getLoad ()           { return load; }
+    public void setLoad (int value) { load = value; }
 
     //-----------------------------------------------------------------------------
     public boolean addItem (OrderItemDto oitem, int quantity /* может быть 0 */)
@@ -69,7 +63,7 @@ public class CartDto
 
                 ok = oitems.add (oitem);
                 load += quantity;
-                cost += oitem.getCost();
+                cost = cost.add (oitem.getCost());
             }
         }
         return ok;

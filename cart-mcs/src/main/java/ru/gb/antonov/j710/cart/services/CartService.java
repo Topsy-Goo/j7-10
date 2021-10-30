@@ -14,6 +14,7 @@ import ru.gb.antonov.j710.monolith.entities.dtos.CartDto;
 import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
@@ -173,14 +174,14 @@ public class CartService
     }
 
 /** Метод должен вызываться в рамках к.-л. транзакции. */
-    public double calcCost (List<CartItem> citems) //TODO: перенести обратно в InMemoryCart.
+    public BigDecimal calcCost (List<CartItem> citems) //TODO: перенести обратно в InMemoryCart.
     {
-        double cartcost = 0.0;
+        BigDecimal cartcost = BigDecimal.ZERO;
         for (CartItem ci : citems)
         {
             int quantity = ci.quantity;
             if (quantity > 0)
-                cartcost += cartToProductCallService.productPriceById (ci.pid) * quantity;
+                cartcost = cartcost.add (cartToProductCallService.productPriceById (ci.pid).multiply(BigDecimal.valueOf(quantity)));
         }
         return cartcost;
     }

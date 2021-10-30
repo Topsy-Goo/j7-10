@@ -5,6 +5,8 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
+import java.math.BigDecimal;
+
 import static ru.gb.antonov.j710.monolith.Factory.PROD_TITLELEN_MAX;
 import static ru.gb.antonov.j710.monolith.Factory.PROD_TITLELEN_MIN;
 
@@ -19,7 +21,7 @@ public class ProductDto
 
     //@Min (value=0, message="…")
     @PositiveOrZero (message="Цена товара должна быть НЕОТРИЦАТЕЛЬНЫМ числом!")
-    private double price;
+    private BigDecimal price = BigDecimal.ZERO;
 
     @PositiveOrZero (message="Остаток товара должен быть НЕОТРИЦАТЕЛЬНЫМ числом!")
     private int rest;
@@ -28,7 +30,7 @@ public class ProductDto
     private String category;
 //--------------------------------------------------------------
     public ProductDto (){}
-    public ProductDto (Long pProductId, String pTitle, Double pPrice, Integer pRest, String pCategory)
+    public ProductDto (Long pProductId, String pTitle, BigDecimal pPrice, Integer pRest, String pCategory)
     {
        if (pProductId != null) this.productId = pProductId;
        if (pTitle     != null) this.title     = pTitle;
@@ -37,21 +39,22 @@ public class ProductDto
        if (pCategory  != null) this.category  = pCategory;
     }
 //--------------------------------------------------------------
-    public Long getProductId ()               { return productId; }
-    public void setProductId (Long productId) { this.productId = productId; }
+    public Long getProductId ()           { return productId; }
+    public void setProductId (Long value) { productId = value; }
 
-    public String getTitle ()                 { return title; }
-    public void setTitle (String title)       { this.title = title; }
+    public String getTitle ()             { return title; }
+    public void setTitle (String value)   { title = value; }
 
-    public double getPrice ()                 { return price; }
-    public void setPrice (double price)       { this.price = price; }
+    public BigDecimal getPrice ()           { return price; }
+    public void setPrice (BigDecimal value) { price = value; }
 
-    public int getRest ()                     { return rest; }
-    public void setRest (int rest)            { this.rest = rest; }
+    public int getRest ()                   { return rest; }
+    public void setRest (int value)         { rest = value; }
 
-    public String getCategory ()              { return category; }
-    public void setCategory (String category) { this.category = category; }
+    public String getCategory ()            { return category; }
+    public void setCategory (String value)  { category = value; }
 //--------------------------------------------------------------
+
     @Override public String toString()
     {   return String.format ("pdto[id:%d, «%s», %.2f, rt:%d]", productId, title, price, rest);
     }

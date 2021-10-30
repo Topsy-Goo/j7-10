@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Length;
 import ru.gb.antonov.j710.monolith.entities.dtos.CartDto;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static ru.gb.antonov.j710.monolith.Factory.*;
@@ -21,13 +22,12 @@ public class OrderDetalesDto
     @Length (max=DELIVERING_ADDRESS_LEN_MAX, message="\rМаксимальная длина адреса — 255 символов.")
     private String address;
 
-    private Long   orderNumber;
-//  private Long   orderCreatedAt;
-    private String orderCreationTime;
-//  private String deliveryType;
-    private double deliveryCost;
-    private String orderState;
-    private double overallCost;
+    private Long       orderNumber;
+    private BigDecimal deliveryCost = BigDecimal.ZERO;
+    private String     orderState;
+    private BigDecimal overallCost = BigDecimal.ZERO;
+    private String     orderCreationTime;
+    //private ShippingDetailesDto shippingDetailesDto;
 
 /*  @Length (max=255, message="Максимальная длина текста комментария — 255 символов.")
     private String comment;*/
@@ -35,30 +35,32 @@ public class OrderDetalesDto
     public OrderDetalesDto (){}
 //-------------------------------------------------------------------------------------
 
-    public CartDto getCartDto ()                  { return cartDto; }
-    public void setCartDto (CartDto cartDto)      { this.cartDto = cartDto; }
+    public CartDto getCartDto ()            { return cartDto; }
+    public void setCartDto (CartDto value)  { cartDto = value; }
 
-    public String getPhone ()                     { return phone; }
-    public void setPhone (String phone)           { this.phone = phone; }
+    public String getPhone ()               { return phone; }
+    public void setPhone (String value)     { phone = value; }
 
-    public String getAddress ()                   { return address; }
-    public void setAddress (String address)       { this.address = address; }
+    public String getAddress ()             { return address; }
+    public void setAddress (String value)   { address = value; }
 
-    public Long getOrderNumber ()                 { return orderNumber; }
-    public void setOrderNumber (Long orderNumber) { this.orderNumber = orderNumber; }
+    public Long getOrderNumber ()           { return orderNumber; }
+    public void setOrderNumber (Long value) { orderNumber = value; }
 
-    public String getOrderCreationTime ()                       { return orderCreationTime; }
-    public void setOrderCreationTime (String orderCreationTime) { this.orderCreationTime = orderCreationTime; }
+    public String getOrderCreationTime ()           { return orderCreationTime; }
+    public void setOrderCreationTime (String value) { orderCreationTime = value; }
 
-    public double getDeliveryCost ()                  { return deliveryCost; }
-    public void setDeliveryCost (double deliveryCost) { this.deliveryCost = deliveryCost; }
+    public BigDecimal getDeliveryCost ()           { return deliveryCost; }
+    public void setDeliveryCost (BigDecimal value) { deliveryCost = value; }
 
-    public String getOrderState ()                    { return orderState; }
-    public void setOrderState (String orderState)     { this.orderState = orderState; }
+    public String getOrderState ()             { return orderState; }
+    public void setOrderState (String value)   { orderState = value; }
 
-    public double getOverallCost ()                   { return overallCost; }
-    public void setOverallCost (double overallCost)   { this.overallCost = overallCost; }
+    public BigDecimal getOverallCost ()            { return overallCost; }
+    public void setOverallCost (BigDecimal value)  { overallCost = value; }
 
+    //public ShippingDetailesDto getShippingDetailesDto ()           { return shippingDetailesDto; }
+    //public void setShippingDetailesDto (ShippingDetailesDto value) { shippingDetailesDto = value; }
 //-------------------------------------------------------------------------------------
     public static OrderDetalesDto dummyOrderDetalesDto (String phone, String address)
     {
@@ -71,9 +73,9 @@ public class OrderDetalesDto
         //oddto.orderCreatedAt = ldt.getLong (ChronoField.MILLI_OF_SECOND;
         oddto.orderCreationTime = orderCreationTimeToString(ldt);
         //oddto.deliveryType = STR_EMPTY;
-        oddto.deliveryCost = 0.0;
+        oddto.deliveryCost = BigDecimal.ZERO;
         oddto.orderState   = STR_EMPTY;
-        oddto.overallCost  = 0.0;
+        oddto.overallCost  = BigDecimal.ZERO;
         //oddto. = ;
         return oddto;
     }

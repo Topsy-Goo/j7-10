@@ -18,25 +18,23 @@ import static ru.gb.antonov.j710.monolith.Factory.*;
 public class OurUser
 {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)    @Getter
+    @GeneratedValue (strategy = GenerationType.IDENTITY) @Getter
     @Column (name="id")
     private Long id;
 
-    @Column(name="login", nullable=false, unique=true)    @Getter
+    @Column(name="login", nullable=false, unique=true)   @Getter
     private String login;
 
-    @Column(name="password", nullable=false)    @Getter
+    @Column(name="password", nullable=false)             @Getter
     private String password;
 
-    @Column(name="email", nullable=false, unique=true)    @Getter
+    @Column(name="email", nullable=false, unique=true)   @Getter
     private String email;
 
-    @CreationTimestamp
-    @Column(name="created_at", nullable=false)    @Getter @Setter
+    @CreationTimestamp    @Column(name="created_at")     @Getter @Setter
     private LocalDateTime createdAt;
 
-    @CreationTimestamp
-    @Column(name="updated_at", nullable=false)    @Getter @Setter
+    @CreationTimestamp    @Column(name="updated_at")     @Getter @Setter
     private LocalDateTime updatedAt;
 //--------------неколонки
     @ManyToMany

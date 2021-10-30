@@ -152,8 +152,6 @@ angular.module('market-front').controller('indexController',
 				 место вызова в коде имеет значение, т.к. при перезагрузке, например, могут потеряться
 				 данные о регистрации, если они не были записаны в хранилище браузера или не были
 				 сохранены иным способом */
-
-//				$rootScope.canEditProducts = $scope.canUserEditProducts();
 			},
 			function failureCallback (response)
 			{
@@ -185,7 +183,6 @@ angular.module('market-front').controller('indexController',
 			function successCallback (response)
 			{
 				console.log ('index - $scope.tryMergeCarts - OK');
-/////////////////////////				$scope.loadCart();
 			},
 			function failureCallback (response)
 			{
@@ -194,17 +191,9 @@ angular.module('market-front').controller('indexController',
 			});
 		}
 	}
-
 //----------------------------------------------------------------------- разрешения
 	$rootScope.isUserLoggedIn = function ()
 	{
-		if ($localStorage.webMarketUser)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		if ($localStorage.webMarketUser)	{return true;}	else	{return false;}
 	}
 });

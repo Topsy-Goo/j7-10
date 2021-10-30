@@ -1,18 +1,22 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
+import java.math.BigDecimal;
+
 public class OrderItemDto
 {
-    private Long productId;
-    private String category;
-    private String title;
-    private double price;
-    private int rest;
-    private int quantity;
-    private double cost;
+    private Long       productId;
+    private String     category;
+    private String     title;
+    private BigDecimal price = BigDecimal.ZERO;
+    private int        rest;
+    private int        quantity;
+    private BigDecimal cost = BigDecimal.ZERO;
 //------------------------------------------------------------------
+    public OrderItemDto () {}
+
 /** Метод меняет только те поля, для которых был передан не null. */
-    public OrderItemDto (Long productId, String category, String title, Double price,
-                         Integer rest, Integer quantity, Double cost)
+    public OrderItemDto (Long productId, String category, String title, BigDecimal price,
+                         Integer rest, Integer quantity, BigDecimal cost)
     {
         if (productId != null) this.productId = productId;
         if (category  != null) this.category  = category;
@@ -22,17 +26,6 @@ public class OrderItemDto
         if (quantity  != null) this.quantity  = quantity;
         if (cost      != null) this.cost      = cost;
     }
-/*    public OrderItemDto (OrderItemDto oi) //TODO: проверить, используется ли этот метод ?
-    {
-        productId = oi.productId;
-        title     = oi.title;
-        category  = oi.category;
-        price     = oi.price;
-        rest      = oi.rest;
-        quantity  = oi.quantity;
-        cost      = oi.cost;
-    }*/
-    public OrderItemDto () {}
 //--------- Геттеры и сеттеры (JSON работает с публичными полями!) --------------
 
     //Возвращает true, если количество было изменено.
@@ -45,23 +38,23 @@ public class OrderItemDto
     }
     public int getQuantity ()         { return quantity; }
 
-    public double getCost ()          { return price * quantity; }
-    public void setCost (double cost) { this.cost = cost; }
+    public BigDecimal getCost ()           { return price.multiply (new BigDecimal(quantity)); }
+    public void setCost (BigDecimal value) { cost = value; }
 
-    public Long getProductId ()               { return productId; }
-    public void setProductId (Long productId) { this.productId = productId; }
+    public Long getProductId ()           { return productId; }
+    public void setProductId (Long value) { productId = value; }
 
-    public String getCategory ()              { return category; }
-    public void setCategory (String category) { this.category = category; }
+    public String getCategory ()           { return category; }
+    public void setCategory (String value) { category = value; }
 
     public String getTitle ()           { return title; }
-    public void setTitle (String title) { this.title = title; }
+    public void setTitle (String value) { title = value; }
 
-    public double getPrice ()           { return price; }
-    public void setPrice (double price) { this.price = price; }
+    public BigDecimal getPrice ()           { return price; }
+    public void setPrice (BigDecimal value) { price = value; }
 
-    public int getRest ()               { return rest; }
-    public void setRest (int rest)      { this.rest = rest; }
+    public int getRest ()           { return rest; }
+    public void setRest (int value) { rest = value; }
 
 //----------------- Другие методы ----------------------------------
 

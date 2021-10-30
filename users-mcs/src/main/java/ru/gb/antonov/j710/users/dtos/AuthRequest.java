@@ -17,11 +17,11 @@ public class AuthRequest
 //--------------------------------------------------------------------------------
     public AuthRequest (){}
 //--------------------------------------------------------------------------------
-    public String getLogin ()    {    return login;    }
-    public void setLogin (String login)    {    this.login = login;    }
+    public String getLogin ()           { return login; }
+    public void setLogin (String value) { login = value; }
 
-    public String getPassword ()    {    return password;    }
-    public void setPassword (String password)    {    this.password = password;    }
+    public String getPassword ()           { return password; }
+    public void setPassword (String value) { password = value; }
 //--------------------------------------------------------------------------------
     public static AuthRequest dummyAuthRequest (String login, String password)
     {

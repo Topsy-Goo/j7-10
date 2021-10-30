@@ -19,9 +19,11 @@ public class OrderState
     @Column (name="friendly_name", nullable=false, unique=true)
     private String friendlyName;
 
-    @CreationTimestamp    @Column(name="created_at", nullable=false)
+    @CreationTimestamp    @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @CreationTimestamp    @Column (name="updated_at", nullable=false)
+    @CreationTimestamp    @Column (name="updated_at")
     private LocalDateTime updatedAt;
+//---------------------------------------------------------------------
+    @Override public String toString () { return String.format("ost:[%d, %s, %s]", id, shortName, friendlyName); }
 }

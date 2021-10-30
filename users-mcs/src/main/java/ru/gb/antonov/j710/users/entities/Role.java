@@ -17,10 +17,10 @@ public class Role
     @Column (name="name", nullable=false, unique=true)
     private String name;
 
-    @CreationTimestamp    @Column(name="created_at", nullable=false)
+    @CreationTimestamp    @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @CreationTimestamp    @Column(name="updated_at", nullable=false)
+    @CreationTimestamp    @Column(name="updated_at")
     private LocalDateTime updatedAt;
 //------------------------------------------------------------
     @Override public boolean equals (Object o)

@@ -12,11 +12,19 @@ public class OrderToOurUserCallService
 
     public Long userIdByLogin (String login)
     {
-        Long result = ourUserServiceWebClient.get()
+        return ourUserServiceWebClient.get()
                                       .uri ("/api/v1/user_profile/userid/" + login)
                                       .retrieve()
                                       .bodyToMono (Long.class)
                                       .block(/*Duration.ofSeconds (10)*/);
-        return result;
+    }
+
+    public String userNameByUserId (Long uid)
+    {
+        return ourUserServiceWebClient.get()
+                                      .uri ("/api/v1/user_profile/username/" + uid)
+                                      .retrieve()
+                                      .bodyToMono (String.class)
+                                      .block(/*Duration.ofSeconds (10)*/);
     }
 }

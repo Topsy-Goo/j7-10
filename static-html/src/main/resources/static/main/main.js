@@ -8,4 +8,6 @@ angular.module('market-front').controller('mainController', function ($scope, $h
 	const contextOrderPath	 		= 'http://localhost:5555/market/order';
 	const contextProductReviewsPath	= 'http://localhost:5555/market/productreviews';
 	const contextUserProfilePath	= 'http://localhost:5555/market/user_profile';
+	const contextPaypalPath 		= 'http://localhost:5555/market/paypal';
+
 });

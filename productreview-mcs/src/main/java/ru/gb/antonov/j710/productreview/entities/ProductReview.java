@@ -26,10 +26,10 @@ public class ProductReview
     @Column(name="product_id", nullable=false)
     private Long productId;
 
-    @CreationTimestamp    @Column(name="created_at", nullable=false)
+    @CreationTimestamp    @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @CreationTimestamp    @Column(name="updated_at", nullable=false)
+    @CreationTimestamp    @Column(name="updated_at")
     private LocalDateTime updatedAt;
 //-----------------------------------------------------------
 

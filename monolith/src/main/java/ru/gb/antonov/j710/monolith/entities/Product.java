@@ -7,6 +7,7 @@ import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterExcep
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -21,25 +22,23 @@ public class Product
     @Column (name="id")
     private Long id;
 
-    @Column(name="title", nullable=false)  @Getter
+    @Column(name="title", nullable=false)             @Getter
     private String title;
 
-    @Column(name="price")  @Getter
-    private double price;
+    @Column(name="price", nullable=false)             @Getter
+    private BigDecimal price = BigDecimal.ZERO;
 
-    @Column(name="rest")  @Getter
+    @Column(name="rest", nullable=false)              @Getter
     private Integer rest;
 
     @ManyToOne
-    @JoinColumn(name="category_id", nullable=false)  @Getter
+    @JoinColumn(name="category_id", nullable=false)   @Getter
     private ProductsCategory category;
 
-    @CreationTimestamp
-    @Column(name="created_at", nullable=false)  @Getter @Setter
+    @CreationTimestamp    @Column(name="created_at")  @Getter @Setter
     private LocalDateTime createdAt;
 
-    @CreationTimestamp
-    @Column(name="updated_at", nullable=false)  @Getter @Setter
+    @CreationTimestamp    @Column(name="updated_at")  @Getter @Setter
     private LocalDateTime updatedAt;
 //----------------------------------------------------------------------
     public Product(){}
@@ -47,11 +46,11 @@ public class Product
 /** Любой из параметров может быть {@code null}. Равенство параметра {@code null} расценивается как
 нежелание изменять соответствующее ему свойство товара..
 @throws  BadCreationParameterException*/
-    public Product update (String ttl, Double prc, Integer rst, ProductsCategory cat)
+    public Product update (String ttl, BigDecimal prc, Integer rst, ProductsCategory cat)
     {
-        String newTitle = (ttl == null) ? title : ttl;
-        Double newPrice = (prc == null) ? price : prc;
-        Integer newRest = (rst == null) ? rest : rst;
+        String newTitle     = (ttl == null) ? title : ttl;
+        BigDecimal newPrice = (prc == null) ? price : prc;
+        Integer newRest     = (rst == null) ? rest : rst;
         ProductsCategory newCat = (cat == null) ? category : cat;
 
         if (!setTitle (newTitle) || !setPrice (newPrice) || !setRest (newRest) || !setCategory (newCat))
@@ -77,7 +76,7 @@ public class Product
         return ok;
     }
 
-    public boolean setPrice (Double newvalue)
+    public boolean setPrice (BigDecimal newvalue)
     {
         boolean ok = isPriceValid (newvalue);
         if (ok)
@@ -109,8 +108,8 @@ public class Product
     {   return sayNoToEmptyStrings (title);
     }
 
-    public static boolean isPriceValid (double value)
-    {   return value >= MIN_PRICE  &&  value <= MAX_PRICE;
+    public static boolean isPriceValid (BigDecimal value)
+    {   return value.compareTo (MIN_PRICE) >= 0  &&  value.compareTo(MAX_PRICE) <= 0;
     }
 
     @Override public boolean equals (Object o)

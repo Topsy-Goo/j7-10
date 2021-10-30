@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -20,26 +21,23 @@ public class Order
     @Column(name="ouruser_id", nullable=false)
     private Long ouruserId;
 
-    @Column (name="phone")
+    @Column (name="phone", nullable=false)
     private String phone;
 
-    @Column (name="address")
+    @Column (name="address", nullable=false)
     private String address;
 
-    @Column (name="cost")
-    private double cost;    //< общая стоимость выбранных/купленных товаров
+    @Column (name="cost", nullable=false)
+    private BigDecimal cost = BigDecimal.ZERO;    //< общая стоимость выбранных/купленных товаров
 
-    @CreationTimestamp
-    @Column(name="created_at", nullable=false)
+    @ManyToOne    @JoinColumn (name="orderstate_id", nullable=false)
+    private OrderState state;
+
+    @CreationTimestamp    @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @CreationTimestamp
-    @Column (name="updated_at", nullable=false)
+    @CreationTimestamp    @Column (name="updated_at")
     private LocalDateTime updatedAt;
-
-    @ManyToOne
-    @JoinColumn (name="orderstate_id", nullable=false)
-    private OrderState state;
 //--------неколонки
     @OneToMany (mappedBy="order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<OrderItem> orderItems;
@@ -47,10 +45,11 @@ public class Order
     // а не они нас.
 //----------------------------------------------------------------------
     public List<OrderItem> getOrderItems () { return Collections.unmodifiableList (orderItems); }
-    public void setOrderItems (List<OrderItem> value) {    orderItems = value;   }
+
+    public void setOrderItems (List<OrderItem> value) {  orderItems = value;  }
 //----------------------------------------------------------------------
     @Override public String toString()
     {   return String.format ("Order:[id:%d, uid:%d, phone:%s, addr:%s]_with_[%s]",
-                              id, ouruserId/*ouruser.getLogin()*/, phone, address, orderItems);
+                              id, ouruserId, phone, address, orderItems);
     }
 }

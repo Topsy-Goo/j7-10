@@ -15,15 +15,15 @@ public class RegisterRequest
     private String password;
 
     @NotNull (message="\rПочта указана неполностью: Имя пользователя.")
-    @Length (min=1/*, message=""*/)
+    @Length (min=1)
     private String emailUser;
 
     @NotNull (message="\rПочта указана неполностью: Имя сервера.")
-    @Length (min=1/*, message=""*/)
+    @Length (min=1)
     private String emailServer;
 
     @NotNull (message="\rПочта указана неполностью: Домен.")
-    @Length (min=1/*, message=""*/)
+    @Length (min=1)
     private String emailDomain;
 //-------------------------------------------------------------------------
     public RegisterRequest(){}
