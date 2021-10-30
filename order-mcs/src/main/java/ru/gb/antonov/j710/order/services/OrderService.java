@@ -5,7 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
-import ru.gb.antonov.j710.monolith.entities.dtos.*;
+import ru.gb.antonov.j710.monolith.beans.errorhandlers.UnableToPerformException;
+import ru.gb.antonov.j710.monolith.entities.dtos.CartDto;
+import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
+import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 import ru.gb.antonov.j710.order.dtos.OrderDetalesDto;
 import ru.gb.antonov.j710.order.dtos.OrderDto;
 import ru.gb.antonov.j710.order.entities.Order;
@@ -17,9 +20,11 @@ import ru.gb.antonov.j710.order.integration.OrderToProductCallService;
 import ru.gb.antonov.j710.order.repositos.OrderItemRepo;
 import ru.gb.antonov.j710.order.repositos.OrdersRepo;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.gb.antonov.j710.monolith.Factory.orderCreationTimeToString;
@@ -40,6 +45,10 @@ public class OrderService
     public OrderDetalesDto getOrderDetales (String login)
     {
         CartDto dryCartDto = orderToCartCallService.getDryCartDto (login);
+
+        if (dryCartDto.getTitlesCount() <= 0)
+            throw new UnableToPerformException("Заказ пуст.");
+
         OrderDetalesDto odt = new OrderDetalesDto();
         odt.setCartDto (dryCartDto);
         return odt;
@@ -61,6 +70,9 @@ public class OrderService
     public OrderDetalesDto applyOrderDetails (@NotNull OrderDetalesDto detales, String username)
     {
         CartDto cartDto   = detales.getCartDto();
+        if (cartDto.getTitlesCount() <= 0)
+            throw new UnableToPerformException ("Заказ пуст.");
+
         Long ouruserId    = orderToOurUserCallService.userIdByLogin (username);
         OrderState oState = orderStatesService.getOrderStatePending();
 
@@ -81,7 +93,7 @@ public class OrderService
         detales.setOrderCreationTime (orderCreationTimeToString (o.getCreatedAt()));
         //detales.setDeliveryType ("Самовывоз");  TODO: сделать ниспадающий список на стр.оформления заказа.
         //detales.setDeliveryCost (0.0);        //TODO: поменять на чтение стоимости выбранной доставки.
-        detales.setOverallCost (o.getCost() + detales.getDeliveryCost());
+        detales.setOverallCost (o.getCost().add (detales.getDeliveryCost()));
 
         //(Оставляем dryCart в OrderDetalesDto, чтобы юзер мог на неё посмотреть перед уходом со
         // страницы заказа.)
@@ -113,13 +125,11 @@ public class OrderService
 
         if (orders != null)
         for (Order o : orders)
-        {
             list.add (orderToDto (o));
-        }
         return list;
     }
 
-    private OrderDto orderToDto (Order o)
+    public OrderDto orderToDto (Order o)
     {
         if (o == null)
             throw new BadCreationParameterException ("Не удалось прочитать инф-цию о заказе.");
@@ -132,9 +142,7 @@ public class OrderService
         odto.setAddress     (o.getAddress());
         odto.setPhone       (o.getPhone());
         odto.setCost        (o.getCost());
-        odto.setOitems      (o.getOrderItems()
-                              .stream()
-                              .map ((oi)->orderItemToDto (oi, oitemLoad))
+        odto.setOitems      (o.getOrderItems().stream().map ((oi)->orderItemToDto (oi, oitemLoad))
                               .collect (Collectors.toList()));
         odto.setLoad        (oitemLoad[0]);
         return odto;
@@ -145,24 +153,36 @@ public class OrderService
         if (oi == null || oitemLoad == null || oitemLoad.length == 0)
             throw new BadCreationParameterException ("Не удалось прочитать инф-цию об элементе заказа.");
 
-        OrderItemDto oidto      = new OrderItemDto();
-        double       price      = oi.getBuyingPrice();
-        int          quantity   = oi.getQuantity();
-        ProductDto   productDto = orderToProductCallService.getProductById(oi.getProductId());
+        OrderItemDto oidto    = new OrderItemDto();
+        BigDecimal   price    = oi.getBuyingPrice();
+        int          quantity = oi.getQuantity();
+        ProductDto   productDto = orderToProductCallService.getProductById (oi.getProductId());
 
         oidto.setProductId (productDto.getProductId());
         oidto.setCategory  (productDto.getCategory());
         oidto.setTitle     (productDto.getTitle());
         oidto.setQuantity  (quantity);
         oidto.setPrice     (price);
-        oidto.setCost      (price * quantity);
+        oidto.setCost      (price.multiply (BigDecimal.valueOf(quantity)));
         oitemLoad[0] += quantity;
         return oidto;
     }
 
     public List<OrderItem> userOrderItemsByProductId (Long uid, Long pid, Integer stateId)
-    {
-        List<OrderItem> list = orderItemRepo.userOrderItemsByProductId (uid, pid, stateId);
-        return list;
+    {   return orderItemRepo.userOrderItemsByProductId (uid, pid, stateId);
+    }
+//------------------ Для PayPal ---------------------------------------------------------
+
+    public Optional<Order> findById (@NotNull Long orderId)
+    {   return ordersRepo.findById (orderId);
+    }
+
+    public String userNameByUserId (@NotNull Long uid)
+    {   return orderToOurUserCallService.userNameByUserId (uid);
+    }
+
+    @Transactional
+    public void setOrderStateToPayed (@NotNull Long orderId)
+    {   findById (orderId).ifPresent (o->o.setState (orderStatesService.getOrderStatePayed()));
     }
 }
