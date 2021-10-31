@@ -8,6 +8,7 @@ import ru.gb.antonov.j710.monolith.beans.errorhandlers.ResourceNotFoundException
 import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
 import ru.gb.antonov.j710.order.dtos.OrderDto;
 import ru.gb.antonov.j710.order.entities.Order;
+import ru.gb.antonov.j710.order.entities.ShippingInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,17 +44,17 @@ public class PayPalService
                                  .purchaseUnits (purchaseUnitRequests);
     }
 
-    private PurchaseUnitRequest newPurchaseUnitRequest (Order order)
+    private PurchaseUnitRequest newPurchaseUnitRequest (Order ourOrder)
     {
-        String userName = orderService.userNameByUserId (order.getOuruserId());
-        OrderDto odto = orderService.orderToDto (order);
+        String userName = orderService.userNameByUserId (ourOrder.getOuruserId());
+        OrderDto odto = orderService.orderToDto (ourOrder);
 
         return new PurchaseUnitRequest()
-                .referenceId (order.getId().toString())
+                .referenceId (ourOrder.getId().toString())
                 .description (BRAND_NAME_ENG + " order")
                 .amountWithBreakdown (newAmountWithBreakdown (odto.getCost().doubleValue()))
                 .items (oitemsToItems (odto.getOitems()))
-                .shippingDetail (newShippingDetail (userName));
+                .shippingDetail (newShippingDetail (userName, ourOrder));
     }
 
 /** (Из комментария к AmountWithBreakdown.) Общая сумма заказа с дополнительной разбивкой, которая предоставляет подробную информацию, такую как общая сумма товара, общая сумма налога, доставка, обработка, страхование и скидки, если таковые имеются. Если вы укажете {@code amount.breakdown}, то сумма будет равна<br>
@@ -94,16 +95,17 @@ public class PayPalService
 • <a href="https://ru.wikipedia.org/wiki/ISO_3166-2:RU">https://ru.wikipedia.org/wiki/ISO_3166-2:RU</a> — деление на регионы в РФ;<br>
 • <a href="https://developer.paypal.com/docs/api/reference/country-codes/">https://developer.paypal.com/docs/api/reference/country-codes/</a> — двухбуквенные коды стран.<br>
 */
-    private static ShippingDetail newShippingDetail (String userName)
+    private static ShippingDetail newShippingDetail (String userName, Order ourOrder)
     {
+        ShippingInfo si = ourOrder.getShippingInfo();
         return new ShippingDetail()
             .name (new Name().fullName (userName))
             .addressPortable (new AddressPortable()
-                    .addressLine1 ("18 Dmitrovskaya St")
-                    .addressLine2 ("216")
-                    .adminArea2 ("Moscow")
-                    .adminArea1 ("RU-MOW")
-                    .postalCode ("125540")
-                    .countryCode ("RU"));
+                    .addressLine1 (si.getStreetHouse())
+                    .addressLine2 (si.getApartment())
+                    .adminArea2   (si.getTownVillage())
+                    .adminArea1   (si.getRegion())
+                    .postalCode   (si.getPostalCode())
+                    .countryCode  (si.getCountryCode()));
     }
 }

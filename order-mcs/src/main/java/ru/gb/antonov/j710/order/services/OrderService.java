@@ -11,9 +11,8 @@ import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 import ru.gb.antonov.j710.order.dtos.OrderDetalesDto;
 import ru.gb.antonov.j710.order.dtos.OrderDto;
-import ru.gb.antonov.j710.order.entities.Order;
-import ru.gb.antonov.j710.order.entities.OrderItem;
-import ru.gb.antonov.j710.order.entities.OrderState;
+import ru.gb.antonov.j710.order.dtos.ShippingInfoDto;
+import ru.gb.antonov.j710.order.entities.*;
 import ru.gb.antonov.j710.order.integration.OrderToCartCallService;
 import ru.gb.antonov.j710.order.integration.OrderToOurUserCallService;
 import ru.gb.antonov.j710.order.integration.OrderToProductCallService;
@@ -33,13 +32,12 @@ import static ru.gb.antonov.j710.monolith.Factory.orderCreationTimeToString;
 @RequiredArgsConstructor
 public class OrderService
 {
-    private final OrdersRepo                ordersRepo;
+    private final OrdersRepo       ordersRepo;
+    private final OrderItemRepo    orderItemRepo;
     private final OrderToOurUserCallService orderToOurUserCallService;
     private final OrderToProductCallService orderToProductCallService;
     private final OrderToCartCallService    orderToCartCallService;
     private final OrderStatesService        orderStatesService;
-    private final OrderItemRepo             orderItemRepo;
-
 //---------------------------------------------------------------------------------------
     @Transactional
     public OrderDetalesDto getOrderDetales (String login)
@@ -51,6 +49,7 @@ public class OrderService
 
         OrderDetalesDto odt = new OrderDetalesDto();
         odt.setCartDto (dryCartDto);
+        odt.setShippingInfoDto (new ShippingInfoDto());
         return odt;
     }
 
@@ -75,25 +74,23 @@ public class OrderService
 
         Long ouruserId    = orderToOurUserCallService.userIdByLogin (username);
         OrderState oState = orderStatesService.getOrderStatePending();
+        ShippingInfo shippingInfo = ShippingInfo.fromShippingInfoDto(detales.getShippingInfoDto());
 
         Order o = new Order();
-        o.setState (oState);
-        o.setOuruserId (ouruserId);
-        o.setPhone (detales.getPhone());
-        o.setAddress (detales.getAddress());
-        o.setOrderItems (cartDto.getOitems()
+        List<OrderItem> oitems = cartDto.getOitems()
                                 .stream()
                                 .map ((dto)->orderItemFromDto (o, dto))
-                                .collect (Collectors.toList()));
-        o.setCost (cartDto.getCost());
+                                .collect (Collectors.toList());
+        o.setOrderItems (oitems);
+        o.setAllItemsCost (cartDto.getCost());
+        o.setOuruserId (ouruserId);
+        o.setState (oState);
+        o.setShippingInfo (shippingInfo);
         ordersRepo.save (o);
 
         detales.setOrderNumber (o.getId());
         detales.setOrderState (oState.getFriendlyName());
         detales.setOrderCreationTime (orderCreationTimeToString (o.getCreatedAt()));
-        //detales.setDeliveryType ("Самовывоз");  TODO: сделать ниспадающий список на стр.оформления заказа.
-        //detales.setDeliveryCost (0.0);        //TODO: поменять на чтение стоимости выбранной доставки.
-        detales.setOverallCost (o.getCost().add (detales.getDeliveryCost()));
 
         //(Оставляем dryCart в OrderDetalesDto, чтобы юзер мог на неё посмотреть перед уходом со
         // страницы заказа.)
@@ -129,6 +126,8 @@ public class OrderService
         return list;
     }
 
+/** Составляем DTO-шку для сделанного ранее заказа. Используется в лином кабинете пользователя
+ для демонстрации пользователю списка его заказов. */
     public OrderDto orderToDto (Order o)
     {
         if (o == null)
@@ -139,9 +138,9 @@ public class OrderService
 
         odto.setOrderNumber (o.getId());
         odto.setState       (o.getState().getFriendlyName());
-        odto.setAddress     (o.getAddress());
-        odto.setPhone       (o.getPhone());
-        odto.setCost        (o.getCost());
+        odto.setAddress     (o.getShippingInfo().getAddress());
+        odto.setPhone       (o.getShippingInfo().getPhone());
+        odto.setCost(o.getAllItemsCost());
         odto.setOitems      (o.getOrderItems().stream().map ((oi)->orderItemToDto (oi, oitemLoad))
                               .collect (Collectors.toList()));
         odto.setLoad        (oitemLoad[0]);
