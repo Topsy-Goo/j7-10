@@ -1,7 +1,6 @@
 package ru.gb.antonov.j710.order.entities;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -10,25 +9,22 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-@Entity  @Data  @NoArgsConstructor  @Table (name="orders")
+@Entity  @Data  @Table (name="orders")
 public class Order
 {
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Id    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="id")
     private Long id;
 
     @Column(name="ouruser_id", nullable=false)
     private Long ouruserId;
 
-    @Column (name="phone", nullable=false)
-    private String phone;
+    @ManyToOne (cascade = {CascadeType.PERSIST})
+    @JoinColumn (name="shipping_info_id", nullable=false)
+    private ShippingInfo shippingInfo;
 
-    @Column (name="address", nullable=false)
-    private String address;
-
-    @Column (name="cost", nullable=false)
-    private BigDecimal cost = BigDecimal.ZERO;    //< общая стоимость выбранных/купленных товаров
+    @Column (name="all_items_cost", nullable=false)
+    private BigDecimal allItemsCost = BigDecimal.ZERO;
 
     @ManyToOne    @JoinColumn (name="orderstate_id", nullable=false)
     private OrderState state;
@@ -38,18 +34,20 @@ public class Order
 
     @CreationTimestamp    @Column (name="updated_at")
     private LocalDateTime updatedAt;
+
 //--------неколонки
     @OneToMany (mappedBy="order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<OrderItem> orderItems;
-    //У OrderItem'мов не нужно указывать cascade, т.к. мы их тянем за собой в БД,
-    // а не они нас.
+
 //----------------------------------------------------------------------
+    public Order () {}
     public List<OrderItem> getOrderItems () { return Collections.unmodifiableList (orderItems); }
 
-    public void setOrderItems (List<OrderItem> value) {  orderItems = value;  }
+//    public void setOrderItems (List<OrderItem> value) {  orderItems = value;  }
 //----------------------------------------------------------------------
     @Override public String toString()
-    {   return String.format ("Order:[id:%d, uid:%d, phone:%s, addr:%s]_with_[%s]",
-                              id, ouruserId, phone, address, orderItems);
+    {   return String.format ("Order:[id:%d, uid:%d, cost:%.2f, ph:%s, adr:%s]_with_[%s]",
+                              id, ouruserId, allItemsCost,
+                              shippingInfo.getPhone(), shippingInfo.getAddress(), orderItems);
     }
 }

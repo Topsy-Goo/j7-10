@@ -5,9 +5,7 @@
 
 Создан в рамках работы над курсовым проектом «Интерет-магазин» (Java 7). Сначало магазин писался в проекте j7-1, но в какой-то момент преподаватель решил пилить магазин на микросервисы, и, чтобы не потерять всё, магазин получил вторую инкарнацию в виде проекта l7-10.
 
-На базе этого проекта выполнены следующие ДЗ:
-• ДЗ-10
-• ДЗ-11
+На базе этого проекта выполнены ДЗ 10…12.
 
 SELECT * FROM CATEGORIES;
 SELECT * FROM ORDERITEMS;
@@ -19,27 +17,20 @@ SELECT * FROM OURUSERS_ROLES;
 SELECT * FROM OURPERMISSIONS;
 SELECT * FROM OURUSERS_OURPERMISSIONS;
 SELECT * FROM PRODUCTS;
-SELECT * FROM DELIVERY_TYPES;
+SELECT * FROM SHIPPING_INFO;
 SELECT * FROM PRODUCTREVIEWS;
 
 memurai-cli --scan
 memurai-cli flushall
 docker-compose up
 
-18181/monolith
-8191/cart-mcs
-22854/order-mcs
-11540/productreview-mcs
-5555/gateway	(шлюз)
-3000/static-html
-7777/users-mcs
-
-В магазин:	http://localhost:5555/shop/index.html
-В консоль:	http://localhost:5555/h2-console
-В консоль:	http://localhost:18181/monolith/h2-console
-В консоль:	http://localhost:7777/ouruser/h2-console
-В консоль:	http://localhost:
-
+18181	monolith
+8191 	cart-mcs
+22854	order-mcs
+11540	productreview-mcs
+5555 	gateway	(шлюз)
+3000 	static-html
+7777 	users-mcs
 
 Домашнее задание 11:
  1. Замените интеграцию core с корзиной с RestTemplate на WebClient
@@ -47,25 +38,15 @@ docker-compose up
  3. * Попробуйте разобраться с CORS Policy для Auth Server
 
 Домашнее задание 12:
- 1.Сделать PayPal
- 2.Сделать форму для адреса доставки.
- 3.Заменить double на BigDecimal.
+1. Замените везде price/totalPrice/пр. price'ы с типа int на тип BigDecimal
+2. Добавьте заказам статусы, при успешной оплате переведите заказ в статус оплачено
+   (В ДЗ вам понадобится создать свой аккаунт разработчика paypal.)
+3. *** Попробуйте завернуть весь проект в пачку образов и один docker-compose
 
 Комментарий для след. коммита:
-• Перевели цены на BigDecimal
-• Прикрутили PayPal.
-•
-
-//TODO: *** >>> --
-//TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:  ----  испортить данные в secret.properties.
-//TODO: *** >>> --
+• .
+• .
+• .
 
 Комментарий для ДЗ:
 
-//TODO: помы почистить
-//TODO: AppConfig-и удалить?
-//TODO: * При авторизации из корзины, она пустеет до обновления страницы. Нужно обновлять страницу при авторизации. * При обновлении страницы магазина, показывается первая страница.
-//TODO: Нет сортировки товаров при выводе их списка на витрину.
-
-Generated Credit Card Details:	Visa		4627586082954754	11/2025		203
-Generated Credit Card Details:	MasterCard	5275940405880695	07/2022		249

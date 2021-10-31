@@ -20,6 +20,7 @@ angular.module('market-front').controller('orderController',
 		function successCallback (response)
 		{
 			$scope.orderDetails = response.data;
+			console.log ($scope.orderDetails);
 			if ($scope.orderDetails.cartDto.load <= 0)
 			{
 				message = 'Заказ пуст.';
@@ -28,9 +29,7 @@ angular.module('market-front').controller('orderController',
 				$location.path('/cart')
 			}
 			else
-			{	//тут мы получаем данные о выбранных товарах. В списке отсутствуют «пустые» позиции.
-				//TODO:	Возможно, следует юзеру сообщить об их отсутствии.
-				$scope.contextPrompt = "Ваш заказ сформирован.";
+			{	$scope.contextPrompt = "Ваш заказ сформирован.";
 				$scope.cart = $scope.orderDetails.cartDto;
 				console.log ('Детали заказа загружены:');
 				console.log (response.data);
@@ -85,6 +84,10 @@ angular.module('market-front').controller('orderController',
 	- отключить антибаннер(ы) на странице оформления заказа.
 	P.S. Если это вам покажется слишком геморройным для простого проекта с двумя кнопками, то значит вы не любите программировать.
 */
+/*	the server responded with a status of 499	-	Касперский
+	net::ERR_BLOCKED_BY_CLIENT	-	AdblockPlus
+	Document is ready and element #paypal-buttons does not exist	-	кнопка не отрисована ко времени, когда она нужна какому-то скрипту (отрисовку может задержать какая-то ошибка или код страницы);
+*/
 	$scope.renderPaymentButtons = function()
 	{
 		$scope.canPay = false;
@@ -108,8 +111,15 @@ angular.module('market-front').controller('orderController',
                 {
                     method: 'post',
                     headers: {'content-type': 'application/json'}
+
+					$scope.orderDetails.orderState = 'Оплачен'; //Это для описания заказа.
                 })
-                .then(function(response) {response.text().then(msg => alert(msg));});
+                .then(function(response)
+                {
+                	response.text().then(msg => alert(msg));
+                	/* Статус заказа изменяется на «оплачен» в PayPalController перед самым возвратом из
+                	обработчика …/api/v1/paypal/create/{payPalId}. */
+                });
             },
             onCancel: function (data) {console.log ("Order canceled: " + data);},
             onError:  function (err)  {console.log (err);}

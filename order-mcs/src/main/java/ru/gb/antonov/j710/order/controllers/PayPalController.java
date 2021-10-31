@@ -52,7 +52,7 @@ public class PayPalController
         {
             long orderId = Long.parseLong (payPalOrder.purchaseUnits().get(0).referenceId());
             orderService.setOrderStateToPayed (orderId);
-            return new ResponseEntity<>("Заказ оформлен!", HttpStatus.valueOf (response.statusCode()));
+            return new ResponseEntity<>("Заказ оплачен!", HttpStatus.valueOf (response.statusCode()));
         }
         return new ResponseEntity<>(payPalOrder, HttpStatus.valueOf (response.statusCode()));
     }

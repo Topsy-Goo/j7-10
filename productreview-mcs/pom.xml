@@ -27,43 +27,8 @@
 					<groupId>com.paypal.sdk</groupId>
 					<artifactId>checkout-sdk</artifactId>
 				</exclusion>
-<!--				<exclusion>-->
-<!--					<groupId>org.springframework.boot</groupId>-->
-<!--					<artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--				</exclusion>-->
-<!--				<exclusion>-->
-<!--					<groupId>org.springframework.boot</groupId>-->
-<!--					<artifactId>spring-boot-starter-security</artifactId>-->
-<!--				</exclusion>-->
-<!--				<exclusion>-->
-<!--					<groupId>org.postgresql</groupId>-->
-<!--					<artifactId>postgresql</artifactId>-->
-<!--				</exclusion>-->
 			</exclusions>
 		</dependency>
-<!--		<dependency>	&lt;!&ndash; Библиотека для генерации кода: геттеры, сеттеры, конструкторы и др. &ndash;&gt;
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>-->
-<!--		<dependency>	&lt;!&ndash; Почему-то не унаследовалось от order-mcs. &ndash;&gt;
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>-->
-<!--		<dependency>	&lt;!&ndash; Почему-то не унаследовалось от order-mcs. &ndash;&gt;
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>-->
-<!--		<dependency>	&lt;!&ndash; Почему-то не унаследовалось от order-mcs. &ndash;&gt;
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>-->
-<!--		<dependency>	&lt;!&ndash; Почему-то не унаследовалось от order-mcs. &ndash;&gt;-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-security</artifactId>-->
-<!--		</dependency>-->
 	</dependencies>
 
 </project>

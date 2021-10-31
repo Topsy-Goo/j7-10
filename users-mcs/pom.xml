@@ -25,11 +25,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
-<!--		<dependency>	&lt;!&ndash; Библиотека для генерации кода: геттеры, сеттеры, конструкторы и др. &ndash;&gt;
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>-->
 		<dependency>	<!-- для организации авторизации при пом.(чего?) -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>

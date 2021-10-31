@@ -32,10 +32,25 @@ public class Factory
     public static final int EMAIL_LEN_MIN = 5;
     public static final int EMAIL_LEN_MAX = 64;
     public static final int DELIVERING_ADDRESS_LEN_MAX  = 255;
-    public static final int DELIVERING_PHONE_LEN_MAX    = 16;
-    public static final int DELIVERING_PHONE_LEN_MIN    = 1;   //TODO: исправить на 10.
-    public static final int ORDERSTATE_SHORTNAME_LEN    = 16;  //TODO: исправить на 10 в т.ч. в sql.
+    public static final int DELIVERING_PHONE_LEN_MAX    = 20;
+    public static final int DELIVERING_PHONE_LEN_MIN    = 1;
+    public static final int ORDERSTATE_SHORTNAME_LEN    = 16;
     public static final int ORDERSTATE_FRIENDLYNAME_LEN = 64;
+
+    public static final int DELIVERING_COUNTRYCODE_LEN_MAX = 2;
+    public static final int DELIVERING_COUNTRYCODE_LEN_MIN = 2;
+    public static final int DELIVERING_POSTALCODE_LEN_MIN = 6;
+    public static final int DELIVERING_POSTALCODE_LEN_MAX = 6;
+    public static final int DELIVERING_REGION_LEN_MIN = 0;
+    public static final int DELIVERING_REGION_LEN_MAX = 100;
+    public static final int DELIVERING_TOWN_VILLAGE_LEN_MIN = 2;
+    public static final int DELIVERING_TOWN_VILLAGE_LEN_MAX = 100;
+    public static final int DELIVERING_STREET_HOUSE_LEN_MIN = 1;
+    public static final int DELIVERING_STREET_HOUSE_LEN_MAX = 100;
+    public static final int DELIVERING_APARTMENT_LEN_MIN = 0;
+    public static final int DELIVERING_APARTMENT_LEN_MAX = 100;
+    public static final String DELIVERY_TYPE_FRIENDLYNAME_SELFY = "Самовывоз";
+    public static final String DELIVERY_TYPE_FRIENDLYNAME_RFPOST = "Почта России";
 
     public static final String BRAND_NAME_ENG = "Marketplace";
     public static final String STR_EMPTY      = "";

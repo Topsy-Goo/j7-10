@@ -58,7 +58,6 @@ public class OrderController
         return orderService.getUserOrdersAsOrderDtos (username);
     }
 
-
     @GetMapping ("/payed_order_items/{uid}/{pid}")
     public Integer payedOrderItemsCountByUserIdAndProductId (@PathVariable Long uid, @PathVariable Long pid)
     {
