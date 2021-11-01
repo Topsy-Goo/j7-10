@@ -183,4 +183,4 @@ public class OrderService
     public void setOrderStateToPayed (@NotNull Long orderId)
     {   findById (orderId).ifPresent (o->o.setState (orderStatesService.getOrderStatePayed()));
     }
-}
+}//1

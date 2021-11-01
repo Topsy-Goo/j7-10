@@ -82,7 +82,7 @@ angular.module('market-front').controller('orderController',
 	- разрешить антивирусу сбор данных на сайте localhost:5555 или на стр.оформления заказа;
 	- отключить антибаннер(ы) на странице оформления заказа.
 	P.S. Если это вам покажется слишком геморройным для простого проекта с двумя кнопками, то значит вы не любите программировать.
-*/
+*//*1*/
 /*	the server responded with a status of 499	-	Касперский
 	net::ERR_BLOCKED_BY_CLIENT	-	AdblockPlus
 	Document is ready and element #paypal-buttons does not exist	-	кнопка не отрисована ко времени, когда она нужна какому-то скрипту (отрисовку может задержать какая-то ошибка или код страницы);

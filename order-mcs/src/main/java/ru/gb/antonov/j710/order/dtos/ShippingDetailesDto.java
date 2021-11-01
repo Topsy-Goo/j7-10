@@ -38,4 +38,4 @@ public class ShippingDetailesDto
     public void setDeliveryType (String value) { deliveryType = set (value); }
 
     private static String set (String value) { return (value == null) ? STR_EMPTY : value; }
-}
+}//1

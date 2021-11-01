@@ -77,4 +77,4 @@ public class ShippingInfo
         return String.format ("%s, %s, %s, %s, %s, %s.",
             countryCode, postalCode, region, townVillage, streetHouse, apartment);
     }
-}
+}//1

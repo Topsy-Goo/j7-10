@@ -44,15 +44,4 @@ public class ShippingInfoDto
         return String.format ("%s, %s, %s, %s, %s, %s.",
                               countryCode, postalCode, region, townVillage, streetHouse, apartment);
     }
-/*    public static ShippingInfoDto dummyShippingInfoDto ()
-    {
-        ShippingInfoDto sidto = new ShippingInfoDto();
-        sidto.countryCode = "RU";
-        sidto.postalCode = STR_EMPTY;
-        //sidto.region = ;
-        sidto.townVillage = STR_EMPTY;
-        sidto.streetHouse = STR_EMPTY;
-        //sidto.apartment = ;
-        return sidto;
-    }*/
 }

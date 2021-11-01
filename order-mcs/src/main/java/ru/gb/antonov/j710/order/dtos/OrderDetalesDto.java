@@ -26,4 +26,4 @@ public class OrderDetalesDto
 
     public ShippingInfoDto getShippingInfoDto ()           { return shippingInfoDto; }
     public void setShippingInfoDto (ShippingInfoDto value) { shippingInfoDto = value; }
-}
+}//1

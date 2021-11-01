@@ -20,4 +20,4 @@ public class PayPalConfig
     private void init()  { environment = new PayPalEnvironment.Sandbox (clientId, secret); }
 
     @Bean public PayPalHttpClient payPalClient() { return new PayPalHttpClient (environment); }
-}
+}//1

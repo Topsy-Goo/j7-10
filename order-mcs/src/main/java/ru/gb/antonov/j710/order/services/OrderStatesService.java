@@ -18,4 +18,4 @@ public class OrderStatesService
     public OrderState getOrderStateServing ()  { return orderStatesRepo.findByShortName (ORDERSTATE_SERVING); }
     public OrderState getOrderStatePayed ()    { return orderStatesRepo.findByShortName (ORDERSTATE_PAYED); }
     public OrderState getOrderStateCanceled () { return orderStatesRepo.findByShortName (ORDERSTATE_CANCELED); }
-}//1
+}
