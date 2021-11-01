@@ -7,6 +7,7 @@ import ru.gb.antonov.j710.order.dtos.ShippingInfoDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 import static ru.gb.antonov.j710.monolith.Factory.STR_EMPTY;
 
@@ -62,6 +63,13 @@ public class ShippingInfo
     }
     private static String setOrEmpty (String value) {   return (value == null) ? STR_EMPTY : value;   }
 //-------------------------------------------------------------------------
+/** Приводим в порядок некоторые поля. */
+    public ShippingInfo adjust ()
+    {
+        countryCode = countryCode.trim().toUpperCase(Locale.ROOT);
+        return this;
+    }
+
     @Override public String toString()    {   return getAddress()+ " телефон: " + getPhone();    }
 
     public String getAddress ()

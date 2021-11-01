@@ -13,18 +13,11 @@ public class PayPalConfig
 {
     @Value("${paypal.client-id}")        private String clientId;
     @Value("${paypal.client-secret}")    private String secret;
-    @Value("${paypal.mode}")             private String mode;
+    //@Value("${paypal.mode}")             private String mode;
     private PayPalEnvironment environment;
 
     @PostConstruct
-    private void init()
-    {
-/*        if (mode.equals("#")) < в живом режиме использовать этот проект вряд ли придётся
-            environment = new PayPalEnvironment.Live (clientId, secret);
-        else*/
-            environment = new PayPalEnvironment.Sandbox (clientId, secret);
-    }
+    private void init()  { environment = new PayPalEnvironment.Sandbox (clientId, secret); }
 
-    @Bean
-    public PayPalHttpClient payPalClient() { return new PayPalHttpClient (environment); }
+    @Bean public PayPalHttpClient payPalClient() { return new PayPalHttpClient (environment); }
 }

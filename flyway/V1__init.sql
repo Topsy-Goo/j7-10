@@ -67,7 +67,7 @@ CREATE TABLE categories
 	updated_at	TIMESTAMP DEFAULT current_timestamp,
 	PRIMARY KEY (id)
 );
-INSERT INTO categories (name) VALUES	('A'),	('B'),	('C'),	('D');
+INSERT INTO categories (name) VALUES	('A'),	('B'),	('C'),	('D'),	('E');
 -- ----------------------------------------------------------------------
 CREATE TABLE products					-- TODO: помни о SOAP.
 (	id			bigserial,
@@ -135,13 +135,13 @@ INSERT INTO orderstates (short_name,	friendly_name) VALUES
 -- ----------------------------------------------------------------------
 CREATE TABLE shipping_info
 (
-	id					bigserial,
+	id					bigserial, --					   PayPal
 	country_code		VARCHAR(2)	, -- country_code		2
 	postal_code			VARCHAR(6)	, -- postal_code		6
-	region				VARCHAR(100), -- admin_area_1		0…100
-	town_village		VARCHAR(100), -- admin_area_2		1…100
-	street_house		VARCHAR(100), -- address_line_1		1…100
-	apartment			VARCHAR(100), -- address_line_2		0…100
+	region				VARCHAR(60), -- admin_area_1		0…300
+	town_village		VARCHAR(100), -- admin_area_2		1…300
+	street_house		VARCHAR(100), -- address_line_1		1…300
+	apartment			VARCHAR(20), -- address_line_2		0…20
 	phone				VARCHAR(20)	NOT NULL, -- +7 (800) 600-40-50
 	created_at		TIMESTAMP DEFAULT current_timestamp,
 	updated_at		TIMESTAMP DEFAULT current_timestamp,

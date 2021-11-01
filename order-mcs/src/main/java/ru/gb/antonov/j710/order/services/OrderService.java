@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.gb.antonov.j710.monolith.Factory.ORDER_IS_EMPTY;
 import static ru.gb.antonov.j710.monolith.Factory.orderCreationTimeToString;
 
 @Service
@@ -45,7 +46,7 @@ public class OrderService
         CartDto dryCartDto = orderToCartCallService.getDryCartDto (login);
 
         if (dryCartDto.getTitlesCount() <= 0)
-            throw new UnableToPerformException("Заказ пуст.");
+            throw new UnableToPerformException (ORDER_IS_EMPTY);
 
         OrderDetalesDto odt = new OrderDetalesDto();
         odt.setCartDto (dryCartDto);
@@ -70,11 +71,11 @@ public class OrderService
     {
         CartDto cartDto   = detales.getCartDto();
         if (cartDto.getTitlesCount() <= 0)
-            throw new UnableToPerformException ("Заказ пуст.");
+            throw new UnableToPerformException (ORDER_IS_EMPTY);
 
         Long ouruserId    = orderToOurUserCallService.userIdByLogin (username);
         OrderState oState = orderStatesService.getOrderStatePending();
-        ShippingInfo shippingInfo = ShippingInfo.fromShippingInfoDto(detales.getShippingInfoDto());
+        ShippingInfo shippingInfo = ShippingInfo.fromShippingInfoDto (detales.getShippingInfoDto()).adjust();
 
         Order o = new Order();
         List<OrderItem> oitems = cartDto.getOitems()
@@ -92,11 +93,9 @@ public class OrderService
         detales.setOrderState (oState.getFriendlyName());
         detales.setOrderCreationTime (orderCreationTimeToString (o.getCreatedAt()));
 
-        //(Оставляем dryCart в OrderDetalesDto, чтобы юзер мог на неё посмотреть перед уходом со
-        // страницы заказа.)
-        //Удаляем из корзины юзера НЕпустые позиции, — они были перенесены в dryCart. Пустые —
-        // оставляем, чтобы юзер их сам удалил, если захочет:
-        orderToCartCallService./*clearCart*/removeNonEmptyItems (username);
+    //(Оставляем dryCart в OrderDetalesDto, чтобы юзер мог на неё посмотреть перед уходом со страницы заказа.)
+    //Удаляем из корзины юзера НЕпустые позиции, — они были перенесены в dryCart. Пустые — оставляем, чтобы юзер их сам удалил, если захочет.
+        orderToCartCallService.removeNonEmptyItems (username);
         return detales;
     }
 

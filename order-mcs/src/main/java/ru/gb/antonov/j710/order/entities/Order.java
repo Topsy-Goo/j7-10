@@ -38,12 +38,9 @@ public class Order
 //--------неколонки
     @OneToMany (mappedBy="order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<OrderItem> orderItems;
-
 //----------------------------------------------------------------------
     public Order () {}
     public List<OrderItem> getOrderItems () { return Collections.unmodifiableList (orderItems); }
-
-//    public void setOrderItems (List<OrderItem> value) {  orderItems = value;  }
 //----------------------------------------------------------------------
     @Override public String toString()
     {   return String.format ("Order:[id:%d, uid:%d, cost:%.2f, ph:%s, adr:%s]_with_[%s]",

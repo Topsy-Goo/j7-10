@@ -2,12 +2,10 @@ package ru.gb.antonov.j710.monolith;
 
 import org.springframework.core.env.Environment;
 import org.springframework.util.MultiValueMap;
-import ru.gb.antonov.j710.monolith.beans.errorhandlers.UnableToPerformException;
 import ru.gb.antonov.j710.monolith.entities.Product;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -36,21 +34,12 @@ public class Factory
     public static final int DELIVERING_PHONE_LEN_MIN    = 1;
     public static final int ORDERSTATE_SHORTNAME_LEN    = 16;
     public static final int ORDERSTATE_FRIENDLYNAME_LEN = 64;
-
-    public static final int DELIVERING_COUNTRYCODE_LEN_MAX = 2;
-    public static final int DELIVERING_COUNTRYCODE_LEN_MIN = 2;
-    public static final int DELIVERING_POSTALCODE_LEN_MIN = 6;
-    public static final int DELIVERING_POSTALCODE_LEN_MAX = 6;
-    public static final int DELIVERING_REGION_LEN_MIN = 0;
-    public static final int DELIVERING_REGION_LEN_MAX = 100;
-    public static final int DELIVERING_TOWN_VILLAGE_LEN_MIN = 2;
+    public static final int DELIVERING_COUNTRYCODE_LEN      = 2;
+    public static final int DELIVERING_POSTALCODE_LEN       = 6;
+    public static final int DELIVERING_REGION_LEN_MAX       = 60;
     public static final int DELIVERING_TOWN_VILLAGE_LEN_MAX = 100;
-    public static final int DELIVERING_STREET_HOUSE_LEN_MIN = 1;
     public static final int DELIVERING_STREET_HOUSE_LEN_MAX = 100;
-    public static final int DELIVERING_APARTMENT_LEN_MIN = 0;
-    public static final int DELIVERING_APARTMENT_LEN_MAX = 100;
-    public static final String DELIVERY_TYPE_FRIENDLYNAME_SELFY = "Самовывоз";
-    public static final String DELIVERY_TYPE_FRIENDLYNAME_RFPOST = "Почта России";
+    public static final int DELIVERING_APARTMENT_LEN_MAX    = 20;
 
     public static final String BRAND_NAME_ENG = "Marketplace";
     public static final String STR_EMPTY      = "";
@@ -72,11 +61,12 @@ public class Factory
     public static final String JWT_PAYLOAD_ROLES = "roles";    //< должно совпадать с одноимённой переменной в gateway.GatewayApp
     public static final String INAPP_HDR_LOGIN   = "username"; //< должно совпадать с одноимённой переменной в gateway.GatewayApp
     public static final String INAPP_HDR_ROLES   = "roles";    //< должно совпадать с одноимённой переменной в gateway.GatewayApp
+    public static final String ORDER_IS_EMPTY = " Заказ пуст. ";
 
     public static final MultiValueMap<String, String> NO_FILTERS = null;
     public static final Locale RU_LOCALE = new Locale ("ru", "RU");
     public static final String NO_STRING = null;
-    public static final MathContext MATH_CONTEXT2 = new MathContext(2);
+    //public static final MathContext MATH_CONTEXT2 = new MathContext(2);
 //------------------------------------------------------------------------
     public static void init (Environment env)
     {

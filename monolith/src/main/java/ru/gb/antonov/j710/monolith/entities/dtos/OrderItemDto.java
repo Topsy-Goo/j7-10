@@ -58,8 +58,6 @@ public class OrderItemDto
 
 //----------------- Другие методы ----------------------------------
 
-    //Возвращает true, если количество было изменено.
+/** Возвращает true, если количество было изменено.    */
     public boolean changeQuantity (int delta) {   return setQuantity (quantity + delta);   }
-
-    //private void calcCost () {   setCost (price * quantity);   }
 }

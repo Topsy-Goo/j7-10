@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.ResourceNotFoundException;
+import ru.gb.antonov.j710.monolith.beans.errorhandlers.UnableToPerformException;
 import ru.gb.antonov.j710.monolith.beans.repositos.ProductRepo;
 import ru.gb.antonov.j710.monolith.beans.repositos.specifications.ProductSpecification;
 import ru.gb.antonov.j710.monolith.entities.*;
@@ -18,20 +19,20 @@ import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static ru.gb.antonov.j710.monolith.Factory.MIN_PRICE;
 import static ru.gb.antonov.j710.monolith.Factory.NO_FILTERS;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService
 {
-    private final ProductRepo productRepo;
+    private final ProductRepo            productRepo;
     private final ProductCategoryService productCategoryService;
-    //private final OrderService orderService;  кольцует
 
 //названия фильтров, использующиеся на фронте:
     private static final String FILTER_MIN_PRICE = "min_price";
     private static final String FILTER_MAX_PRICE = "max_price";
-    private static final String FILTER_TITLE = "title";
+    private static final String FILTER_TITLE     = "title";
 //-----------------------------------------------------------------------
 
 /** @throws ResourceNotFoundException */
@@ -94,6 +95,9 @@ public class ProductService
     @Transactional
     public Product updateProduct (@NotNull Long id, String title, BigDecimal price, Integer rest, String productCategoryName)
     {
+        if (price != null && price.compareTo (MIN_PRICE) > 0)
+            throw new UnableToPerformException ("Указаная цена меньше минимальной: "+ price);
+
         Product p = findById (id);
         ProductsCategory category = null;
 
@@ -110,11 +114,8 @@ public class ProductService
     @Transactional
     public void deleteById (Long id)
     {
-        //TODO: Редактирование товаров пока не входит в план проекта.
-        //TODO: добавить к этому НЕвозможность показывать такой товар на витрине.
         Product p = findById (id);  //< бросает ResourceNotFoundException
         p.setRest (0);
-        //productRepo.delete(p);
     }
 //-------------- Фильтры ------------------------------------------------
     @NotNull private Specification<Product> constructSpecification (@Nullable MultiValueMap<String, String> params)

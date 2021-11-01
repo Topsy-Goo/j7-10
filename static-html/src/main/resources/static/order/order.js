@@ -6,7 +6,7 @@ angular.module('market-front').controller('orderController',
 	const contextPaypalPath = 'http://localhost:5555/market/paypal';
 
 	var cartPageCurrent  = 0;
-	var cartPageTotal    = 0;
+	var cartPageTotal	= 0;
 	$scope.orderNumber   = 0;
 	$scope.contextPrompt = "";
 	$scope.showForm 	 = true;
@@ -67,8 +67,7 @@ angular.module('market-front').controller('orderController',
 			$scope.contextPrompt = "Произошла ошибка! ";
 			console.log (response.data.messages);
 			alert ($scope.contextPrompt + response.data.messages);
-			/* если выводим сообщение от валидатора, то нужно укзаывать имя поля с сообщением,
-			например:	response.data.messages,
+			/* если выводим сообщение от валидатора, то нужно укзаывать имя поля с сообщением, например:	response.data.messages,
 			а для всех нормальных сообщений — указываем только response.data.	*/
 		});
 	}
@@ -91,40 +90,34 @@ angular.module('market-front').controller('orderController',
 	$scope.renderPaymentButtons = function()
 	{
 		$scope.canPay = false;
-		console.log ('Показ кнопки PayPal.');
-		console.log ($scope.orderDetails);
+		console.log ('Показ кнопки PayPal.');		console.log ($scope.orderDetails);
+		paypal.Buttons(
+		{
+			createOrder: function(data, actions)
+			{
+				return fetch(contextPaypalPath + '/create/' + $scope.orderDetails.orderNumber,
+				{	method: 'post',
+					headers: {'content-type': 'application/json'}
+				})
+				.then(function(response) {return response.text();});
+			},
+			onApprove: function(data, actions)
+			{
+				return fetch(contextPaypalPath + '/capture/' + data.orderID,
+				{	method: 'post',
+					headers: {'content-type': 'application/json'}
 
-        paypal.Buttons(
-        {
-            createOrder: function(data, actions)
-            {
-                return fetch(contextPaypalPath + '/create/' + $scope.orderDetails.orderNumber,
-                {
-                    method: 'post',
-                    headers: {'content-type': 'application/json'}
-                })
-                .then(function(response) {return response.text();});
-            },
-            onApprove: function(data, actions)
-            {
-                return fetch(contextPaypalPath + '/capture/' + data.orderID,
-                {
-                    method: 'post',
-                    headers: {'content-type': 'application/json'}
-
-					$scope.orderDetails.orderState = 'Оплачен'; //Это для описания заказа.
-                })
-                .then(function(response)
-                {
-                	response.text().then(msg => alert(msg));
-                	/* Статус заказа изменяется на «оплачен» в PayPalController перед самым возвратом из
-                	обработчика …/api/v1/paypal/create/{payPalId}. */
-                });
-            },
-            onCancel: function (data) {console.log ("Order canceled: " + data);},
-            onError:  function (err)  {console.log (err);}
-        })
-        .render('#paypal-buttons');
+					$scope.orderDetails.orderState = 'Оплачен'; //Это для описания заказа на текущей стр.
+				})
+				.then(function(response)
+				{	response.text().then(msg => alert(msg));
+					/* Статус заказа изменяется на «оплачен» в PayPalController перед самым возвратом из обработчика …/api/v1/paypal/create/{payPalId}. */
+				});
+			},
+			onCancel: function (data) {console.log ("Order canceled: " + data);},
+			onError:  function (err)  {console.log (err);}
+		})
+		.render('#paypal-buttons');
 	}
 
 	$scope.cancelOrdering = function () { $location.path('/cart'); }
