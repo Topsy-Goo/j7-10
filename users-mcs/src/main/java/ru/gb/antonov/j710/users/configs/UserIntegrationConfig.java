@@ -14,12 +14,12 @@ import reactor.netty.tcp.TcpClient;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-public class UserIntegrationConfig
-{
+public class UserIntegrationConfig {
+
     @Value ("${integration.product-service.url}") private String productServiceUrl;
 
-    @Bean public WebClient productServiceWebClient ()
-    {
+    @Bean public WebClient productServiceWebClient () {
+
         return WebClient.builder()
                         .baseUrl (productServiceUrl) //< адрес назначения запроса
                         //.defaultHeader ("my-header", "my-value")  < стандартные хэдеры
@@ -27,8 +27,8 @@ public class UserIntegrationConfig
                         .build();
     }
 
-    private TcpClient newTcpClient (/*int connectionTimeOut, long readTimeOut, long writeTimeOut*/)
-    {
+    private TcpClient newTcpClient (/*int connectionTimeOut, long readTimeOut, long writeTimeOut*/) {
+
         return TcpClient.create()
                         .option (ChannelOption.CONNECT_TIMEOUT_MILLIS, 2000) //< таймаут на соединение
                         .doOnConnected (connection -> {

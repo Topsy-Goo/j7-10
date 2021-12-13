@@ -16,6 +16,7 @@ import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static ru.gb.antonov.j710.monolith.Factory.*;
@@ -24,12 +25,14 @@ import static ru.gb.antonov.j710.monolith.Factory.*;
 @RequestMapping ("/api/v1/products")
 @RequiredArgsConstructor
 //@CrossOrigin ("*")
-public class ProductController
-{
+public class ProductController {
+
     private final ProductService productService;
 
     //@Value ("${views.shop.items-per-page-def}")
-    private final int pageSize = PROD_PAGESIZE_DEF;
+    private final        int    pageSize = PROD_PAGESIZE_DEF;
+    private final static Logger LOGGER   = Logger.getLogger ("ru.gb.antonov.j710.monolith.beans.controllers.ProductController");
+
 //--------------------------------------------------------------------
 
     //http://localhost:18181/monolith/api/v1/products/page?p=0
@@ -38,13 +41,15 @@ public class ProductController
             @RequestParam (defaultValue="0", name="p", required=false) Integer pageIndex,
             @RequestParam MultiValueMap<String, String> filters)
     {
+        LOGGER.info ("Получен GET-запрос: /api/v1/products/page?p=" + pageIndex + "; filters: "+ filters);
         return productService.getPageOfProducts (pageIndex, pageSize, filters);
     }
 
     //http://localhost:18181/monolith/api/v1/products/11
     @GetMapping ("/{id}")
-    public ProductDto findById (@PathVariable Long id)
-    {
+    public ProductDto findById (@PathVariable Long id)    {
+
+        LOGGER.info ("Получен GET-запрос: /api/v1/products/"+id);
         if (id == null)
             throw new UnableToPerformException ("Не могу выполнить поиск для товара id: "+ id);
         return productService.findById (id).toProductDto();
@@ -59,9 +64,10 @@ public class ProductController
                     @RequestHeader(name= INAPP_HDR_LOGIN) String username,
                     @RequestHeader(name= INAPP_HDR_ROLES) String[] roles)
     {
+        LOGGER.info ("Получен POST-запрос: /api/v1/products + "+ pdto +" + "+ username + " + "+ Arrays.toString(roles));
         chechAccessToEditProducts (username, roles);
-        if (br.hasErrors())
-        {   //преобразуем набор ошибок в список сообщений, и пакуем в одно общее исключение (в наше заранее для это приготовленное исключение).
+        if (br.hasErrors()) {
+            //преобразуем набор ошибок в список сообщений, и пакуем в одно общее исключение (в наше заранее для это приготовленное исключение).
             throw new OurValidationException (br.getAllErrors().stream()
                                                 .map (ObjectError::getDefaultMessage)
                                                 .collect (Collectors.toList()));
@@ -77,6 +83,7 @@ public class ProductController
                                                @RequestHeader(name= INAPP_HDR_LOGIN) String username,
                                                @RequestHeader(name= INAPP_HDR_ROLES) String[] roles)
     {
+        LOGGER.info ("Получен PUT-запрос: /api/v1/products + "+ pdto +" + "+ username + " + "+ Arrays.toString(roles));
         chechAccessToEditProducts (username, roles);
         Product p = productService.updateProduct (pdto.getProductId(), pdto.getTitle(), pdto.getPrice(),
                                                   pdto.getRest(), pdto.getCategory());
@@ -89,20 +96,21 @@ public class ProductController
                                    @RequestHeader(name= INAPP_HDR_LOGIN) String username,
                                    @RequestHeader(name= INAPP_HDR_LOGIN) String[] roles)
     {
+        LOGGER.info ("Получен GET-запрос: /api/v1/products/delete/"+ id +" + "+ username + " + "+ Arrays.toString(roles));
         chechAccessToEditProducts (username, roles);
         if (id == null)
             throw new UnableToPerformException ("Не могу удалить товар (Unable to delete product) id: "+ id);
         productService.deleteById (id);
     }
 //----------------------------------------------------------------------
-    private static Optional<ProductDto> toOptionalProductDto (Product p)
-    {
+    private static Optional<ProductDto> toOptionalProductDto (Product p)    {
+
         return p != null ? Optional.of (p.toProductDto())
                          : Optional.empty();
     }
 
-    private void chechAccessToEditProducts (String login, String[] roles)
-    {
+    private void chechAccessToEditProducts (String login, String[] roles)    {
+
         boolean ok = login != null && !login.isBlank() && roles != null && Arrays.asList (roles).contains(PERMISSION_EDIT_PRODUCT);
         if (!ok)
             throw new UnauthorizedAccessException ("Вам это нельзя!");

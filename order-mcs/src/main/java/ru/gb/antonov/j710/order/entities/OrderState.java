@@ -7,9 +7,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity   @Data   @NoArgsConstructor   @Table (name="orderstates")
-public class OrderState
-{
+@Entity
+@Data
+@NoArgsConstructor
+@Table (name="orderstates")
+public class OrderState {
+
     @Id    @Column (name="id")    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -25,5 +28,7 @@ public class OrderState
     @CreationTimestamp    @Column (name="updated_at")
     private LocalDateTime updatedAt;
 //---------------------------------------------------------------------
-    @Override public String toString () { return String.format("ost:[%d, %s, %s]", id, shortName, friendlyName); }
+    @Override public String toString () {
+        return String.format("ost:[%d, %s, %s]", id, shortName, friendlyName);
+    }
 }

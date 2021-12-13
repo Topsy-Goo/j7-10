@@ -5,7 +5,6 @@ import org.springframework.util.MultiValueMap;
 import ru.gb.antonov.j710.monolith.entities.Product;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -41,6 +40,7 @@ public class Factory
     public static final int DELIVERING_STREET_HOUSE_LEN_MAX = 100;
     public static final int DELIVERING_APARTMENT_LEN_MAX    = 20;
 
+    public static final String USE_DEFAULT_STRING = null;
     public static final String BRAND_NAME_ENG = "Marketplace";
     public static final String STR_EMPTY      = "";
     public static final String BEARER_        = "Bearer ";  //< должно совпадать с одноимённой переменной в gateway.GatewayApp
@@ -62,24 +62,25 @@ public class Factory
     public static final String INAPP_HDR_LOGIN   = "username"; //< должно совпадать с одноимённой переменной в gateway.GatewayApp
     public static final String INAPP_HDR_ROLES   = "roles";    //< должно совпадать с одноимённой переменной в gateway.GatewayApp
     public static final String ORDER_IS_EMPTY = " Заказ пуст. ";
+    public static final String ERR_MINPRICE_OUTOF_RANGE = "Указаная цена (%f)\rменьше минимальной (%f).";
 
     public static final MultiValueMap<String, String> NO_FILTERS = null;
     public static final Locale RU_LOCALE = new Locale ("ru", "RU");
     public static final String NO_STRING = null;
     //public static final MathContext MATH_CONTEXT2 = new MathContext(2);
 //------------------------------------------------------------------------
-    public static void init (Environment env)
-    {
+    public static void init (Environment env)    {
+
         System.out.println ("\n************************* Считывание настроек: *************************");
 
         String s;
-        if (isDecimalNumber (s = env.getProperty ("views.shop.page.items"), !FLOAT_POINT))
-        {
+        if (isDecimalNumber (s = env.getProperty ("views.shop.page.items"), !FLOAT_POINT)) {
+
             PROD_PAGESIZE_DEF = Integer.parseInt (s);
             System.out.println ("views.shop.page.items: "+ PROD_PAGESIZE_DEF);
         }
-        if (isDecimalNumber (s = env.getProperty ("app.product.price.min"), FLOAT_POINT))
-        {
+        if (isDecimalNumber (s = env.getProperty ("app.product.price.min"), FLOAT_POINT)) {
+
             MIN_PRICE = BigDecimal.valueOf(Double.parseDouble(s));
             if (MIN_PRICE.compareTo(BigDecimal.ZERO) < 0)
                 MIN_PRICE = BigDecimal.ZERO;
@@ -92,34 +93,32 @@ public class Factory
 /** Составляем строку даты и времени как:  {@code d MMMM yyyy, HH:mm:ss}<p>
     Пример строки:  {@code 20 сентября 2021, 23:10:29}
 */
-    public static String orderCreationTimeToString (LocalDateTime ldt)
-    {
+    public static String orderCreationTimeToString (LocalDateTime ldt) {
+
         return (ldt != null) ? ldt.format(DateTimeFormatter.ofPattern ("d MMMM yyyy, HH:mm:ss", RU_LOCALE))
                              : "(?)";
     }
 
-    public static boolean hasEmailFormat (String email)
-    {
+    public static boolean hasEmailFormat (String email) {
+
         boolean ok = false;
         int at = email.indexOf ('@');
-        if (at > 0 && email.indexOf ('@', at +1) < 0)
-        {
+        if (at > 0 && email.indexOf ('@', at +1) < 0) {
+
             int point = email.indexOf ('.', at);
             ok = point >= at +2;
         }
         return ok;
     }
 
-    public static String  validateString (String s, int minLen, int maxLen)
-    {
-        if (s != null && minLen > 0 && minLen <= maxLen)
-        {
+    public static String  validateString (String s, int minLen, int maxLen) {
+
+        if (s != null && minLen > 0 && minLen <= maxLen) {
+
             s = s.trim();
             int len = s.length();
             if (len >= minLen && len <= maxLen)
-            {
                 return s;
-            }
         }
         return null;
     }
@@ -127,16 +126,16 @@ public class Factory
 /** Проверяем, содержатся ли в строке посторонние символы, которые могут вызвать исключение при переводе строки вчисло. (Занятно, что разработчики Java не позаботились отакой мелочи.)
  @param s собственно срока.
  @param floatPoint {@code true} означает, что число может содержать десятичную точку или запятую. */
-    public static boolean isDecimalNumber (String s, boolean floatPoint)
-    {
+    public static boolean isDecimalNumber (String s, boolean floatPoint) {
+
         if (s == null)
             return false;
 
         char[] arrchar = s.trim().toCharArray();
-        for (char ch : arrchar)
-        {
-            if (ch < '0' || ch > '9')
-            {
+        for (char ch : arrchar) {
+
+            if (ch < '0' || ch > '9') {
+
                 if (!floatPoint || (ch != '.' && ch != ','))
                     return false;
                 floatPoint = false;
@@ -147,14 +146,13 @@ public class Factory
 
 /** @param lines массив строк, подлежащих проверке.
     @return {@code true} — если ни одна из строк lines не пустая и не равна null. */
-    public static boolean sayNoToEmptyStrings (String ... lines)
-    {
+    public static boolean sayNoToEmptyStrings (String ... lines) {
+
         if (lines != null)
-        for (String s : lines)
+        for (String s : lines) {
             if (s == null || s.trim().isEmpty())
-            {
                 return false;
-            }
+        }
         return true;
     }
 }

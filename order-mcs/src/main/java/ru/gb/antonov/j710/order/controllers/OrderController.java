@@ -24,15 +24,15 @@ import static ru.gb.antonov.j710.monolith.Factory.INAPP_HDR_LOGIN;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin ("*")
-public class OrderController
-{
+public class OrderController {
+
     private final OrderService       orderService;
     private final OrderStatesService orderStatesService;
 //-------------------------------------------------------------------------------------------
 
     @GetMapping ("/details")
-    public OrderDetalesDto getOrderDetales (@RequestHeader(name= INAPP_HDR_LOGIN) String username) //в параметр username попадает значение заголовка username; если имя параметра отличается от имени заголовка, то нужно указать, из какого заголовка папраметр должен брать значение
-    {
+    public OrderDetalesDto getOrderDetales (@RequestHeader(name= INAPP_HDR_LOGIN) String username) { //в параметр username попадает значение заголовка username; если имя параметра отличается от имени заголовка, то нужно указать, из какого заголовка папраметр должен брать значение
+
         checkRightsToMakeOrder (username);
         return orderService.getOrderDetales (username);
     }
@@ -53,14 +53,14 @@ public class OrderController
     }
 
     @GetMapping ("/orders")
-    public Collection<OrderDto> getOrders (@RequestHeader(name= INAPP_HDR_LOGIN) String username)
-    {
+    public Collection<OrderDto> getOrders (@RequestHeader(name= INAPP_HDR_LOGIN) String username) {
+
         return orderService.getUserOrdersAsOrderDtos (username);
     }
 
     @GetMapping ("/payed_order_items/{uid}/{pid}")
-    public Integer payedOrderItemsCountByUserIdAndProductId (@PathVariable Long uid, @PathVariable Long pid)
-    {
+    public Integer payedOrderItemsCountByUserIdAndProductId (@PathVariable Long uid, @PathVariable Long pid) {
+
         Integer stateId = orderStatesService.getOrderStatePayed().getId();
         List<OrderItem> list = orderService.userOrderItemsByProductId (uid, pid, stateId);
         return list.size();
@@ -68,8 +68,8 @@ public class OrderController
 
 /** Проверяем, зарегистрирован ли пользователь и бросаем исключение, если он не зарегистрирован.
     @throws UnauthorizedAccessException */
-    private void checkRightsToMakeOrder (String username)
-    {
+    private void checkRightsToMakeOrder (String username) {
+
         if (username == null || username.isBlank())
             throw new UnauthorizedAccessException ("Заказ может оформить только авторизованый пользователь. (It's only authorized user can make order.)");
     }

@@ -18,16 +18,16 @@ import java.util.stream.Collectors;
 import static ru.gb.antonov.j710.monolith.Factory.JWT_PAYLOAD_ROLES;
 
 @Component
-public class JwtokenUtil
-{
+public class JwtokenUtil {
+
     @Value("${jwt.secret}") //< ссылка на проперти-файл
     private String secret;  //< обычно выносится в к-л конфиг (см. yaml)
 
     @Value("${jwt.lifetime}")
     private Integer lifetime;   //< обычно выносится в к-л конфиг (см. yaml)
 
-    public String generateJWToken (UserDetails userDetails)
-    {
+    public String generateJWToken (UserDetails userDetails) {
+
         Map<String, Object> claims = new HashMap<>();
         List<String> roles = userDetails
                                 .getAuthorities()
@@ -48,27 +48,27 @@ public class JwtokenUtil
     }
 
 /** Сейчас используется для получения инф-ции о юзере для его л/к. */
-    public String getLoginFromToken (String jwt)
-    {   return getClaimFromToken(jwt, Claims::getSubject);
+    public String getLoginFromToken (String jwt) {
+        return getClaimFromToken(jwt, Claims::getSubject);
     }
 
 /** Сейчас используется для получения инф-ции о юзере для его л/к. */
-    private <T> T getClaimFromToken (String jwt, Function<Claims, T> claimsResolver)
-    {
+    private <T> T getClaimFromToken (String jwt, Function<Claims, T> claimsResolver) {
+
         Claims claims = getAllClaimsFromToken (jwt);
         return claimsResolver.apply (claims);
     }
 
 /** Сейчас используется для получения инф-ции о юзере для его л/к. */
-    private Claims getAllClaimsFromToken(String jwt)
-    {
+    private Claims getAllClaimsFromToken(String jwt) {
+
         return Jwts.parser()
                    .setSigningKey (secret)
                    .parseClaimsJws (jwt)
                    .getBody();
     }
 
-    public List<String> getRoles (String jwt)
-    {   return getClaimFromToken (jwt, claims -> claims.get (JWT_PAYLOAD_ROLES, List.class));
+    public List<String> getRoles (String jwt) {
+        return getClaimFromToken (jwt, claims -> claims.get (JWT_PAYLOAD_ROLES, List.class));
     }
 }

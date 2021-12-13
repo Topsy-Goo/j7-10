@@ -17,21 +17,21 @@ import static ru.gb.antonov.j710.monolith.Factory.STR_EMPTY;
 
 @Service
 @RequiredArgsConstructor
-public class ProductReviewService
-{
+public class ProductReviewService {
+
     private final ProductReviewsRepo                productReviewsRepo;
     private final ProductreviewToOurUserCallService productreviewToOurUserCallService;
     private final ProductreviewToOrderCallService   productreviewToOrderCallService;
 
     @Transactional
-    public List<ProductReviewDto> getReviewListById (Long pid)
-    {
+    public List<ProductReviewDto> getReviewListById (Long pid) {
+
         List<ProductReviewDto> list = productReviewsRepo.findAllByProductId (pid)
                                  .stream()
                                  .map (ProductReview::toProductReviewDto)
                                  .collect (Collectors.toList ());
-        for (ProductReviewDto prd : list)
-        {
+        for (ProductReviewDto prd : list) {
+
             String name = productreviewToOurUserCallService.userNameByUserId(prd.getUserId());
             if (name == null)
                 name = STR_EMPTY;
@@ -41,8 +41,8 @@ public class ProductReviewService
     }
 
     @Transactional
-    public void newProductReview (Long pid, String text, String username)
-    {
+    public void newProductReview (Long pid, String text, String username) {
+
         if (pid == null || username == null || text == null || text.isBlank())
             throw new BadCreationParameterException ("Не могу выполнить запрошенное действие.");
 
@@ -57,15 +57,15 @@ public class ProductReviewService
 
 /** Юзер может оставить один отзыв к товару, если он этот товар купил хотя бы один раз. */
     @Transactional
-    public Boolean canReview (String username, Long pid)
-    {
+    public Boolean canReview (String username, Long pid) {
+
         boolean ok = false;
-        if (username != null && pid != null)
-        {
+        if (username != null && pid != null)  {
+
         //Убеждаемся, что юзер ещё не написал отзыв на товар pid:
             Long uid = productreviewToOurUserCallService.userIdByLogin (username);
-            if (productReviewsRepo.findByProductIdAndOuruserId (pid, uid).isEmpty())
-            {
+            if (productReviewsRepo.findByProductIdAndOuruserId (pid, uid).isEmpty()) {
+
         //Убеждаемся, что юзер купил этот товар:
                 ok = 0 < productreviewToOrderCallService.payedOrderItemsCountByUserIdAndProductId (uid, pid);
             }

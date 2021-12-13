@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-@Entity  @Data  @Table (name="orders")
-public class Order
-{
+@Entity
+@Data
+@Table (name="orders")
+public class Order {
+
     @Id    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="id")
     private Long id;
@@ -40,11 +42,13 @@ public class Order
     private List<OrderItem> orderItems;
 //----------------------------------------------------------------------
     public Order () {}
-    public List<OrderItem> getOrderItems () { return Collections.unmodifiableList (orderItems); }
+    public List<OrderItem> getOrderItems () {
+        return Collections.unmodifiableList (orderItems);
+    }
 //----------------------------------------------------------------------
-    @Override public String toString()
-    {   return String.format ("Order:[id:%d, uid:%d, cost:%.2f, ph:%s, adr:%s]_with_[%s]",
+    @Override public String toString() {
+        return String.format ("Order:[id:%d, uid:%d, cost:%.2f, ph:%s, adr:%s]_with_[%s]",
                               id, ouruserId, allItemsCost,
                               shippingInfo.getPhone(), shippingInfo.getAddress(), orderItems);
     }
-}//1
+}

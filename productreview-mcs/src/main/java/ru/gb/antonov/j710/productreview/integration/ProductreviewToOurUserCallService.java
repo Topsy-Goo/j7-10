@@ -6,12 +6,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 @RequiredArgsConstructor
-public class ProductreviewToOurUserCallService
-{
+public class ProductreviewToOurUserCallService {
+
     private final WebClient ourUserServiceWebClient;
 
-    public Long userIdByLogin (String login)
-    {
+    public Long userIdByLogin (String login) {
+
         return ourUserServiceWebClient
                 .get()
                 .uri ("/api/v1/user_profile/userid/" + login)
@@ -20,11 +20,11 @@ public class ProductreviewToOurUserCallService
                 .block();
     }
 
-    public String userNameByUserId (Long uid)
-    {
+    public String userNameByUserId (Long uid) {
+
         String result = null;
-        if (uid != null)
-        {
+        if (uid != null) {
+
             result = ourUserServiceWebClient//
                 .get()
                 .uri ("/api/v1/user_profile/username/"+ uid)

@@ -19,12 +19,12 @@
 	</properties>
 
 	<dependencies>
-<!--		<dependency>	&lt;!&ndash; Это быстро стартует и не отжирает 4Гб ОЗУ. См.также YAML-файл в (?каком?) модуле. &ndash;&gt;
+<!--		<dependency>	&lt;!&ndash; Это быстро стартует и не отжирает 4Гб ОЗУ. См.также YAML-файл в этом модуле. &ndash;&gt;
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>	&lt;!&ndash; Кажется, не нужна при использовании flyway из docker-а. &ndash;&gt;
+		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>-->

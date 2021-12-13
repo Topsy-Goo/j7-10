@@ -11,26 +11,26 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin ("*")
-public class UserProfileController
-{
+public class UserProfileController {
+
     private final OurUserService ourUserService;
 //--------------------------------------------------------------------------
 
     @GetMapping ("/userinfo")
-    public UserInfoDto getUserInfo (Principal principal)
-    {
+    public UserInfoDto getUserInfo (Principal principal) {
+
         return ourUserService.getUserInfoDto (principal);
     }
 
     @GetMapping ("/userid/{login}")
-    public Long getUserIdByLogin (@PathVariable String login)
-    {
+    public Long getUserIdByLogin (@PathVariable String login) {
+
         return ourUserService.userIdByLogin (login);
     }
 
     @GetMapping("/username/{uid}")
-    public String userNameByUserId (@PathVariable Long uid)
-    {
+    public String userNameByUserId (@PathVariable Long uid) {
+
         return ourUserService.userNameByUserId (uid);
     }
 }

@@ -13,10 +13,9 @@ import java.util.Objects;
 
 import static ru.gb.antonov.j710.monolith.Factory.*;
 
-@Entity
-@Table (name="products")
-public class Product
-{
+@Entity     @Table (name="products")
+public class Product implements Buildable<Product> {
+
     @Id  @Getter
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="id")
@@ -24,6 +23,9 @@ public class Product
 
     @Column(name="title", nullable=false)             @Getter
     private String title;
+
+    public static String getPriceFieldName ()  { return "price"; }
+    public static String getTitleFieldName ()  { return "title"; }
 
     @Column(name="price", nullable=false)             @Getter
     private BigDecimal price = BigDecimal.ZERO;
@@ -41,79 +43,121 @@ public class Product
     @CreationTimestamp    @Column(name="updated_at")  @Getter @Setter
     private LocalDateTime updatedAt;
 //----------------------------------------------------------------------
-    public Product(){}
+    private Product () {}
+
+//---------------- создание и обновление объектов ----------------------
+/** Создаёт пустой объект Product и начинает цепочку методов, каждый из которых проверяет валидность
+изменяемого параметра.
+@return ссылка на объект Product */
+    public static Product create () {
+        return new Product();
+    }
+
+ /** Начинает цепочку методов, каждый из которых проверяет валидность изменяемого параметра. Цепочка не
+обязана начинаться с этого метода, но его использование улучшает читаемость кода.
+@return this
+@throws BadCreationParameterException */
+    public Product strictUpdate () {
+        return this;
+    }
+/**
+@return this
+@throws BadCreationParameterException */
+    public Product withTitle (String newTitle) {
+        if (!setTitle (newTitle))
+            throw new BadCreationParameterException ("\rнекорректное название продукта : " + newTitle);
+        return this;
+    }
+/**
+@return this
+@throws BadCreationParameterException */
+    public Product withPrice (BigDecimal newPrice) {
+        if (!setPrice (newPrice))
+            throw new BadCreationParameterException ("\rнекорректная цена продукта : " + newPrice);
+        return this;
+    }
+/**
+@return this
+@throws BadCreationParameterException */
+    public Product withRest (Integer newRest) {
+        if (!setRest (newRest))
+            throw new BadCreationParameterException ("\rнекорректный остаток продукта : " + newRest);
+        return this;
+    }
+/**
+@return this
+@throws BadCreationParameterException */
+    public Product withProductsCategory (ProductsCategory newProductCategory) {
+        if (!setCategory (newProductCategory))
+            throw new BadCreationParameterException ("\rнекорректная категория продукта : " + newProductCategory);
+        return this;
+    }
+/**
+@return this */
+    @Override public Product build () {
+        return this;
+    }
 
 /** Любой из параметров может быть {@code null}. Равенство параметра {@code null} расценивается как
 нежелание изменять соответствующее ему свойство товара..
 @throws  BadCreationParameterException*/
-    public Product update (String ttl, BigDecimal prc, Integer rst, ProductsCategory cat)
+    public void update (String newTitle, BigDecimal newPrice, Integer newRest,
+                        ProductsCategory newProductCategory)
     {
-        String newTitle     = (ttl == null) ? title : ttl;
-        BigDecimal newPrice = (prc == null) ? price : prc;
-        Integer newRest     = (rst == null) ? rest : rst;
-        ProductsCategory newCat = (cat == null) ? category : cat;
+        if (newTitle != null && !setTitle (newTitle))
+            throw new BadCreationParameterException ("\rнекорректное название продукта : " + newTitle);
 
-        if (!setTitle (newTitle) || !setPrice (newPrice) || !setRest (newRest) || !setCategory (newCat))
-        {
-            String newCategoryName = (newCat != null) ? newCat.getName() : "null";
-            String sb = "Недопустимый набор значений:\r" +
-                        "• название продукта = " + newTitle + ",\r" +
-                        "• цена = " + newPrice + ",\r" +
-                        "• остаток = " + newRest + ",\r" +
-                        "• категория = " + newCategoryName + '.';
-            throw new BadCreationParameterException (sb);
-        }
-        return this;
+        if (newPrice != null && !setPrice (newPrice))
+            throw new BadCreationParameterException ("\rнекорректная цена продукта : " + newPrice);
+
+        if (newRest != null && !setRest (newRest))
+            throw new BadCreationParameterException ("\rнекорректный остаток продукта : " + newRest);
+
+        if (newProductCategory != null && !setCategory (newProductCategory))
+            throw new BadCreationParameterException ("\rнекорректная категория продукта : " + newProductCategory);
     }
 //----------------- Геттеры и сеттеры -----------------------------------
+
     private void setId (Long id)   {   this.id = id;   }
 
-    public boolean setTitle (String title)
-    {
+    public boolean setTitle (String title) {
         boolean ok = isTitleValid (title);
         if (ok)
             this.title = title.trim();
         return ok;
     }
 
-    public boolean setPrice (BigDecimal newvalue)
-    {
+    public boolean setPrice (BigDecimal newvalue) {
         boolean ok = isPriceValid (newvalue);
         if (ok)
             this.price = newvalue;
         return ok;
     }
 
-    private boolean setCategory (ProductsCategory newcategory)
-    {
+    private boolean setCategory (ProductsCategory newcategory) {
         boolean ok = newcategory != null;
         if (ok)
             category = newcategory;
         return ok;
     }
 
-    public boolean setRest (Integer newvalue)
-    {
+    public boolean setRest (Integer newvalue) {
         boolean ok = newvalue != null && newvalue >= 0;
         if (ok)
             rest = newvalue;
         return ok;
     }
-
-    public static String getPriceFieldName ()  { return "price"; }
-    public static String getTitleFieldName ()  { return "title"; }
 //-----------------------------------------------------------------------
 
-    public static boolean isTitleValid (String title)
-    {   return sayNoToEmptyStrings (title);
+    public static boolean isTitleValid (String title)  {
+        return sayNoToEmptyStrings (title);
     }
 
-    public static boolean isPriceValid (BigDecimal value)
-    {   return value.compareTo (MIN_PRICE) >= 0  &&  value.compareTo(MAX_PRICE) <= 0;
+    public static boolean isPriceValid (BigDecimal value) {
+        return value.compareTo (MIN_PRICE) >= 0  &&  value.compareTo(MAX_PRICE) <= 0;
     }
 
-    @Override public boolean equals (Object o)
-    {
+    @Override public boolean equals (Object o) {
         if (o == this)  return true;
         if (o == null || getClass() != o.getClass())  return false;
         Product p = (Product) o;
@@ -122,11 +166,11 @@ public class Product
 
     @Override public int hashCode()    {   return Objects.hash (id);   }
 
-    @Override public String toString()
-    {   return String.format ("[id:%d, «%s», %.2f, rt:%d]", id, title, price, rest);
+    @Override public String toString() {
+        return String.format ("[id:%d, «%s», %.2f, rt:%d]", id, title, price, rest);
     }
 
-    public ProductDto toProductDto ()
-    {   return new ProductDto (id, title, price, rest, category.getName());
+    public ProductDto toProductDto ()  {
+        return new ProductDto (id, title, price, rest, category.getName());
     }
 }

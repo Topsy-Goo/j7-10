@@ -1,15 +1,14 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
 
-public class UserInfoDto
-{
+public class UserInfoDto {
+
 //    private Long ouruserId;
     private String login;
     private String email;
 //--------------------------------------------------
     public UserInfoDto (){}
-    public UserInfoDto (String login, String email/*, Long uid*/)
-    {
+    public UserInfoDto (String login, String email/*, Long uid*/) {
         setLogin (login);
         setEmail (email);
         //setOuruserId (uid);

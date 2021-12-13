@@ -31,8 +31,8 @@ import static ru.gb.antonov.j710.monolith.Factory.orderCreationTimeToString;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService
-{
+public class OrderService {
+
     private final OrdersRepo       ordersRepo;
     private final OrderItemRepo    orderItemRepo;
     private final OrderToOurUserCallService orderToOurUserCallService;
@@ -41,12 +41,12 @@ public class OrderService
     private final OrderStatesService        orderStatesService;
 //---------------------------------------------------------------------------------------
     @Transactional
-    public OrderDetalesDto getOrderDetales (String login)
-    {
+    public OrderDetalesDto getOrderDetales (String login) {
+
         CartDto dryCartDto = orderToCartCallService.getDryCartDto (login);
 
         if (dryCartDto.getTitlesCount() <= 0)
-            throw new UnableToPerformException (ORDER_IS_EMPTY);
+            throw new BadCreationParameterException (ORDER_IS_EMPTY);
 
         OrderDetalesDto odt = new OrderDetalesDto();
         odt.setCartDto (dryCartDto);
@@ -67,11 +67,11 @@ public class OrderService
     @return та же {@code OrderDetalesDto}, но с дозаполненными полями.
 */
     @Transactional
-    public OrderDetalesDto applyOrderDetails (@NotNull OrderDetalesDto detales, String username)
-    {
+    public OrderDetalesDto applyOrderDetails (@NotNull OrderDetalesDto detales, String username)  {
+
         CartDto cartDto   = detales.getCartDto();
         if (cartDto.getTitlesCount() <= 0)
-            throw new UnableToPerformException (ORDER_IS_EMPTY);
+            throw new BadCreationParameterException (ORDER_IS_EMPTY);
 
         Long ouruserId    = orderToOurUserCallService.userIdByLogin (username);
         OrderState oState = orderStatesService.getOrderStatePending();
@@ -99,8 +99,8 @@ public class OrderService
         return detales;
     }
 
-    private OrderItem orderItemFromDto (Order o, OrderItemDto dto)
-    {
+    private OrderItem orderItemFromDto (Order o, OrderItemDto dto)  {
+
         if (o == null || dto == null)
             throw new BadCreationParameterException ("orderItemFromDto(): не удалось сформировать строку заказа.");
 
@@ -113,8 +113,8 @@ public class OrderService
     }
 
     @Transactional
-    public Collection<OrderDto> getUserOrdersAsOrderDtos (String login)
-    {
+    public Collection<OrderDto> getUserOrdersAsOrderDtos (String login) {
+
         Long ouruserId = orderToOurUserCallService.userIdByLogin (login);
         List<Order> orders = ordersRepo.findAllByOuruserId (ouruserId);
         Collection<OrderDto> list = new ArrayList<>((orders != null) ? orders.size() : 0);
@@ -127,8 +127,8 @@ public class OrderService
 
 /** Составляем DTO-шку для сделанного ранее заказа. Используется в лином кабинете пользователя
  для демонстрации пользователю списка его заказов. */
-    public OrderDto orderToDto (Order o)
-    {
+    public OrderDto orderToDto (Order o) {
+
         if (o == null)
             throw new BadCreationParameterException ("Не удалось прочитать инф-цию о заказе.");
 
@@ -146,8 +146,8 @@ public class OrderService
         return odto;
     }
 
-    private OrderItemDto orderItemToDto (OrderItem oi, int[] oitemLoad)
-    {
+    private OrderItemDto orderItemToDto (OrderItem oi, int[] oitemLoad) {
+
         if (oi == null || oitemLoad == null || oitemLoad.length == 0)
             throw new BadCreationParameterException ("Не удалось прочитать инф-цию об элементе заказа.");
 
@@ -166,21 +166,21 @@ public class OrderService
         return oidto;
     }
 
-    public List<OrderItem> userOrderItemsByProductId (Long uid, Long pid, Integer stateId)
-    {   return orderItemRepo.userOrderItemsByProductId (uid, pid, stateId);
+    public List<OrderItem> userOrderItemsByProductId (Long uid, Long pid, Integer stateId) {
+        return orderItemRepo.userOrderItemsByProductId (uid, pid, stateId);
     }
 //------------------ Для PayPal ---------------------------------------------------------
 
-    public Optional<Order> findById (@NotNull Long orderId)
-    {   return ordersRepo.findById (orderId);
+    public Optional<Order> findById (@NotNull Long orderId) {
+        return ordersRepo.findById (orderId);
     }
 
-    public String userNameByUserId (@NotNull Long uid)
-    {   return orderToOurUserCallService.userNameByUserId (uid);
+    public String userNameByUserId (@NotNull Long uid) {
+        return orderToOurUserCallService.userNameByUserId (uid);
     }
 
     @Transactional
-    public void setOrderStateToPayed (@NotNull Long orderId)
-    {   findById (orderId).ifPresent (o->o.setState (orderStatesService.getOrderStatePayed()));
+    public void setOrderStateToPayed (@NotNull Long orderId) {
+        findById (orderId).ifPresent (o->o.setState (orderStatesService.getOrderStatePayed()));
     }
-}//1
+}

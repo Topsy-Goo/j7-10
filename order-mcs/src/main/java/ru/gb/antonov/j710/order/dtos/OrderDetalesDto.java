@@ -2,8 +2,7 @@ package ru.gb.antonov.j710.order.dtos;
 
 import ru.gb.antonov.j710.monolith.entities.dtos.CartDto;
 
-public class OrderDetalesDto
-{
+public class OrderDetalesDto {
     private Long            orderNumber;
     private String          orderState;
     private String          orderCreationTime;

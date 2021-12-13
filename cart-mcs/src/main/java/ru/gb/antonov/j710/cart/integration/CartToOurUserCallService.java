@@ -6,12 +6,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 @RequiredArgsConstructor
-public class CartToOurUserCallService
-{
+public class CartToOurUserCallService {
+
     private final WebClient ourUserServiceWebClient;
 
-    public Long userIdByLogin (String login)
-    {
+    public Long userIdByLogin (String login)    {
         return ourUserServiceWebClient.get() //< метод (тип запроса: GET, POST, …)
                                       .uri ("/api/v1/user_profile/userid"/* + login*/)
                                       .retrieve() //< хотим получить ответ

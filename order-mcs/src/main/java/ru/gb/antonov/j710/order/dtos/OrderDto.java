@@ -5,8 +5,7 @@ import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class OrderDto
-{
+public class OrderDto {
     private Long               orderNumber;
     private String             address;
     private String             phone;

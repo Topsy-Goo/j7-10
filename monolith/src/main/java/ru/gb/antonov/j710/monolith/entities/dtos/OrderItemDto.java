@@ -2,8 +2,8 @@ package ru.gb.antonov.j710.monolith.entities.dtos;
 
 import java.math.BigDecimal;
 
-public class OrderItemDto
-{
+public class OrderItemDto {
+
     private Long       productId;
     private String     category;
     private String     title;
@@ -16,8 +16,8 @@ public class OrderItemDto
 
 /** Метод меняет только те поля, для которых был передан не null. */
     public OrderItemDto (Long productId, String category, String title, BigDecimal price,
-                         Integer rest, Integer quantity, BigDecimal cost)
-    {
+                         Integer rest, Integer quantity, BigDecimal cost) {
+
         if (productId != null) this.productId = productId;
         if (category  != null) this.category  = category;
         if (title     != null) this.title     = title;
@@ -29,8 +29,7 @@ public class OrderItemDto
 //--------- Геттеры и сеттеры (JSON работает с публичными полями!) --------------
 
     //Возвращает true, если количество было изменено.
-    public boolean setQuantity (int newQuantity)
-    {
+    public boolean setQuantity (int newQuantity) {
         boolean ok = newQuantity >= 0 && quantity != newQuantity;
         if (ok)
             quantity = newQuantity;
@@ -41,8 +40,8 @@ public class OrderItemDto
     public BigDecimal getCost ()           { return price.multiply (new BigDecimal(quantity)); }
     public void setCost (BigDecimal value) { cost = value; }
 
-    public Long getProductId ()           { return productId; }
-    public void setProductId (Long value) { productId = value; }
+    public Long getProductId ()            { return productId; }
+    public void setProductId (Long value)  { productId = value; }
 
     public String getCategory ()           { return category; }
     public void setCategory (String value) { category = value; }

@@ -11,7 +11,13 @@ import java.util.Optional;
 /** Наследование от {@code JpaSpecificationExecutor<T>} требуется для использования «спецификайий», которые используются в фильтрах (см. {@code ProductSpecification}). Это наследование увеличивает количество перегруженных методов findAll(…), которые может вызывать {@code ProductRepo}.
 */
 @Repository
-public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product>
-{
+public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
+
     Optional<List<Product>> findAllByIdBetween (Long from, Long to);
+
+/*    @Query (value = "SELECT price FROM products WHERE id = :pid ;", //< точка с запятой должна быть
+            // отделена от имени параметра пробелом (видимо, эту часть spring поручили писать каким-то
+            // крестьянам с соломой в волосах)
+            nativeQuery = true)
+    BigDecimal getProductPrice (@Param ("pid") Long pid);*/
 }

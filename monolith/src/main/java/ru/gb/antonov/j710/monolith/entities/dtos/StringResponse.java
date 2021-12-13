@@ -1,7 +1,7 @@
 package ru.gb.antonov.j710.monolith.entities.dtos;
 
-public class StringResponse
-{
+public class StringResponse {
+
     private String value;
 //------------------------------------------------------------
     public StringResponse() {}

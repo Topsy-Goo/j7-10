@@ -14,14 +14,14 @@ import reactor.netty.tcp.TcpClient;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-public class OrderIntegrationConfig
-{
+public class OrderIntegrationConfig {
+
     @Value ("${integration.product-service.url}") private String productServiceUrl;
     @Value ("${integration.user-service.url}") private String ourUserServiceUrl;
     @Value ("${integration.cart-service.url}") private String cartServiceUrl;
 
-    @Bean public WebClient productServiceWebClient ()
-    {
+    @Bean public WebClient productServiceWebClient () {
+
         return WebClient.builder()
                         .baseUrl (productServiceUrl) //< адрес назначения запроса
                         //.defaultHeader ("my-header", "my-value")  < стандартные хэдеры
@@ -29,24 +29,24 @@ public class OrderIntegrationConfig
                         .build();
     }
 
-    @Bean public WebClient ourUserServiceWebClient ()
-    {
+    @Bean public WebClient ourUserServiceWebClient () {
+
         return WebClient.builder()
                         .baseUrl (ourUserServiceUrl)
                         .clientConnector (new ReactorClientHttpConnector (HttpClient.from (newTcpClient())))
                         .build();
     }
 
-    @Bean public WebClient cartServiceWebClient ()
-    {
+    @Bean public WebClient cartServiceWebClient () {
+
         return WebClient.builder()
                         .baseUrl (cartServiceUrl)
                         .clientConnector (new ReactorClientHttpConnector (HttpClient.from (newTcpClient())))
                         .build();
     }
 
-    private TcpClient newTcpClient (/*int connectionTimeOut, long readTimeOut, long writeTimeOut*/)
-    {
+    private TcpClient newTcpClient (/*int connectionTimeOut, long readTimeOut, long writeTimeOut*/) {
+
         return TcpClient.create()
                         .option (ChannelOption.CONNECT_TIMEOUT_MILLIS, 20000) //< таймаут на соединение
                         .doOnConnected (connection -> {

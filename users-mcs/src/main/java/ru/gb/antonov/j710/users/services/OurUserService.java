@@ -27,8 +27,8 @@ import static ru.gb.antonov.j710.monolith.Factory.STR_EMPTY;
 
 @Service
 @RequiredArgsConstructor
-public class OurUserService implements UserDetailsService
-{
+public class OurUserService implements UserDetailsService {
+
     private final OurUserRepo          ourUserRepo;
     private final RoleService          roleService;
     private final OurPermissionService ourPermissionService;
@@ -38,26 +38,27 @@ public class OurUserService implements UserDetailsService
 //TODO: если юзера можно будет удалять из БД, то нужно не забыть удалить и его корзину из Memurai.
 
 /** @throws UserNotFoundException */
-    public OurUser userByPrincipal (Principal principal)
-    {
+    public OurUser userByPrincipal (Principal principal)  {
+
         String login = (principal != null) ? principal.getName() : STR_EMPTY;
         return findByLogin (login).orElseThrow (()->new UserNotFoundException (NO_SUCH_LOGIN_ + login));
     }
 
     @Transactional
-    public Long getUserId (Principal principal)
-    {   return userByPrincipal (principal).getId();
+    public Long getUserId (Principal principal) {
+        return userByPrincipal (principal).getId();
     }
 
     @Transactional
-    public Long userIdByLogin (@NotNull String login)
-    {   return findByLogin (login).orElseThrow (()->new UserNotFoundException (NO_SUCH_LOGIN_ + login))
+    public Long userIdByLogin (@NotNull String login) {
+
+        return findByLogin (login).orElseThrow (()->new UserNotFoundException (NO_SUCH_LOGIN_ + login))
                                   .getId();
     }
 
     @Transactional
-    public @NotNull String userNameByUserId (Long uid)
-    {
+    public @NotNull String userNameByUserId (Long uid) {
+
         String username = STR_EMPTY;
         if (uid != null)
             username = ourUserRepo.findById (uid)
@@ -68,8 +69,8 @@ public class OurUserService implements UserDetailsService
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername (String login)
-    {
+    public UserDetails loadUserByUsername (String login) {
+
         OurUser ourUser = findByLogin(login).orElseThrow(()->new UsernameNotFoundException (NO_SUCH_LOGIN_+login));
 
         return new User(ourUser.getLogin(),
@@ -94,25 +95,29 @@ public class OurUserService implements UserDetailsService
     }
 
     @Transactional
-    public Optional<OurUser> createNewOurUser (String login, String password, String email)
-    {
-        OurUser dummyUser = OurUser.dummyOurUser (login, password, email);
-        Role role = roleService.getRoleUser();
-        OurPermission ourPermission = ourPermissionService.getPermissionDefault();
+    public Optional<OurUser> createNewOurUser (String login, String password, String email)  {
+
+        OurUser dummyUser = OurUser.create()
+                                   .withLogin (login)
+                                   .withPassword (password)
+                                   .withEmail (email)
+                                   .build();
+        Role roleUser = roleService.getRoleUser();
+        OurPermission ourDefaultPermission = ourPermissionService.getPermissionDefault();
 
         OurUser saved = ourUserRepo.save (dummyUser);
-        saved.addRole (role);
-        saved.addPermission (ourPermission);
+        saved.addRole (roleUser);
+        saved.addPermission (ourDefaultPermission);
         return Optional.of (saved);
     }
 
-    public Optional<OurUser> findByLogin (String login)
-    {   return ourUserRepo.findByLogin (login);
+    public Optional<OurUser> findByLogin (String login) {
+        return ourUserRepo.findByLogin (login);
     }
 
     @Transactional
-    public UserInfoDto getUserInfoDto (Principal principal)
-    {
+    public UserInfoDto getUserInfoDto (Principal principal) {
+
         OurUser u = userByPrincipal (principal);
         return new UserInfoDto (u.getLogin(), u.getEmail());
     }
@@ -120,8 +125,8 @@ public class OurUserService implements UserDetailsService
 /** Редактировать информацию о товарах могут только те пользователи, у которых есть
 разрешение {@code PERMISSION_EDIT_PRODUCT}. */
     @Transactional
-    public Boolean canEditProduct (Principal principal)
-    {
+    public Boolean canEditProduct (Principal principal) {
+
         OurUser ourUser = userByPrincipal (principal);
         Collection<OurPermission> permissions = ourUser.getOurPermissions();
         return permissions.contains (ourPermissionService.getPermissionEditProducts());

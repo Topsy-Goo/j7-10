@@ -7,12 +7,11 @@ import ru.gb.antonov.j710.monolith.entities.dtos.CartDto;
 
 @Component
 @RequiredArgsConstructor
-public class OrderToCartCallService
-{
+public class OrderToCartCallService {
+
     private final WebClient cartServiceWebClient;
 
-    public CartDto getDryCartDto (String login)
-    {
+    public CartDto getDryCartDto (String login)    {
         return cartServiceWebClient.get()
                                    .uri ("/api/v1/cart/drycart/" + login)
                                    .retrieve()
@@ -20,8 +19,7 @@ public class OrderToCartCallService
                                    .block();
     }
 
-    public void removeNonEmptyItems (String login)
-    {
+    public void removeNonEmptyItems (String login)    {
         cartServiceWebClient.get()
                             .uri ("/api/v1/cart/remove_non_empty/" + login)
                             .retrieve()

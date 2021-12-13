@@ -1,7 +1,19 @@
 package ru.gb.antonov.j710.monolith.beans.errorhandlers;
 
-/** {@code HttpStatus.UNAUTHORIZED = 401} */
-public class UnauthorizedAccessException extends RuntimeException
-{
-    public UnauthorizedAccessException (String text) { super (text); }
+import java.util.logging.Logger;
+
+/** {@code HttpStatus.UNAUTHORIZED = 401}<br>
+    Умолчальный текст сообщения: " Авторизуйтесь! "  */
+public class UnauthorizedAccessException extends RuntimeException {
+
+    final static String messageDefault = " Авторизуйтесь! ";
+    final static Logger LOGGER         = Logger.getLogger("ru.gb.antonov.j710.monolith.beans.errorhandlers.UnauthorizedAccessException");
+
+/** {@code HttpStatus.UNAUTHORIZED = 401}}<br>
+    Умолчальный текст сообщения: " Авторизуйтесь! " */
+    public UnauthorizedAccessException (String messageText) {
+
+        super (messageText = messageText != null ? messageText : messageDefault);
+        LOGGER.severe ("ОШИБКА: "+ messageText);
+    }
 }

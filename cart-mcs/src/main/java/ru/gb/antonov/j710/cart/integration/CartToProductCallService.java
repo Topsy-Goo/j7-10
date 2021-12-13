@@ -9,12 +9,11 @@ import java.math.BigDecimal;
 
 @Component
 @RequiredArgsConstructor
-public class CartToProductCallService
-{
+public class CartToProductCallService {
+
     private final WebClient productServiceWebClient;
 
-    public ProductDto getProductById (Long pid)
-    {
+    public ProductDto getProductById (Long pid)    {
         return productServiceWebClient.get()
                                       .uri ("/api/v1/products/" + pid)
                                       .retrieve()

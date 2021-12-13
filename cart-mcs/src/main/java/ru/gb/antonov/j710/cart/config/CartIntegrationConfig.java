@@ -14,29 +14,26 @@ import reactor.netty.tcp.TcpClient;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-public class CartIntegrationConfig
-{
+public class CartIntegrationConfig {
+
     @Value ("${integration.product-service.url}") private String productServiceUrl;
     @Value ("${integration.user-service.url}") private String ourUserServiceUrl;
 
-    @Bean public WebClient productServiceWebClient ()
-    {
+    @Bean public WebClient productServiceWebClient ()    {
         return WebClient.builder()
                         .baseUrl (productServiceUrl)
                         .clientConnector (new ReactorClientHttpConnector (HttpClient.from (newTcpClient())))
                         .build();
     }
 
-    @Bean public WebClient ourUserServiceWebClient ()
-    {
+    @Bean public WebClient ourUserServiceWebClient ()    {
         return WebClient.builder()
                         .baseUrl (ourUserServiceUrl)
                         .clientConnector (new ReactorClientHttpConnector (HttpClient.from (newTcpClient())))
                         .build();
     }
 
-    private TcpClient newTcpClient (/*int connectionTimeOut, long readTimeOut, long writeTimeOut*/)
-    {
+    private TcpClient newTcpClient (/*int connectionTimeOut, long readTimeOut, long writeTimeOut*/)    {
         return TcpClient.create()
                         .option (ChannelOption.CONNECT_TIMEOUT_MILLIS, 2000)
                         .doOnConnected (connection -> {

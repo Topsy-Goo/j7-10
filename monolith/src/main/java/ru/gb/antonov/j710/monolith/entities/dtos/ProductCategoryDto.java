@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 import static ru.gb.antonov.j710.monolith.Factory.PRODCAT_NAMELEN_MAX;
 import static ru.gb.antonov.j710.monolith.Factory.PRODCAT_NAMELEN_MIN;
 
-public class ProductCategoryDto
-{
+public class ProductCategoryDto {
+
     private Long id;
 
     @NotNull (message="Не указано название категории товара!")
@@ -19,8 +19,7 @@ public class ProductCategoryDto
     private String name;
 //-----------------------------------------------------------------------
     public ProductCategoryDto(){}
-    public ProductCategoryDto (ProductsCategory category)
-    {
+    public ProductCategoryDto (ProductsCategory category) {
         this.id   = category.getId();
         this.name = category.getName();
     }

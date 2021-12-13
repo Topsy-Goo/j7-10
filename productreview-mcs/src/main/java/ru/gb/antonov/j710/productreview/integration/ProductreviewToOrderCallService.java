@@ -6,15 +6,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 @RequiredArgsConstructor
-public class ProductreviewToOrderCallService
-{
+public class ProductreviewToOrderCallService {
+
     private final WebClient orderServiceWebClient;
 
-    public Integer payedOrderItemsCountByUserIdAndProductId (Long uid, Long pid)
-    {
+    public Integer payedOrderItemsCountByUserIdAndProductId (Long uid, Long pid) {
+
         Integer result = null;
-        if (uid != null && pid != null)
-        {
+        if (uid != null && pid != null) {
+
             result = orderServiceWebClient//
                       .get()
                       .uri (String.format ("/api/v1/order/payed_order_items/%d/%d", uid, pid))

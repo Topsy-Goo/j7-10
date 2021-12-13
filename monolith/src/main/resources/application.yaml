@@ -1,7 +1,7 @@
 server:
   port: 18181
   servlet:
-    context-path: /monolith # Если этот параметр указываем, то его нужно включить в маршрут(ы) в PrefixPath. Например: «- PrefixPath=/monolith/api/v1».
+    context-path: /monolith # Если этот параметр указываем, то его нужно включить в маршрут(ы) в PrefixPath. Например: «- PrefixPath=/monolith/api/v1». При этом в контроллер всё равно придут только /api/vi/….
 
 spring:
   application:

@@ -8,9 +8,12 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity  @Data  @NoArgsConstructor  @Table (name="orderitems")
-public class OrderItem
-{
+@Entity
+@Data
+@NoArgsConstructor
+@Table (name="orderitems")
+public class OrderItem {
+
     @Id    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
@@ -33,8 +36,7 @@ public class OrderItem
     @CreationTimestamp    @Column (name="updated_at")
     private LocalDateTime updatedAt;
 //-----------------------------------------------------------------
-    @Override public String toString()
-    {
+    @Override public String toString() {
         return String.format ("OrderItem:[id:%d, oid:%d, pid:%s, bp:%.2f, qt:%d].",
                               id, order.getId(), productId, buyingPrice, quantity);
     }

@@ -8,9 +8,10 @@ import javax.validation.constraints.NotNull;
 
 import static ru.gb.antonov.j710.monolith.Factory.*;
 
-@Data    @NoArgsConstructor
-public class ShippingInfoDto
-{
+@Data
+@NoArgsConstructor
+public class ShippingInfoDto {
+
     private Long id;
 
     @Length (min=DELIVERING_COUNTRYCODE_LEN, max=DELIVERING_COUNTRYCODE_LEN, message="Код страны: 2 латинских символа.")
@@ -36,11 +37,11 @@ public class ShippingInfoDto
     private String phone;
 //-------------------------------------------------------------------------
 
-    @Override public String toString()
-    {   return getAddress()+ " телефон: " + getPhone();
+    @Override public String toString() {
+        return getAddress()+ " телефон: " + getPhone();
     }
-    public String getAddress ()
-    {                       // RU, 125433, МО, Москва, Королёва 12/4, 192,
+    public String getAddress () {
+                            // RU, 125433, МО, Москва, Королёва 12/4, 192,
         return String.format ("%s, %s, %s, %s, %s, %s.",
                               countryCode, postalCode, region, townVillage, streetHouse, apartment);
     }

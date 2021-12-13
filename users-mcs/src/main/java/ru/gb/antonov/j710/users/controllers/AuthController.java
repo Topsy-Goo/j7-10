@@ -13,6 +13,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.ErrorMessage;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.OurValidationException;
+import ru.gb.antonov.j710.monolith.beans.errorhandlers.UserCreationException;
+import ru.gb.antonov.j710.monolith.beans.errorhandlers.UserNotFoundException;
 import ru.gb.antonov.j710.users.services.OurUserService;
 import ru.gb.antonov.j710.users.utils.JwtokenUtil;
 import ru.gb.antonov.j710.users.entities.OurUser;
@@ -28,16 +30,16 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin ("*")
-public class AuthController
-{
+public class AuthController {
+
     private final OurUserService ourUserService;
     private final JwtokenUtil    jwtokenUtil;
     private final AuthenticationManager authenticationManager;
 
     //http://localhost:7777/ouruser/api/v1/auth/login
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser (@RequestBody AuthRequest authRequest)
-    {
+    public ResponseEntity<?> authenticateUser (@RequestBody AuthRequest authRequest)    {
+
         String login = authRequest.getLogin();
         String password = authRequest.getPassword();
         return inlineAuthentificateAndResponseWithJwt (login, password);
@@ -47,8 +49,7 @@ public class AuthController
     @PostMapping ("/register")
     public ResponseEntity<?> registerNewUser (@RequestBody @Validated RegisterRequest registerRequest,
                                               BindingResult br)
-    {   if (br.hasErrors())
-        {
+    {   if (br.hasErrors()) {
             throw new OurValidationException (br.getAllErrors()
                                                 .stream()
                                                 .map (ObjectError::getDefaultMessage)
@@ -66,28 +67,27 @@ public class AuthController
         if (optionalOurUser.isPresent())
             return inlineAuthentificateAndResponseWithJwt (login, password);
 
-        return new ResponseEntity<> (new ErrorMessage ("Новый пользователь создан некорректно."),
-                                     HttpStatus.INTERNAL_SERVER_ERROR);
+        String errMsg = "Новый пользователь создан некорректно.";
+        throw new UserCreationException (errMsg);
+        //return new ResponseEntity<> (new ErrorMessage (errMsg), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("/can_edit_product")
-    public Boolean checkPermissionEditProducts (Principal principal)
-    {
+    public Boolean checkPermissionEditProducts (Principal principal)    {
         return ourUserService.canEditProduct (principal);
     }
 
-    private ResponseEntity<?> inlineAuthentificateAndResponseWithJwt (String login, String password)
-    {
+    private ResponseEntity<?> inlineAuthentificateAndResponseWithJwt (String login, String password)    {
     //Сначала авторизацию проверяет система безопасности:
-        try
-        {   authenticationManager.authenticate (new UsernamePasswordAuthenticationToken (login, password));
+        try {
+            authenticationManager.authenticate (new UsernamePasswordAuthenticationToken (login, password));
         }
-        catch (BadCredentialsException e)
-        {
-            String errMsg = String.format ("Некорректные логин (%s) и/или пароль (%s).", login, password);
-            return new ResponseEntity<> (new ErrorMessage (errMsg), HttpStatus.UNAUTHORIZED);
+        catch (BadCredentialsException e) {
+            String errMsg = String.format ("\nНекорректные логин (%s) и/или пароль (%s).", login, password);
+            throw new UserNotFoundException (errMsg, e);
+            //return new ResponseEntity<> (new ErrorMessage (errMsg), HttpStatus.UNAUTHORIZED);
         }
-        catch (Exception e){e.printStackTrace();}
+        //catch (Exception e){e.printStackTrace();}
 
     //Если СБ признала юзера «правильным», то генерируем JWT и отдаём его браузеру:
         UserDetails userDetails = ourUserService.loadUserByUsername (login);

@@ -1,8 +1,25 @@
 package ru.gb.antonov.j710.monolith.beans.errorhandlers;
 
-/** {@code HttpStatus.NOT_FOUND = 404} */
-public class UserNotFoundException extends RuntimeException
-{
-/** {@code HttpStatus.NOT_FOUND = 404} */
-    public UserNotFoundException (String messageText) { super (messageText); }
+import java.util.logging.Logger;
+
+/** {@code HttpStatus.NOT_FOUND = 404}<br>
+    Умолчальный текст сообщения: " Пользователь не найден. " */
+public class UserNotFoundException extends RuntimeException {
+
+    final static String messageDefault = " Пользователь не найден. ";
+    final static Logger LOGGER         = Logger.getLogger("ru.gb.antonov.j710.monolith.beans.errorhandlers.UserNotFoundException");
+
+/** {@code HttpStatus.NOT_FOUND = 404}<br>
+    Умолчальный текст сообщения: " Пользователь не найден. " */
+    public UserNotFoundException (String messageText) {
+
+        super (messageText = messageText == null ? messageDefault : messageText);
+        LOGGER.severe ("ОШИБКА: "+ messageText);
+    }
+
+    public UserNotFoundException (String messageText, Throwable cause) {
+
+        this (cause.getLocalizedMessage() + messageText);
+        this.initCause (cause);
+    }
 }

@@ -7,8 +7,8 @@ import java.time.format.FormatStyle;
 import static ru.gb.antonov.j710.monolith.Factory.NO_STRING;
 import static ru.gb.antonov.j710.monolith.Factory.STR_EMPTY;
 
-public class ProductReviewDto
-{
+public class ProductReviewDto {
+
     private Long   userId;  //< введено при «отпиливании», тк ProductReview утратил возможность быстрого преобразования id в login
     private String authorName;
     private String text;
@@ -16,8 +16,8 @@ public class ProductReviewDto
     private Long   productId;
 //----------------------------------------------------------
     protected ProductReviewDto(){}
-    public ProductReviewDto (Long uid, String name, String txt, LocalDateTime ldt, Long pid)
-    {
+    public ProductReviewDto (Long uid, String name, String txt, LocalDateTime ldt, Long pid) {
+
         if (pid != null  &&  txt != null  &&  !txt.isBlank())
         {
             userId     = uid;

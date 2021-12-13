@@ -6,8 +6,8 @@ import static ru.gb.antonov.j710.monolith.Factory.STR_EMPTY;
  направильно, то менеждер поможет ему исправить это при телефонном разговоре. Если юзер безнадёжен
  настолько, что неправильно указал номер телефона, то упаваем на то, что он не единственный наш клиент.
  А деньги мы ему вернём. */
-public class ShippingDetailesDto
-{
+public class ShippingDetailesDto {
+
     private String postcode;
     private String country;
     private String region;
@@ -38,4 +38,4 @@ public class ShippingDetailesDto
     public void setDeliveryType (String value) { deliveryType = set (value); }
 
     private static String set (String value) { return (value == null) ? STR_EMPTY : value; }
-}//1
+}

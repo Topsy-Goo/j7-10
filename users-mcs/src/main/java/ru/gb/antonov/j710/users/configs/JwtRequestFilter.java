@@ -29,8 +29,8 @@ import static ru.gb.antonov.j710.monolith.Factory.BEARER_;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtRequestFilter extends OncePerRequestFilter
-{
+public class JwtRequestFilter extends OncePerRequestFilter {
+
     private final JwtokenUtil    jwtokenUtil;
     private final OurUserService ourUserService;
 
@@ -43,15 +43,15 @@ public class JwtRequestFilter extends OncePerRequestFilter
         String jwt   = null;
         String authHeader = request.getHeader (AUTHORIZATION_HDR_TITLE);
 
-        if (authHeader != null && authHeader.startsWith (BEARER_))
-        {
+        if (authHeader != null && authHeader.startsWith (BEARER_)) {
+
             jwt = authHeader.substring (BEARER_.length());
             try {   login = jwtokenUtil.getLoginFromToken (jwt);
                 }
             catch (ExpiredJwtException e) { log.debug ("The token is expired"); }
         }
-        if (login != null && SecurityContextHolder.getContext ().getAuthentication() == null)
-        {
+        if (login != null && SecurityContextHolder.getContext ().getAuthentication() == null) {
+
             //UsernamePasswordAuthenticationToken token = trustYourUser (login, jwt);
             UsernamePasswordAuthenticationToken token = trustDatabaseOnly (login, jwt, request);
             SecurityContextHolder.getContext().setAuthentication (token);
@@ -60,8 +60,8 @@ public class JwtRequestFilter extends OncePerRequestFilter
     }
 
 /** Данные об авторизации юзера берутся из переданного им JWT. */
-    private UsernamePasswordAuthenticationToken trustYourUser (String login, String jwt)
-    {
+    private UsernamePasswordAuthenticationToken trustYourUser (String login, String jwt) {
+
         Collection<GrantedAuthority> gaCollection =
             jwtokenUtil.getRoles (jwt)
                        .stream()

@@ -1,8 +1,8 @@
 package ru.gb.antonov.j710.users.dtos;
 
 
-public class AuthResponse
-{
+public class AuthResponse {
+
     private String token;
 
     public AuthResponse (){}

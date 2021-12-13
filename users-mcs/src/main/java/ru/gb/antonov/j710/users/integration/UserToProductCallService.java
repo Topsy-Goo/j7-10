@@ -7,12 +7,12 @@ import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
 @Component
 @RequiredArgsConstructor
-public class UserToProductCallService
-{
+public class UserToProductCallService {
+
     private final WebClient productServiceWebClient;
 
-    public ProductDto getProductById (Long pid)
-    {
+    public ProductDto getProductById (Long pid) {
+
         return productServiceWebClient
                 .get()
                 .uri ("/api/v1/products/" + pid)

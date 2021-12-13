@@ -10,9 +10,12 @@ import java.time.LocalDateTime;
 
 import static ru.gb.antonov.j710.monolith.Factory.NO_STRING;
 
-@Data   @NoArgsConstructor   @Entity    @Table (name="productreviews")
-public class ProductReview
-{
+@Data
+@NoArgsConstructor
+@Entity
+@Table (name="productreviews")
+public class ProductReview {
+
     @Id    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="id")
     private Long id;
@@ -33,11 +36,11 @@ public class ProductReview
     private LocalDateTime updatedAt;
 //-----------------------------------------------------------
 
-    public ProductReviewDto toProductReviewDto ()
-    {   return new ProductReviewDto (ouruserId, NO_STRING, text, createdAt, productId);
+    public ProductReviewDto toProductReviewDto () {
+        return new ProductReviewDto (ouruserId, NO_STRING, text, createdAt, productId);
     }
 
-    @Override public String toString()
-    {   return String.format ("review:[%d, u:%s, p:%s, «%s»]", id, ouruserId, productId, text);
+    @Override public String toString() {
+        return String.format ("review:[%d, u:%s, p:%s, «%s»]", id, ouruserId, productId, text);
     }
 }

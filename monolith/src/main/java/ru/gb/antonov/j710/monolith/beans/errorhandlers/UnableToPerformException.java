@@ -1,8 +1,19 @@
 package ru.gb.antonov.j710.monolith.beans.errorhandlers;
 
-/** {@code HttpStatus.INTERNAL_SERVER_ERROR = 500}  */
-public class UnableToPerformException extends IllegalArgumentException
-{
-/** {@code HttpStatus.INTERNAL_SERVER_ERROR = 500}  */
-    public UnableToPerformException (String messageText) { super (messageText); }
+import java.util.logging.Logger;
+
+/** {@code HttpStatus.INTERNAL_SERVER_ERROR = 500}<br>
+    Умолчальный текст сообщения: " Не удалось выполнить запрошенное действие. "  */
+public class UnableToPerformException extends IllegalArgumentException {
+
+    final static String messageDefault = " Не удалось выполнить запрошенное действие. ";
+    final static Logger LOGGER         = Logger.getLogger("ru.gb.antonov.j710.monolith.beans.errorhandlers.UnableToPerformException");
+
+/** {@code HttpStatus.INTERNAL_SERVER_ERROR = 500}<br>
+    Умолчальный текст сообщения: " Не удалось выполнить запрошенное действие. "  */
+    public UnableToPerformException (String messageText) {
+
+        super (messageText = messageText != null ? messageText : messageDefault);
+        LOGGER.severe ("ОШИБКА: "+ messageText);
+    }
 }

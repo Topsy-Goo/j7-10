@@ -11,9 +11,12 @@ import java.util.Locale;
 
 import static ru.gb.antonov.j710.monolith.Factory.STR_EMPTY;
 
-@Entity  @Data  @NoArgsConstructor  @Table (name="shipping_info")
-public class ShippingInfo
-{
+@Entity
+@Data
+@NoArgsConstructor
+@Table (name="shipping_info")
+public class ShippingInfo {
+
     @Id    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="id")
     private Long id;
@@ -46,11 +49,9 @@ public class ShippingInfo
     private LocalDateTime updatedAt;
 //-------------------------------------------------------------------------
 
-    public static ShippingInfo fromShippingInfoDto (ShippingInfoDto dto)
-    {
+    public static ShippingInfo fromShippingInfoDto (ShippingInfoDto dto)    {
         ShippingInfo si = new ShippingInfo();
-        if (dto != null)
-        {
+        if (dto != null) {
             si.countryCode = setOrEmpty (dto.getCountryCode());
             si.postalCode  = setOrEmpty (dto.getPostalCode());
             si.region      = setOrEmpty (dto.getRegion());
@@ -64,17 +65,16 @@ public class ShippingInfo
     private static String setOrEmpty (String value) {   return (value == null) ? STR_EMPTY : value;   }
 //-------------------------------------------------------------------------
 /** Приводим в порядок некоторые поля. */
-    public ShippingInfo adjust ()
-    {
+    public ShippingInfo adjust ()    {
         countryCode = countryCode.trim().toUpperCase(Locale.ROOT);
         return this;
     }
 
     @Override public String toString()    {   return getAddress()+ " телефон: " + getPhone();    }
 
-    public String getAddress ()
-    {                       // RU, 125433, MO, Москва, Королёва, 12/4, 192,
+    public String getAddress ()    {
+                            // RU, 125433, MO, Москва, Королёва, 12/4, 192,
         return String.format ("%s, %s, %s, %s, %s, %s.",
             countryCode, postalCode, region, townVillage, streetHouse, apartment);
     }
-}//1
+}

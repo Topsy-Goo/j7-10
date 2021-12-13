@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 import static ru.gb.antonov.j710.monolith.Factory.PROD_TITLELEN_MAX;
 import static ru.gb.antonov.j710.monolith.Factory.PROD_TITLELEN_MIN;
 
-public class ProductDto
-{
+public class ProductDto {
+
     private Long productId;
 
     @NotNull (message="Не задано название товара!")
@@ -28,8 +28,7 @@ public class ProductDto
 //--------------------------------------------------------------
     public ProductDto (){}
 
-    public ProductDto (Long pProductId, String pTitle, BigDecimal pPrice, Integer pRest, String pCategory)
-    {
+    public ProductDto (Long pProductId, String pTitle, BigDecimal pPrice, Integer pRest, String pCategory) {
        if (pProductId != null) this.productId = pProductId;
        if (pTitle     != null) this.title     = pTitle;
        if (pPrice     != null) this.price     = pPrice;
@@ -53,7 +52,8 @@ public class ProductDto
     public void setCategory (String value)  { category = value; }
 //--------------------------------------------------------------
 
-    @Override public String toString()
-    {   return String.format ("pdto[id:%d, «%s», %.2f, rt:%d]", productId, title, price, rest);
+    @Override public String toString() {
+        return String.format ("ProductDto:{pid:%d, title:%s, price:%f, rest:%d, categ:%s}",
+                                         productId, title,   price,    rest,    category);
     }
 }

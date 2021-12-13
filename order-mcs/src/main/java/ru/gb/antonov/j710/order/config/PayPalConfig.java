@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 
 @Configuration
-public class PayPalConfig
-{
+public class PayPalConfig {
+
     @Value("${paypal.client-id}")        private String clientId;
     @Value("${paypal.client-secret}")    private String secret;
     //@Value("${paypal.mode}")             private String mode;
@@ -20,4 +20,4 @@ public class PayPalConfig
     private void init()  { environment = new PayPalEnvironment.Sandbox (clientId, secret); }
 
     @Bean public PayPalHttpClient payPalClient() { return new PayPalHttpClient (environment); }
-}//1
+}

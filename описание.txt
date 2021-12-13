@@ -44,9 +44,11 @@ docker-compose up
 3. *** Попробуйте завернуть весь проект в пачку образов и один docker-compose
 
 Комментарий для след. коммита:
-• .
-• .
-• .
+
 
 Комментарий для ДЗ:
 
+
+Пример JWT для admin
+eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIkVESVRfUFJPRFVDVFMiLCJST0xFX0FETUlOIiwiU0lNTEVfU0hPUFBJTkciXSwiZXhwIjoxNjM3MjA1ODIzLCJpYXQiOjE2MzcxNjk4MjN9.VDhlTLzR9Y4AXva4Vt_jofJDtSL_Z7mknDsCoSmQmJI
+(см.в https://jwt.io )

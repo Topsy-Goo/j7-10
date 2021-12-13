@@ -7,9 +7,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity    @Data    @Table (name="roles")
-public class Role
-{
+@Entity
+@Data
+@Table (name="roles")
+public class Role {
+
     @Id    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="id")
     private Long id;
@@ -23,8 +25,8 @@ public class Role
     @CreationTimestamp    @Column(name="updated_at")
     private LocalDateTime updatedAt;
 //------------------------------------------------------------
-    @Override public boolean equals (Object o)
-    {
+    @Override public boolean equals (Object o) {
+
         if (this == o)   return true;
         if (o == null || getClass () != o.getClass ())   return false;
         Role role = (Role) o;

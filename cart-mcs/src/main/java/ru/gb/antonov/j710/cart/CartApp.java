@@ -8,8 +8,8 @@ import org.springframework.core.env.Environment;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication (scanBasePackages = "ru.gb.antonov.j710.cart")
-public class CartApp
-{
+public class CartApp {
+
     @Autowired private Environment env;
 
     @PostConstruct private void init () { ru.gb.antonov.j710.cart.CartFactory.init(env); }

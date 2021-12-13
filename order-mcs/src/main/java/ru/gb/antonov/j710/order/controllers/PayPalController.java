@@ -22,16 +22,16 @@ import java.io.IOException;
 @RequestMapping("/api/v1/paypal")
 @RequiredArgsConstructor
 //@CrossOrigin ("*")
-public class PayPalController
-{
+public class PayPalController {
+
     private final PayPalHttpClient payPalClient;
     private final OrderService     orderService;
     private final PayPalService    payPalService;
 
 /** Платёж подготавливается. */
     @PostMapping ("/create/{orderId}")
-    public ResponseEntity<?> createOrder (@PathVariable Long orderId) throws IOException
-    {
+    public ResponseEntity<?> createOrder (@PathVariable Long orderId) throws IOException  {
+
         OrdersCreateRequest request = new OrdersCreateRequest();
         request.prefer ("return=representation");
         request.requestBody (payPalService.createOrderRequest (orderId));
@@ -41,15 +41,15 @@ public class PayPalController
 
 /** Платёж подтверждается. */
     @PostMapping ("/capture/{payPalId}")
-    public ResponseEntity<?> captureOrder (@PathVariable String payPalId) throws IOException
-    {
+    public ResponseEntity<?> captureOrder (@PathVariable String payPalId) throws IOException {
+
         OrdersCaptureRequest request = new OrdersCaptureRequest (payPalId);
         request.requestBody (new OrderRequest());
 
         HttpResponse<Order> response = payPalClient.execute (request);
         Order payPalOrder = response.result();
-        if ("COMPLETED".equals (payPalOrder.status()))
-        {
+        if ("COMPLETED".equals (payPalOrder.status())) {
+
             long orderId = Long.parseLong (payPalOrder.purchaseUnits().get(0).referenceId());
             orderService.setOrderStateToPayed (orderId);
             return new ResponseEntity<>("Заказ оплачен!", HttpStatus.valueOf (response.statusCode()));
