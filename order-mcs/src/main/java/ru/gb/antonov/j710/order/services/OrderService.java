@@ -140,7 +140,9 @@ public class OrderService {
         odto.setAddress     (o.getShippingInfo().getAddress());
         odto.setPhone       (o.getShippingInfo().getPhone());
         odto.setCost(o.getAllItemsCost());
-        odto.setOitems      (o.getOrderItems().stream().map ((oi)->orderItemToDto (oi, oitemLoad))
+        odto.setOitems      (o.getOrderItems()
+                              .stream()
+                              .map ((oi)->orderItemToDto (oi, oitemLoad))
                               .collect (Collectors.toList()));
         odto.setLoad        (oitemLoad[0]);
         return odto;
@@ -162,6 +164,7 @@ public class OrderService {
         oidto.setQuantity  (quantity);
         oidto.setPrice     (price);
         oidto.setCost      (price.multiply (BigDecimal.valueOf(quantity)));
+        oidto.setMeasure   (productDto.getMeasure());
         oitemLoad[0] += quantity;
         return oidto;
     }

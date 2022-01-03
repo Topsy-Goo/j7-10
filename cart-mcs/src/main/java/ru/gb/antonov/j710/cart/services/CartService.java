@@ -14,13 +14,11 @@ import ru.gb.antonov.j710.monolith.entities.dtos.CartDto;
 import ru.gb.antonov.j710.monolith.entities.dtos.OrderItemDto;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
 
-import static ru.gb.antonov.j710.cart.CartFactory.CART_LIFE;
-import static ru.gb.antonov.j710.cart.CartFactory.DONOT_SET_CART_LIFE;
+import static ru.gb.antonov.j710.cart.CartFactory.*;
 import static ru.gb.antonov.j710.monolith.Factory.*;
 
 @Service
@@ -156,7 +154,7 @@ public class CartService {
     @NotNull private CartsEntry getUsersCartEntry (String username, String uuid) {
 
         String postfix = uuid;
-        Duration cartLife = CART_LIFE;
+        Duration cartLife = CART_LIFE_GUEST;
         if (username != null) {
 
             postfix = username;
@@ -253,7 +251,7 @@ public class CartService {
     public void clearCart (String username, String uuid) { clearCart (getUsersCartEntry (username, uuid)); }
 
     private void clearCart (CartsEntry ce) {
-        if (ce.imcart.clear())     //TODO: удалять корзины нужно поручить Memurai-ю.
+        if (ce.imcart.clear())
             updateCart(ce);
     }
 
@@ -278,7 +276,8 @@ public class CartService {
 
                     quantity = Math.min (rest, quantity);
                     cdto.addItem (new OrderItemDto (pid, pdto.getCategory(), pdto.getTitle(),
-                                                    pdto.getPrice(), rest, null, null),
+                                                    pdto.getPrice(), rest, null, null,
+                                                    pdto.getMeasure()),
                                   quantity);        //OrderItemDto.quantity будет установлено в CartDto.addItem.
                 }
             }
@@ -311,7 +310,8 @@ public class CartService {
                 updateCart (cePr);
                 /*ceUu.imcart.clear();
                 updateCart (ceUu);*/
-                redisTemplate.delete (ceUu.key); //TODO: это не удаляет корзину из кэша!!!!
+                //redisTemplate.delete (ceUu.key); //< это не удаляет корзину из кэша! Кажется, дело в том, что удаление происходит во время транзакции (см.описание к RedisKeyCommands.del()), но это не точно.
+                redisTemplate.expire (ceUu.key, CART_LIFE_DELETED); //< вместо удаления установим короткий (положительный) срок жизни (https://redis.io/commands/expire)
             }
         }
     }

@@ -36,6 +36,10 @@ public class OrderItem {
     @CreationTimestamp    @Column (name="updated_at")
     private LocalDateTime updatedAt;
 //-----------------------------------------------------------------
+    private void setId (Long value) { id = value; }
+    private void setUpdatedAt (LocalDateTime value) { updatedAt = value; }
+    private void setCreatedAt (LocalDateTime value) { createdAt = value; }
+//-----------------------------------------------------------------
     @Override public String toString() {
         return String.format ("OrderItem:[id:%d, oid:%d, pid:%s, bp:%.2f, qt:%d].",
                               id, order.getId(), productId, buyingPrice, quantity);

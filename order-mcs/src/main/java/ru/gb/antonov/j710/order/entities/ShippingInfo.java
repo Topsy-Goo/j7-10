@@ -64,6 +64,10 @@ public class ShippingInfo {
     }
     private static String setOrEmpty (String value) {   return (value == null) ? STR_EMPTY : value;   }
 //-------------------------------------------------------------------------
+    private void setId (Long value) { id = value; }
+    private void setUpdatedAt (LocalDateTime value) { updatedAt = value; }
+    private void setCreatedAt (LocalDateTime value) { createdAt = value; }
+//-------------------------------------------------------------------------
 /** Приводим в порядок некоторые поля. */
     public ShippingInfo adjust ()    {
         countryCode = countryCode.trim().toUpperCase(Locale.ROOT);

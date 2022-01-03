@@ -35,6 +35,10 @@ public class ProductReview {
     @CreationTimestamp    @Column(name="updated_at")
     private LocalDateTime updatedAt;
 //-----------------------------------------------------------
+    private void setId (Long value) { id = value; }
+    private void setUpdatedAt (LocalDateTime value) { updatedAt = value; }
+    private void setCreatedAt (LocalDateTime value) { createdAt = value; }
+//-----------------------------------------------------------
 
     public ProductReviewDto toProductReviewDto () {
         return new ProductReviewDto (ouruserId, NO_STRING, text, createdAt, productId);

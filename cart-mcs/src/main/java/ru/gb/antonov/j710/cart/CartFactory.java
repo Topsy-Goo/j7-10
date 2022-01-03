@@ -12,8 +12,9 @@ public class CartFactory {
 
     public static final String   STR_EMPTY           = "";
     public static       String   CART_PREFIX_        = STR_EMPTY;
-    public static       Duration CART_LIFE           = Duration.ofDays(30L);
-    public static       Duration DONOT_SET_CART_LIFE = null;
+    public static       Duration CART_LIFE_GUEST     = Duration.ofDays(30L);
+    public static       Duration CART_LIFE_DELETED   = Duration.ofSeconds(1L); //< срок жизни удалённой корзины
+    public static       Duration DONOT_SET_CART_LIFE = null;  //< срок жизни гостевой корзины
 
 /** Считываем настройки из файла настроек. */
     public static void init (Environment env)    {
@@ -25,8 +26,8 @@ public class CartFactory {
 
         String s = env.getProperty ("app.cart.life");
         if (Factory.isDecimalNumber (s, !FLOAT_POINT))        {
-            CART_LIFE = Duration.ofDays(Long.parseLong(s));
-            System.out.println ("app.cart.life: "+ CART_LIFE);
+            CART_LIFE_GUEST = Duration.ofDays(Long.parseLong(s));
+            System.out.println("app.cart.life: " + CART_LIFE_GUEST);
         }
         System.out.println ("************************** Настройки считаны: **************************");
     }

@@ -38,7 +38,7 @@ angular.module('market-front').controller('orderController',
 		function failureCallback (response)
 		{
 			$scope.contextPrompt = "Произошла ошибка!";
-			alert (response.data);
+			alert ('ОШИБКА! Не удалось загрузить инфорацию о заказе.');
 		});
 	}
 
@@ -89,8 +89,12 @@ angular.module('market-front').controller('orderController',
 */
 	$scope.renderPaymentButtons = function()
 	{
+/*		Закомментировано, чтобы не выдавало ошибку при загрузке страницы. Из-за этой «рацухи»
+		вся страница загружается кое-как.
+
 		$scope.canPay = false;
-		console.log ('Показ кнопки PayPal.');		console.log ($scope.orderDetails);
+		console.log ('Показ кнопки PayPal.');
+		console.log ($scope.orderDetails);
 		paypal.Buttons(
 		{
 			createOrder: function(data, actions)
@@ -106,18 +110,17 @@ angular.module('market-front').controller('orderController',
 				return fetch(contextPaypalPath + '/capture/' + data.orderID,
 				{	method: 'post',
 					headers: {'content-type': 'application/json'}
-
 					$scope.orderDetails.orderState = 'Оплачен'; //Это для описания заказа на текущей стр.
 				})
 				.then(function(response)
 				{	response.text().then(msg => alert(msg));
-					/* Статус заказа изменяется на «оплачен» в PayPalController перед самым возвратом из обработчика …/api/v1/paypal/create/{payPalId}. */
+					*//* Статус заказа изменяется на «оплачен» в PayPalController перед самым возвратом из обработчика …/api/v1/paypal/create/{payPalId}. *//*
 				});
 			},
 			onCancel: function (data) {console.log ("Order canceled: " + data);},
 			onError:  function (err)  {console.log (err);}
 		})
-		.render('#paypal-buttons');
+		.render('#paypal-buttons');*/
 	}
 
 	$scope.cancelOrdering = function () { $location.path('/cart'); }
@@ -126,12 +129,14 @@ angular.module('market-front').controller('orderController',
 //----------------------------------------------------------------------- действия
 	$scope.infoProduct = function (oitem)
 	{
-		alert('id:			  '+ oitem.productId +
-		   ',\rкатегория:	   '+ oitem.category +
-		   ',\rназвание:		'+ oitem.title +
-		   ',\rцена:			'+ oitem.price +
-		   ',\rколичество:	  '+ oitem.quantity +
-		   ',\rобщая стоимость: '+ oitem.cost);
+		alert('id:                '+ oitem.productId +
+		   ',\rкатегория:         '+ oitem.category +
+		   ',\rназвание:          '+ oitem.title +
+		   ',\rцена:              '+ oitem.price +
+		   ',\rколичество:        '+ oitem.quantity +
+		   ',\rеденица измерения: '+ oitem.measure +
+		   ',\rостаток:           '+ oitem.rest +
+		   ',\rобщая стоимость:   '+ oitem.cost);
 	}
 //----------------------------------------------------------------------- условия
 	$scope.canShowConfirmationButton = function ()	{ return $rootScope.isUserLoggedIn(); }

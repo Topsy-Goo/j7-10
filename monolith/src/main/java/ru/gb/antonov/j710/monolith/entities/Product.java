@@ -34,6 +34,10 @@ public class Product implements Buildable<Product> {
     private Integer rest;
 
     @ManyToOne
+    @JoinColumn(name="measure_id", nullable=false)    @Getter
+    private Measure measure;
+
+    @ManyToOne
     @JoinColumn(name="category_id", nullable=false)   @Getter
     private ProductsCategory category;
 
@@ -84,6 +88,14 @@ public class Product implements Buildable<Product> {
             throw new BadCreationParameterException ("\rнекорректный остаток продукта : " + newRest);
         return this;
     }
+    /**
+@return this
+@throws BadCreationParameterException */
+    public Product withMeasure (Measure newMeasure) {
+        if (!setMeasure(newMeasure))
+            throw new BadCreationParameterException ("\rнекорректная еденица измерения : "+ newMeasure);
+        return this;
+    }
 /**
 @return this
 @throws BadCreationParameterException */
@@ -92,16 +104,19 @@ public class Product implements Buildable<Product> {
             throw new BadCreationParameterException ("\rнекорректная категория продукта : " + newProductCategory);
         return this;
     }
+
 /**
 @return this */
     @Override public Product build () {
+        if (title == null || category == null || price == null || measure == null || rest == null)
+            throw new BadCreationParameterException ("\rнедостаточная инициализация");
         return this;
     }
 
 /** Любой из параметров может быть {@code null}. Равенство параметра {@code null} расценивается как
 нежелание изменять соответствующее ему свойство товара..
 @throws  BadCreationParameterException*/
-    public void update (String newTitle, BigDecimal newPrice, Integer newRest,
+    public void update (String newTitle, BigDecimal newPrice, Integer newRest, Measure newMeasure,
                         ProductsCategory newProductCategory)
     {
         if (newTitle != null && !setTitle (newTitle))
@@ -112,6 +127,9 @@ public class Product implements Buildable<Product> {
 
         if (newRest != null && !setRest (newRest))
             throw new BadCreationParameterException ("\rнекорректный остаток продукта : " + newRest);
+
+        if (newMeasure != null && !setMeasure (newMeasure))
+            throw new BadCreationParameterException ("\rнекорректная еденица измерения продукта : "+ newMeasure);
 
         if (newProductCategory != null && !setCategory (newProductCategory))
             throw new BadCreationParameterException ("\rнекорректная категория продукта : " + newProductCategory);
@@ -134,6 +152,13 @@ public class Product implements Buildable<Product> {
         return ok;
     }
 
+    private boolean setMeasure (Measure value) {
+        boolean ok = Measure.isMeasureValid (value);
+        if (ok)
+            measure = value;
+        return ok;
+    }
+
     private boolean setCategory (ProductsCategory newcategory) {
         boolean ok = newcategory != null;
         if (ok)
@@ -147,6 +172,9 @@ public class Product implements Buildable<Product> {
             rest = newvalue;
         return ok;
     }
+
+    private void setUpdatedAt (LocalDateTime value) { updatedAt = value; }
+    private void setCreatedAt (LocalDateTime value) { createdAt = value; }
 //-----------------------------------------------------------------------
 
     public static boolean isTitleValid (String title)  {
@@ -157,6 +185,10 @@ public class Product implements Buildable<Product> {
         return value.compareTo (MIN_PRICE) >= 0  &&  value.compareTo(MAX_PRICE) <= 0;
     }
 
+    public ProductDto toProductDto ()  {
+        return new ProductDto (id, title, price, rest, measure.getName(), category.getName());
+    }
+//-----------------------------------------------------------------------
     @Override public boolean equals (Object o) {
         if (o == this)  return true;
         if (o == null || getClass() != o.getClass())  return false;
@@ -167,10 +199,7 @@ public class Product implements Buildable<Product> {
     @Override public int hashCode()    {   return Objects.hash (id);   }
 
     @Override public String toString() {
-        return String.format ("[id:%d, «%s», %.2f, rt:%d]", id, title, price, rest);
-    }
-
-    public ProductDto toProductDto ()  {
-        return new ProductDto (id, title, price, rest, category.getName());
+        return String.format ("prod:[id:%d, «%s», %.2f, rt:%d, msr:%s, cat:%s]",
+                              id, title, price, rest, measure, category);
     }
 }

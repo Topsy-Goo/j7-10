@@ -23,16 +23,22 @@ public class ProductDto {
     @PositiveOrZero (message="Остаток товара должен быть НЕОТРИЦАТЕЛЬНЫМ числом!")
     private int rest;
 
+    @NotNull (message="\rНе указана еденица измерения!")
+    private String measure;
+
     @NotNull (message="Не указано название категории товара!")
     private String category;
 //--------------------------------------------------------------
     public ProductDto (){}
 
-    public ProductDto (Long pProductId, String pTitle, BigDecimal pPrice, Integer pRest, String pCategory) {
+    public ProductDto (Long pProductId, String pTitle, BigDecimal pPrice, Integer pRest,
+                       String pMeasure, String pCategory)
+    {
        if (pProductId != null) this.productId = pProductId;
        if (pTitle     != null) this.title     = pTitle;
        if (pPrice     != null) this.price     = pPrice;
        if (pRest      != null) this.rest      = pRest;
+       if (pMeasure   != null) this.measure   = pMeasure;
        if (pCategory  != null) this.category  = pCategory;
     }
 //--------------------------------------------------------------
@@ -48,12 +54,15 @@ public class ProductDto {
     public int getRest ()                   { return rest; }
     public void setRest (int value)         { rest = value; }
 
+    public String getMeasure ()             { return measure; }
+    public void   setMeasure (String value) { measure = value; }
+
     public String getCategory ()            { return category; }
     public void setCategory (String value)  { category = value; }
 //--------------------------------------------------------------
 
     @Override public String toString() {
-        return String.format ("ProductDto:{pid:%d, title:%s, price:%f, rest:%d, categ:%s}",
-                                         productId, title,   price,    rest,    category);
+        return String.format ("ProductDto:{pid:%d, title:%s, price:%f, rest:%d, msr:%s, categ:%s}",
+                                         productId, title,   price,    rest,    measure, category);
     }
 }

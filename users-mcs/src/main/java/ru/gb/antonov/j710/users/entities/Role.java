@@ -25,6 +25,12 @@ public class Role {
     @CreationTimestamp    @Column(name="updated_at")
     private LocalDateTime updatedAt;
 //------------------------------------------------------------
+    private Role (){}
+//------------------------------------------------------------
+    private void setId (Long value) { id = value; }
+    private void setUpdatedAt (LocalDateTime value) { updatedAt = value; }
+    private void setCreatedAt (LocalDateTime value) { createdAt = value; }
+//------------------------------------------------------------
     @Override public boolean equals (Object o) {
 
         if (this == o)   return true;

@@ -15,6 +15,7 @@ import ru.gb.antonov.j710.monolith.entities.Product;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -73,7 +74,7 @@ public class ProductController {
                                                 .collect (Collectors.toList()));
         }
         Product p = productService.createProduct (pdto.getTitle(), pdto.getPrice(), pdto.getRest(),
-                                                  pdto.getCategory());
+                                                  pdto.getMeasure(), pdto.getCategory());
         return toOptionalProductDto (p);
     }
 
@@ -86,7 +87,7 @@ public class ProductController {
         LOGGER.info ("Получен PUT-запрос: /api/v1/products + "+ pdto +" + "+ username + " + "+ Arrays.toString(roles));
         chechAccessToEditProducts (username, roles);
         Product p = productService.updateProduct (pdto.getProductId(), pdto.getTitle(), pdto.getPrice(),
-                                                  pdto.getRest(), pdto.getCategory());
+                                                  pdto.getRest(), pdto.getMeasure(), pdto.getCategory());
         return toOptionalProductDto (p);
     }
 
@@ -101,6 +102,18 @@ public class ProductController {
         if (id == null)
             throw new UnableToPerformException ("Не могу удалить товар (Unable to delete product) id: "+ id);
         productService.deleteById (id);
+    }
+
+    //http://localhost:12440/market/api/v1/product/categories_list
+    @GetMapping ("/categories_list")
+    public List<String> getCategories () {
+        return productService.getCategoriesList();
+    }
+
+    //http://localhost:12440/market/api/v1/product/measures_list
+    @GetMapping ("/measures_list")
+    public List<String> getMeasures () {
+        return productService.getMeasuresList();
     }
 //----------------------------------------------------------------------
     private static Optional<ProductDto> toOptionalProductDto (Product p)    {

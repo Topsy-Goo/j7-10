@@ -5,19 +5,20 @@ import java.math.BigDecimal;
 public class OrderItemDto {
 
     private Long       productId;
-    private String     category;
     private String     title;
     private BigDecimal price = BigDecimal.ZERO;
-    private int        rest;
     private int        quantity;
+    private String     measure;     //< единицы измерения есть OrderItemDto, но отсутствуют в OrderItem
+    private int        rest;
+    private String     category;
     private BigDecimal cost = BigDecimal.ZERO;
 //------------------------------------------------------------------
     public OrderItemDto () {}
 
 /** Метод меняет только те поля, для которых был передан не null. */
     public OrderItemDto (Long productId, String category, String title, BigDecimal price,
-                         Integer rest, Integer quantity, BigDecimal cost) {
-
+                         Integer rest, Integer quantity, BigDecimal cost, String measure)
+    {
         if (productId != null) this.productId = productId;
         if (category  != null) this.category  = category;
         if (title     != null) this.title     = title;
@@ -25,6 +26,7 @@ public class OrderItemDto {
         if (rest      != null) this.rest      = rest;
         if (quantity  != null) this.quantity  = quantity;
         if (cost      != null) this.cost      = cost;
+        if (measure   != null) this.measure   = measure;
     }
 //--------- Геттеры и сеттеры (JSON работает с публичными полями!) --------------
 
@@ -54,6 +56,9 @@ public class OrderItemDto {
 
     public int getRest ()           { return rest; }
     public void setRest (int value) { rest = value; }
+
+    public String getMeasure ()           { return measure; }
+    public void setMeasure (String value) { measure = value; }
 
 //----------------- Другие методы ----------------------------------
 

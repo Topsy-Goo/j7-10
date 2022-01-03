@@ -30,13 +30,19 @@ public class OrderController {
     private final OrderStatesService orderStatesService;
 //-------------------------------------------------------------------------------------------
 
+/** Фронт запрашивает информацию по заказу, который пользователь собирается сделать.
+На данный момент у нас есть только пользователь и его корзина. Нам предстоит определить,
+как должен выглядеть заказ, и показать результат наших «исследований» пользователю для
+подтверждения. */
     @GetMapping ("/details")
-    public OrderDetalesDto getOrderDetales (@RequestHeader(name= INAPP_HDR_LOGIN) String username) { //в параметр username попадает значение заголовка username; если имя параметра отличается от имени заголовка, то нужно указать, из какого заголовка папраметр должен брать значение
+    public OrderDetalesDto getOrderDetales (@RequestHeader(name= INAPP_HDR_LOGIN) String username) {
+    //в параметр username попадает значение заголовка username; если имя параметра отличается от имени заголовка, то нужно указать, из какого заголовка папраметр должен брать значение
 
         checkRightsToMakeOrder (username);
         return orderService.getOrderDetales (username);
     }
 
+/** Пользователь оценил наше вИдение его заказа и нажал кнопку «Оформить заказ». */
     @PostMapping ("/confirm")
     @ResponseStatus (HttpStatus.CREATED)
     public OrderDetalesDto applyOrderDetails (@RequestBody @Validated OrderDetalesDto orderDetalesDto,
@@ -52,9 +58,9 @@ public class OrderController {
         return orderService.applyOrderDetails (orderDetalesDto, username);
     }
 
+/** Фронт запрашивает список заказов пользователя. */
     @GetMapping ("/orders")
     public Collection<OrderDto> getOrders (@RequestHeader(name= INAPP_HDR_LOGIN) String username) {
-
         return orderService.getUserOrdersAsOrderDtos (username);
     }
 

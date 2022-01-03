@@ -46,6 +46,10 @@ public class Order {
         return Collections.unmodifiableList (orderItems);
     }
 //----------------------------------------------------------------------
+    private void setId (Long value) { id = value; }
+    private void setUpdatedAt (LocalDateTime value) { updatedAt = value; }
+    private void setCreatedAt (LocalDateTime value) { createdAt = value; }
+//----------------------------------------------------------------------
     @Override public String toString() {
         return String.format ("Order:[id:%d, uid:%d, cost:%.2f, ph:%s, adr:%s]_with_[%s]",
                               id, ouruserId, allItemsCost,
