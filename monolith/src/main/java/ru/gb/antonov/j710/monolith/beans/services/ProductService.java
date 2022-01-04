@@ -157,12 +157,16 @@ public class ProductService {
     //MultiValueMap.getFirst() returns the first value for the specified key, or null if none.
             String s;
             if ((s = params.getFirst (FILTER_MIN_PRICE)) != null && !s.isBlank())  {
-                double minPrice = Integer.parseInt (s);
+                Double minPrice = stringToDouble (s);
+                if (minPrice == null)
+                    minPrice = MIN_PRICE.doubleValue();
                 spec = spec.and (ProductSpecification.priceGreaterThanOrEqualsTo (minPrice));
             }
 
             if ((s = params.getFirst (FILTER_MAX_PRICE)) != null && !s.isBlank()) {
-                double maxPrice = Integer.parseInt (s);
+                Double maxPrice = stringToDouble (s);
+                if (maxPrice == null)
+                    maxPrice = MAX_PRICE.doubleValue();
                 spec = spec.and (ProductSpecification.priceLessThanOrEqualsTo (maxPrice));
             }
 
