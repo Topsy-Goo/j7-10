@@ -24,9 +24,6 @@ public class Product implements Buildable<Product> {
     @Column(name="title", nullable=false)             @Getter
     private String title;
 
-    public static String getPriceFieldName ()  { return "price"; }
-    public static String getTitleFieldName ()  { return "title"; }
-
     @Column(name="price", nullable=false)             @Getter
     private BigDecimal price = BigDecimal.ZERO;
 
@@ -47,14 +44,28 @@ public class Product implements Buildable<Product> {
     @CreationTimestamp    @Column(name="updated_at")  @Getter @Setter
     private LocalDateTime updatedAt;
 //----------------------------------------------------------------------
-    private Product () {}
-
+/** При создании товара некоторые характеристики должны обязательно заполняться. Остальные могут
+быть заполнены позже и/или при необходимости.
+@param newTitle наименование товара. Уникальность наименования не проверяется в этом конструкторе.
+@param newMeasure единица измерения.
+@param newProductCategory категория товара. */
+    private Product (String newTitle, Measure newMeasure, ProductsCategory newProductCategory) {
+        if (!setTitle (newTitle))
+            throw new BadCreationParameterException ("\rнекорректное название продукта : "+ newTitle);
+        if (!setMeasure (newMeasure))
+            throw new BadCreationParameterException ("\rнекорректная еденица измерения : "+ newMeasure);
+        if (!setCategory (newProductCategory))
+            throw new BadCreationParameterException ("\rнекорректная категория продукта : "+ newProductCategory);
+    }
 //---------------- создание и обновление объектов ----------------------
 /** Создаёт пустой объект Product и начинает цепочку методов, каждый из которых проверяет валидность
-изменяемого параметра.
+изменяемого параметра. Параметрами являются обязательные характеристики товара.
 @return ссылка на объект Product */
-    public static Product create () {
-        return new Product();
+    public static Product create (String newTitle, Measure newMeasure, ProductsCategory newProductCategory)
+    {
+        //Делая measure и category обязательными, мы в частности избавляем себя от их проверок на null
+        //в таких методах как Product.toProductDto().
+        return new Product (newTitle, newMeasure, newProductCategory);
     }
 
  /** Начинает цепочку методов, каждый из которых проверяет валидность изменяемого параметра. Цепочка не
@@ -64,14 +75,7 @@ public class Product implements Buildable<Product> {
     public Product strictUpdate () {
         return this;
     }
-/**
-@return this
-@throws BadCreationParameterException */
-    public Product withTitle (String newTitle) {
-        if (!setTitle (newTitle))
-            throw new BadCreationParameterException ("\rнекорректное название продукта : " + newTitle);
-        return this;
-    }
+
 /**
 @return this
 @throws BadCreationParameterException */
@@ -80,28 +84,13 @@ public class Product implements Buildable<Product> {
             throw new BadCreationParameterException ("\rнекорректная цена продукта : " + newPrice);
         return this;
     }
+
 /**
 @return this
 @throws BadCreationParameterException */
     public Product withRest (Integer newRest) {
         if (!setRest (newRest))
             throw new BadCreationParameterException ("\rнекорректный остаток продукта : " + newRest);
-        return this;
-    }
-    /**
-@return this
-@throws BadCreationParameterException */
-    public Product withMeasure (Measure newMeasure) {
-        if (!setMeasure(newMeasure))
-            throw new BadCreationParameterException ("\rнекорректная еденица измерения : "+ newMeasure);
-        return this;
-    }
-/**
-@return this
-@throws BadCreationParameterException */
-    public Product withProductsCategory (ProductsCategory newProductCategory) {
-        if (!setCategory (newProductCategory))
-            throw new BadCreationParameterException ("\rнекорректная категория продукта : " + newProductCategory);
         return this;
     }
 
@@ -136,12 +125,12 @@ public class Product implements Buildable<Product> {
     }
 //----------------- Геттеры и сеттеры -----------------------------------
 
-    private void setId (Long id)   {   this.id = id;   }
+    private void setId (Long newvalue)   {   this.id = newvalue;   }
 
-    public boolean setTitle (String title) {
-        boolean ok = isTitleValid (title);
+    public boolean setTitle (String newvalue) {
+        boolean ok = isTitleValid (newvalue);
         if (ok)
-            this.title = title.trim();
+            this.title = newvalue.trim();
         return ok;
     }
 
@@ -152,17 +141,17 @@ public class Product implements Buildable<Product> {
         return ok;
     }
 
-    private boolean setMeasure (Measure value) {
-        boolean ok = Measure.isMeasureValid (value);
+    private boolean setMeasure (Measure newvalue) {
+        boolean ok = Measure.isMeasureValid (newvalue);
         if (ok)
-            measure = value;
+            measure = newvalue;
         return ok;
     }
 
-    private boolean setCategory (ProductsCategory newcategory) {
-        boolean ok = newcategory != null;
+    private boolean setCategory (ProductsCategory newvalue) {
+        boolean ok = newvalue != null;
         if (ok)
-            category = newcategory;
+            category = newvalue;
         return ok;
     }
 
@@ -173,12 +162,12 @@ public class Product implements Buildable<Product> {
         return ok;
     }
 
-    private void setUpdatedAt (LocalDateTime value) { updatedAt = value; }
-    private void setCreatedAt (LocalDateTime value) { createdAt = value; }
+    private void setUpdatedAt (LocalDateTime newvalue) { updatedAt = newvalue; }
+    private void setCreatedAt (LocalDateTime newvalue) { createdAt = newvalue; }
 //-----------------------------------------------------------------------
 
-    public static boolean isTitleValid (String title)  {
-        return sayNoToEmptyStrings (title);
+    public static boolean isTitleValid (String value)  {
+        return sayNoToEmptyStrings (value);
     }
 
     public static boolean isPriceValid (BigDecimal value) {

@@ -99,8 +99,6 @@ public class ProductController {
     {
         LOGGER.info ("Получен GET-запрос: /api/v1/products/delete/"+ id +" + "+ username + " + "+ Arrays.toString(roles));
         chechAccessToEditProducts (username, roles);
-        if (id == null)
-            throw new UnableToPerformException ("Не могу удалить товар (Unable to delete product) id: "+ id);
         productService.deleteById (id);
     }
 
@@ -123,8 +121,10 @@ public class ProductController {
     }
 
     private void chechAccessToEditProducts (String login, String[] roles)    {
-
-        boolean ok = login != null && !login.isBlank() && roles != null && Arrays.asList (roles).contains(PERMISSION_EDIT_PRODUCT);
+        boolean ok = login != null
+                     && !login.isBlank()
+                     && roles != null
+                     && Arrays.asList (roles).contains(PERMISSION_EDIT_PRODUCT);
         if (!ok)
             throw new UnauthorizedAccessException ("Вам это нельзя!");
     }

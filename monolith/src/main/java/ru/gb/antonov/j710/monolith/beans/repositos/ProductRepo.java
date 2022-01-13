@@ -20,4 +20,6 @@ public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificat
             // крестьянам с соломой в волосах)
             nativeQuery = true)
     BigDecimal getProductPrice (@Param ("pid") Long pid);*/
+
+    Product findByTitle (String title);
 }

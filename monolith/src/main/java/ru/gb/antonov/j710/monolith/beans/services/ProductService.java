@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
+import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.FilterPriceException;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.ResourceNotFoundException;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.UnableToPerformException;
@@ -20,7 +21,9 @@ import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
+import static java.util.logging.Logger.getLogger;
 import static ru.gb.antonov.j710.monolith.Factory.*;
 
 @Service
@@ -35,6 +38,8 @@ public class ProductService {
     private static final String FILTER_MIN_PRICE = "min_price";
     private static final String FILTER_MAX_PRICE = "max_price";
     private static final String FILTER_TITLE     = "title";
+
+    private static final Logger LOGGER = getLogger (ProductService.class.getSimpleName());
 //-----------------------------------------------------------------------
 
 /** @throws ResourceNotFoundException */
@@ -94,13 +99,19 @@ public class ProductService {
     {
         ProductsCategory category = productCategoryService.findByName (productCategoryName); //< бросает ResourceNotFoundException
         Measure measure = productMeasureService.findByName (productMeasure);
-        Product p = Product.create()
-                           .withTitle (title)
-                           .withPrice (price)
-                           .withRest (rest)
-                           .withMeasure (measure)
-                           .withProductsCategory (category)
-                           .build();     //< бросает BadCreationParameterException
+
+        //проверка уникальности имени товара ДО записи в базу (теоретически, такая проверка даёт возможность
+        // менять политику уникальности имени товара без вмешательства в БД):
+        Product p = productRepo.findByTitle (title);
+        if (p != null)
+            throw new BadCreationParameterException (
+                    "ОШИБКА! Товар с таким наименованием уже существует.\r" + p.toString());
+
+        p = Product.create (title, measure, category)
+                   .withPrice (price)
+                   .withRest (rest)
+                   .build();     //< бросает BadCreationParameterException
+        LOGGER.warning ("Создан продукт: "+ p.toString());
         return productRepo.save (p);
     }
 
@@ -125,7 +136,9 @@ public class ProductService {
             measure = productMeasureService.findByName (productMeasure);
 
         p.update (title, price, rest, measure, category);
-        return productRepo.save (p);
+        p = productRepo.save (p);
+        LOGGER.warning ("Изменён продукт: "+ p.toString());
+        return p;
     }
 
 /** Товар не удаляем, а обнуляем у него поле {@code rest}. В дальнейшем, при попытке добавить
@@ -133,8 +146,12 @@ public class ProductService {
     Логично будет добавить к этому НЕвозможность показывать такой товар на витрине.*/
     @Transactional
     public void deleteById (Long id)    {
+        if (id == null)
+            throw new UnableToPerformException ("Не могу удалить товар (Unable to delete product) id: "+ id);
         Product p = findById (id);  //< бросает ResourceNotFoundException
         p.setRest (0);
+        productRepo.save (p);
+        LOGGER.warning ("Удалён продукт: "+ p.toString());
     }
 
     @Transactional
