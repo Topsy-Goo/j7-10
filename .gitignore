@@ -42,3 +42,4 @@ build/
 /hs_err_pid14300.log
 /replay_pid14300.log
 /order-mcs/src/main/resources/secret.properties
+/monolith/src/main/resources/db.rar

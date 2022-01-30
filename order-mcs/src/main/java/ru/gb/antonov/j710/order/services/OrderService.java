@@ -139,7 +139,7 @@ public class OrderService {
         odto.setState       (o.getState().getFriendlyName());
         odto.setAddress     (o.getShippingInfo().getAddress());
         odto.setPhone       (o.getShippingInfo().getPhone());
-        odto.setCost(o.getAllItemsCost());
+        odto.setCost        (o.getAllItemsCost());
         odto.setOitems      (o.getOrderItems()
                               .stream()
                               .map ((oi)->orderItemToDto (oi, oitemLoad))
