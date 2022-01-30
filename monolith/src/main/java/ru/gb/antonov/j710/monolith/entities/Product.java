@@ -44,6 +44,7 @@ public class Product implements Buildable<Product> {
     @CreationTimestamp    @Column(name="updated_at")  @Getter @Setter
     private LocalDateTime updatedAt;
 //----------------------------------------------------------------------
+    private Product () {}
 /** При создании товара некоторые характеристики должны обязательно заполняться. Остальные могут
 быть заполнены позже и/или при необходимости.
 @param newTitle наименование товара. Уникальность наименования не проверяется в этом конструкторе.
@@ -63,17 +64,9 @@ public class Product implements Buildable<Product> {
 @return ссылка на объект Product */
     public static Product create (String newTitle, Measure newMeasure, ProductsCategory newProductCategory)
     {
-        //Делая measure и category обязательными, мы в частности избавляем себя от их проверок на null
+        //Делая measure и category обязательными, мы избавляем себя от их проверок на null
         //в таких методах как Product.toProductDto().
         return new Product (newTitle, newMeasure, newProductCategory);
-    }
-
- /** Начинает цепочку методов, каждый из которых проверяет валидность изменяемого параметра. Цепочка не
-обязана начинаться с этого метода, но его использование улучшает читаемость кода.
-@return this
-@throws BadCreationParameterException */
-    public Product strictUpdate () {
-        return this;
     }
 
 /**
@@ -188,7 +181,7 @@ public class Product implements Buildable<Product> {
     @Override public int hashCode()    {   return Objects.hash (id);   }
 
     @Override public String toString() {
-        return String.format ("prod:[id:%d, «%s», %.2f, rt:%d, msr:%s, cat:%s]",
-                              id, title, price, rest, measure, category);
+        return String.format ("Product:[id:%d, «%s», %.2f, rt:%d, msr:«%s», cat:«%s»]",
+                        id, title, price, rest, measure.getName(), category.getName());
     }
 }

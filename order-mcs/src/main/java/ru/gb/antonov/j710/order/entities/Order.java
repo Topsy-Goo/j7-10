@@ -21,7 +21,7 @@ public class Order {
     @Column(name="ouruser_id", nullable=false)
     private Long ouruserId;
 
-    @ManyToOne (cascade = {CascadeType.PERSIST})
+    @ManyToOne (cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn (name="shipping_info_id", nullable=false)
     private ShippingInfo shippingInfo;
 
@@ -38,7 +38,8 @@ public class Order {
     private LocalDateTime updatedAt;
 
 //--------неколонки
-    @OneToMany (mappedBy="order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany (mappedBy="order", orphanRemoval = true,
+                cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<OrderItem> orderItems;
 //----------------------------------------------------------------------
     public Order () {}

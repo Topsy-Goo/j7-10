@@ -22,15 +22,15 @@ SELECT * FROM PRODUCTREVIEWS;
 
 memurai-cli --scan
 memurai-cli flushall
-docker-compose up
+docker-compose up	- (пере)монтирование образа; команда выполняется из PowerShell, запущенной из папки проекта и с правами администратора; знак $ перед командой ставить не нужно.
 
-18181	monolith
+18181	monolith *	InternetShopApplication
+7777 	users-mcs
 8191 	cart-mcs
 22854	order-mcs
 11540	productreview-mcs
-5555 	gateway	(шлюз)
 3000 	static-html
-7777 	users-mcs
+5555 	gateway	(шлюз)
 
 Домашнее задание 11:
  1. Замените интеграцию core с корзиной с RestTemplate на WebClient
@@ -44,9 +44,12 @@ docker-compose up
 3. *** Попробуйте завернуть весь проект в пачку образов и один docker-compose
 
 Комментарий для след. коммита:
-
+•
 
 
 Пример JWT для admin
 eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIkVESVRfUFJPRFVDVFMiLCJST0xFX0FETUlOIiwiU0lNTEVfU0hPUFBJTkciXSwiZXhwIjoxNjM3MjA1ODIzLCJpYXQiOjE2MzcxNjk4MjN9.VDhlTLzR9Y4AXva4Vt_jofJDtSL_Z7mknDsCoSmQmJI
 (см.в https://jwt.io )
+
+
+//TODO: Не работает фильтрация товаров на витрине.

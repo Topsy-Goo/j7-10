@@ -6,7 +6,6 @@ import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterExcep
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity  @Data  @Table(name="categories")
 public class ProductsCategory {
@@ -24,8 +23,8 @@ public class ProductsCategory {
     @CreationTimestamp  @Column(name="updated_at")
     private LocalDateTime updatedAt;
 //---- неколонки
-    @OneToMany(mappedBy="category")
-    private List<Product> products;
+/*    @OneToMany(mappedBy="category")
+    private List<Product> products;*/
 //----------------------------------------------------------------------
     public ProductsCategory (){}
     public ProductsCategory (String name)    {
@@ -48,17 +47,19 @@ public class ProductsCategory {
         }
         return result;
     }
-    public String toString() { return name; }
+    public String toString() { return ProductsCategory.class.getSimpleName() +":"+ name; }
 
 //(метод используется в тестах, где корректность аргументов зависит от целей тестирования)
-    public static ProductsCategory dummyProductsCategory (Long id, String name, List<Product> products,
-                                                          LocalDateTime createdAt, LocalDateTime updatedAt)
-    {   ProductsCategory pc = new ProductsCategory();
+    public static ProductsCategory dummyProductsCategory (
+                        Long id, String name, /*List<Product> products,*/
+                        LocalDateTime createdAt, LocalDateTime updatedAt)
+    {
+        ProductsCategory pc = new ProductsCategory();
         pc.id        = id;
         pc.name      = name;
         pc.createdAt = createdAt;
         pc.updatedAt = updatedAt;
-        pc.products  = products;
+        //pc.products  = products;
         return pc;
     }
 }

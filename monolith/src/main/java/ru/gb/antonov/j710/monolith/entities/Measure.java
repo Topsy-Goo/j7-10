@@ -46,7 +46,7 @@ public class Measure {
         return Objects.hash(name);
     }
 
-    @Override public String toString () { return String.format ("Measure[%d, %s]", id, name); }
+    @Override public String toString () { return Measure.class.getSimpleName() +":"+ name; }
 //------------------------------------------------------------ */
 
     public static boolean isMeasureValid (Measure value) {
