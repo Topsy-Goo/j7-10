@@ -35,15 +35,15 @@ public class ProductService {
     private final ProductMeasureService  productMeasureService;
 
 //названия фильтров, использующиеся на фронте:
-    private static final String FILTER_MIN_PRICE = "min_price";
-    private static final String FILTER_MAX_PRICE = "max_price";
-    private static final String FILTER_TITLE     = "title";
+    private static final String FILTER_NAME_MIN_PRICE = "min_price";
+    private static final String FILTER_NAME_MAX_PRICE = "max_price";
+    private static final String FILTER_NAME_TITLE     = "title";
 
     private static final Logger LOGGER = getLogger (ProductService.class.getSimpleName());
 //-----------------------------------------------------------------------
 
 /** @throws ResourceNotFoundException */
-    public Product findById (Long id)    {
+    public Product findById (Long id) {
 
         String errMessage = "Не найден продукт с id = "+ id;
         return productRepo.findById(id)
@@ -52,7 +52,7 @@ public class ProductService {
 
 /** @param from {@code productId} первого элемента интервала.
     @param to {@code productId} последнего элемента интервала (включительно). */
-    public List<Product> findAllByIdBetween (Long from, Long to)    {
+    public List<Product> findAllByIdBetween (Long from, Long to) {
 
         String errMsg = String.format ("Не могу получить все товары из диапазона id: %d…%d.", from, to);
         return productRepo.findAllByIdBetween (from, to)
@@ -63,16 +63,18 @@ public class ProductService {
                                   @Nullable MultiValueMap<String, String> filters)
     {
         pageIndex = validatePageIndex (pageIndex, pageSize, productRepo.count());
-        return (filters == NO_FILTERS)
-                    ? productRepo.findAll (PageRequest.of (pageIndex, pageSize))
-                    : productRepo.findAll (constructSpecification (filters), PageRequest.of (pageIndex, pageSize));
+        Page<Product> pp = null;
+        if (filters == NO_FILTERS)
+            pp = productRepo.findAll (PageRequest.of (pageIndex, pageSize));
+        else {
+            Specification<Product> pspec = constructSpecification (filters);
+            PageRequest preq = PageRequest.of (pageIndex, pageSize);
+            pp = productRepo.findAll (pspec, preq);
+        }
+        return pp;
     }
 
-/*    public BigDecimal getProductPrice (Long pid) {
-        return productRepo.getProductPrice (pid);
-    }*/
-
-    private int validatePageIndex (int pageIndex, int pageSize, long productsCount)    {
+    private int validatePageIndex (int pageIndex, int pageSize, long productsCount) {
 
         int pagesCount    = (int)(productsCount / pageSize);
 
@@ -145,7 +147,7 @@ public class ProductService {
     этот товар в корзину, проверяется его количество, и, т.к. оно равно 0, добавление не происходит.<p>
     Логично будет добавить к этому НЕвозможность показывать такой товар на витрине.*/
     @Transactional
-    public void deleteById (Long id)    {
+    public void deleteById (Long id) {
         if (id == null)
             throw new UnableToPerformException ("Не могу удалить товар (Unable to delete product) id: "+ id);
         Product p = findById (id);  //< бросает ResourceNotFoundException
@@ -179,14 +181,14 @@ public class ProductService {
             String s;
             double minPrice = 0.0;
             try {
-                if ((s = params.getFirst (FILTER_MIN_PRICE)) != null && !s.isBlank())  {
+                if ((s = params.getFirst(FILTER_NAME_MIN_PRICE)) != null && !s.isBlank())  {
                     minPrice = stringToDouble (s);
                     if (minPrice < 0.0)
                         throw new FilterPriceException (USE_DEFAULT_STRING);
                     spec = spec.and (ProductSpecification.priceGreaterThanOrEqualsTo (minPrice));
                 }
 
-                if ((s = params.getFirst (FILTER_MAX_PRICE)) != null && !s.isBlank()) {
+                if ((s = params.getFirst (FILTER_NAME_MAX_PRICE)) != null && !s.isBlank()) {
                     double maxPrice = stringToDouble (s);
                     if (maxPrice < minPrice)
                         throw new FilterPriceException (USE_DEFAULT_STRING);
@@ -197,13 +199,13 @@ public class ProductService {
                 throw new FilterPriceException (USE_DEFAULT_STRING, e);
             }
 
-            if ((s = params.getFirst (FILTER_TITLE)) != null && !s.isBlank()) {
+            if ((s = params.getFirst (FILTER_NAME_TITLE)) != null && !s.isBlank()) {
                 spec = spec.and (ProductSpecification.titleLike (s));
             }
-/*  Если, например, понадобится добавить фильтр, состоящий из ряда необязательных элементов, то для него нужно создать отдельную спецификацию, заполнить её при пом. Specification.or(…), а потом добавить в основную спецификайию при пом. Specification.add(…). */
+/*  Если, например, понадобится добавить фильтр, состоящий из ряда необязательных элементов,
+то для него нужно создать отдельную спецификацию, заполнить её при пом. Specification.or(…),
+а потом добавить в основную спецификайию при пом. Specification.add(…). */
         }
         return spec;
     }
 }
-
-

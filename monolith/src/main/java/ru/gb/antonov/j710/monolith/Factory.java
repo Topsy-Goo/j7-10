@@ -49,8 +49,8 @@ public class Factory
     public static final String BRAND_NAME_ENG = "Marketplace";
     public static final String STR_EMPTY      = "";
     public static final String BEARER_        = "Bearer ";  //< должно совпадать с одноимённой переменной в gateway.GatewayApp
-    public static final String PRODUCT_PRICE_FIELD_NAME = "title";
-    public static final String PRODUCT_TITLE_FIELD_NAME = "price";
+    public static final String PRODUCT_TITLE_FIELD_NAME = "title";
+    public static final String PRODUCT_PRICE_FIELD_NAME = "price";
     public static final String ORDERSTATE_NONE     = "NONE";
     public static final String ORDERSTATE_PENDING  = "PENDING";
     public static final String ORDERSTATE_SERVING  = "SERVING";
