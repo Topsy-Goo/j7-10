@@ -45,8 +45,12 @@ docker-compose up	- (пере)монтирование образа; коман�
 
 Комментарий для след. коммита:
 •
+•
 
 
 Пример JWT для admin
 eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIkVESVRfUFJPRFVDVFMiLCJST0xFX0FETUlOIiwiU0lNTEVfU0hPUFBJTkciXSwiZXhwIjoxNjM3MjA1ODIzLCJpYXQiOjE2MzcxNjk4MjN9.VDhlTLzR9Y4AXva4Vt_jofJDtSL_Z7mknDsCoSmQmJI
 (см.в https://jwt.io )
+
+Разметка для MD-документов:		http://coddism.com/zametki/razmetka_readmemd_v_github
+

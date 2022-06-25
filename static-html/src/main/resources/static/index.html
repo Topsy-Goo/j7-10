@@ -58,6 +58,12 @@
 		.copyright	{	height: 40px;	line-height: 20px;	margin: 0px 0px 30px 0px;	/* top,rig,bot,lef */
 						box-sizing: border-box;		border: none;/*	3px solid #d8deff;	*/
 		}
+		.page_content
+		{	width: 100%;
+			height: fit-content;
+			min-height: 800px;
+			box-sizing: border-box;	/* http://htmlbook.ru/css/box-sizing */
+		}
 	</style>
 
 </head>
@@ -124,7 +130,7 @@
                         <a	class="nav-link" href="#!/user_profile">👤&nbsp;Профиль</a>
 					</li>
 					<li class="nav-item" style="background-color: #E0F8C3; margin: 1px;" ng-show="isUserLoggedIn()"><!-- "padding: 4px;" -->
-						<a class="nav-link" ng-click="tryToLogout()">🚪&nbsp;Выход</a>
+						<a class="nav-link" href="" ng-click="tryToLogout()">🚪&nbsp;Выход</a>
 					</li>
 				</ul><!-- 🎀 📎 🔔 👤 🚪 🔕 🔒   -->
 			</div>
@@ -134,8 +140,10 @@
 
 	</div>
 
-	<ng-view>
-	</ng-view>
+	<div class="page_content">
+		<ng-view>
+		</ng-view>
+	</div>
 
 	<!-- footer start -->
 	<div class="page_footer">

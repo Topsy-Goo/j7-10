@@ -18,8 +18,8 @@ public class UserIntegrationConfig {
 
     @Value ("${integration.product-service.url}") private String productServiceUrl;
 
-    @Bean public WebClient productServiceWebClient () {
-
+    @Bean public WebClient productServiceWebClient ()
+    {
         return WebClient.builder()
                         .baseUrl (productServiceUrl) //< адрес назначения запроса
                         //.defaultHeader ("my-header", "my-value")  < стандартные хэдеры

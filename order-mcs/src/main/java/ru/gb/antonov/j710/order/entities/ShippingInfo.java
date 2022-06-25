@@ -3,6 +3,7 @@ package ru.gb.antonov.j710.order.entities;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import ru.gb.antonov.j710.order.dtos.ShippingInfoDto;
 
 import javax.persistence.*;
@@ -21,31 +22,31 @@ public class ShippingInfo {
     @Column (name="id")
     private Long id;
 
-    @Column (name="country_code", nullable = false)
+    @Column (name="country_code", nullable=false, length=2)
     private String countryCode = STR_EMPTY;
 
-    @Column (name="postal_code", nullable = false)
+    @Column (name="postal_code", nullable=false, length=6)
     private String postalCode = STR_EMPTY;
 
-    @Column (name="region", nullable = false)
+    @Column (name="region", nullable=false, length=100)
     private String region = STR_EMPTY;
 
-    @Column (name="town_village", nullable = false)
+    @Column (name="town_village", nullable=false, length=100)
     private String townVillage = STR_EMPTY;
 
-    @Column (name="street_house", nullable = false)
+    @Column (name="street_house", nullable=false, length=100)
     private String streetHouse = STR_EMPTY;
 
-    @Column (name="apartment", nullable = false)
+    @Column (name="apartment", nullable=false, length=100)
     private String apartment = STR_EMPTY;
 
-    @Column (name="phone", nullable=false)
+    @Column (name="phone", nullable=false, length=20)
     private String phone = STR_EMPTY;
 
     @CreationTimestamp    @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @CreationTimestamp    @Column (name="updated_at")
+    @UpdateTimestamp    @Column (name="updated_at")
     private LocalDateTime updatedAt;
 //-------------------------------------------------------------------------
 

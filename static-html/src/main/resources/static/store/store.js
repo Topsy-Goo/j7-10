@@ -29,9 +29,9 @@ angular.module('market-front').controller('storeController',
 			params:
 			{	p: productPageCurrent,
 			//это фильтры:
-                title: $scope.filter ? $scope.filter.title : null,			// FILTER_NAME_TITLE
-                min_price: $scope.filter ? $scope.filter.min_price : null,	// FILTER_NAME_MIN_PRICE
-                max_price: $scope.filter ? $scope.filter.max_price : null	// FILTER_NAME_MAX_PRICE
+                title: $scope.filter ? $scope.filter.title : null,			// ProductService.FILTER_NAME_TITLE
+                min_price: $scope.filter ? $scope.filter.min_price : null,	// ProductService.FILTER_NAME_MIN_PRICE
+                max_price: $scope.filter ? $scope.filter.max_price : null	// ProductService.FILTER_NAME_MAX_PRICE
 			}
 		})
 		.then (function successCallback (response)

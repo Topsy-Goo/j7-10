@@ -3,6 +3,7 @@ package ru.gb.antonov.j710.order.entities;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -24,7 +25,7 @@ public class OrderItem {
     @Column(name="product_id", nullable=false)
     private Long productId;
 
-    @Column(name="buying_price", nullable=false)
+    @Column(name="buying_price", nullable=false, precision=10, scale=2)
     private BigDecimal buyingPrice = BigDecimal.ZERO;
 
     @Column(name="quantity", nullable=false)
@@ -33,7 +34,7 @@ public class OrderItem {
     @CreationTimestamp    @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @CreationTimestamp    @Column (name="updated_at")
+    @UpdateTimestamp    @Column (name="updated_at")
     private LocalDateTime updatedAt;
 //-----------------------------------------------------------------
     private void setId (Long value) { id = value; }

@@ -3,6 +3,7 @@ package ru.gb.antonov.j710.productreview.entities;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import ru.gb.antonov.j710.productreview.dtos.ProductReviewDto;
 
 import javax.persistence.*;
@@ -20,7 +21,7 @@ public class ProductReview {
     @Column (name="id")
     private Long id;
 
-    @Column(name="text", nullable=false)
+    @Column(name="text", nullable=false, length=2048)
     private String text;
 
     @Column(name="ouruser_id", nullable=false)
@@ -32,7 +33,7 @@ public class ProductReview {
     @CreationTimestamp    @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @CreationTimestamp    @Column(name="updated_at")
+    @UpdateTimestamp    @Column(name="updated_at")
     private LocalDateTime updatedAt;
 //-----------------------------------------------------------
     private void setId (Long value) { id = value; }

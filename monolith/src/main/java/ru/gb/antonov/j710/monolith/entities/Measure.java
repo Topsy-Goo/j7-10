@@ -2,6 +2,7 @@ package ru.gb.antonov.j710.monolith.entities;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,14 +18,13 @@ public class Measure {
     @Column (name="id")
     private Long id;
 
-    @Column (name="name", nullable=false, unique=true)
+    @Column (name="name", nullable=false, unique=true, length=128)
     private String name;
 
-    @CreationTimestamp
-    @Column(name="created_at")
+    @CreationTimestamp    @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @CreationTimestamp    @Column(name="updated_at")
+    @UpdateTimestamp    @Column(name="updated_at")
     private LocalDateTime updatedAt;
 //------------------------------------------------------------ конструкторы
     private Measure () {}
@@ -32,7 +32,7 @@ public class Measure {
     private void setId (Long value) { id = value; }
     private void setUpdatedAt (LocalDateTime value) { updatedAt = value; }
     private void setCreatedAt (LocalDateTime value) { createdAt = value; }
-//------------------------------------------------------------ @Overrides
+//------------------------------------------------------------ overrides
     @Override
     public boolean equals (Object o) {
         if (this == o) return true;
@@ -42,9 +42,7 @@ public class Measure {
     }
 
     @Override
-    public int hashCode () {
-        return Objects.hash(name);
-    }
+    public int hashCode () {    return Objects.hash (name);    }
 
     @Override public String toString () { return Measure.class.getSimpleName() +":"+ name; }
 //------------------------------------------------------------ */

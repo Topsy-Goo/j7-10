@@ -10,4 +10,9 @@ angular.module('market-front').controller('mainController', function ($scope, $h
 	const contextUserProfilePath	= 'http://localhost:5555/market/user_profile';
 	const contextPaypalPath 		= 'http://localhost:5555/market/paypal';
 
+
+/*	$scope.tableHH = ["id","category","title"];
+	$scope.tableL1 = [1,   "xxxx",    "Name1"];
+	$scope.tableL2 = [2,   "yyyy",    "Name2"];*/
+
 });

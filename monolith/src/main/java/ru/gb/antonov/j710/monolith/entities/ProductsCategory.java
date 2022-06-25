@@ -2,6 +2,7 @@ package ru.gb.antonov.j710.monolith.entities;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
 
 import javax.persistence.*;
@@ -14,13 +15,13 @@ public class ProductsCategory {
     @Column (name="id")
     private Long id;
 
-    @Column(name="name", nullable=false)
+    @Column(name="name", nullable=false, length=128)
     private String name;
 
     @CreationTimestamp  @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @CreationTimestamp  @Column(name="updated_at")
+    @UpdateTimestamp @Column(name="updated_at")
     private LocalDateTime updatedAt;
 //---- неколонки
 /*    @OneToMany(mappedBy="category")

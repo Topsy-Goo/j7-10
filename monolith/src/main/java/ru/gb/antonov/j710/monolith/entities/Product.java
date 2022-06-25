@@ -3,6 +3,7 @@ package ru.gb.antonov.j710.monolith.entities;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import ru.gb.antonov.j710.monolith.beans.errorhandlers.BadCreationParameterException;
 import ru.gb.antonov.j710.monolith.entities.dtos.ProductDto;
 
@@ -21,10 +22,10 @@ public class Product implements Buildable<Product> {
     @Column (name="id")
     private Long id;
 
-    @Column(name="title", nullable=false)             @Getter
+    @Column(name="title", nullable=false, length=255)             @Getter
     private String title;
 
-    @Column(name="price", nullable=false)             @Getter
+    @Column(name="price", nullable=false, precision=10, scale=2)             @Getter
     private BigDecimal price = BigDecimal.ZERO;
 
     @Column(name="rest", nullable=false)              @Getter
@@ -41,7 +42,7 @@ public class Product implements Buildable<Product> {
     @CreationTimestamp    @Column(name="created_at")  @Getter @Setter
     private LocalDateTime createdAt;
 
-    @CreationTimestamp    @Column(name="updated_at")  @Getter @Setter
+    @UpdateTimestamp     @Column(name="updated_at")  @Getter @Setter
     private LocalDateTime updatedAt;
 //----------------------------------------------------------------------
     private Product () {}
